@@ -21,8 +21,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2025060900;                                      // Plugin version (YYYYMMDDXX).
-$plugin->release = 'v0.0.1';                                        // Plugin release number.
+$plugin->version = 2025061100;                                      // Plugin version (YYYYMMDDXX).
+$plugin->release = 'v0.0.3';                                        // Plugin release number.
 $plugin->requires = 2022112800;                                     // Required moodle version (>=4.1 LTS).
 $plugin->component = 'mod_stalloc';                                 // Component name.
 $plugin->maturity = MATURITY_ALPHA;
