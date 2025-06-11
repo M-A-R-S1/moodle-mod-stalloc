@@ -131,10 +131,14 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                         $declarationDone = true;
                     }
                 } else {
-                    if($student_data->declaration == 1) {
-                        $declarationDone = true;
+                    if($declaration_end > $today) {
+                        if($student_data->declaration == 1) {
+                            $declarationDone = true;
+                        } else {
+                            $viewparams['time_over_declaration'] = true;
+                        }
                     } else {
-                        $viewparams['time_over_declaration'] = true;
+                        $viewparams['waiting_declaration'] = true;
                     }
                 }
             } else {
@@ -188,10 +192,12 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
 
                         $showDirectAllocation = true;
                     } else {
-                        $allocationDone = true;
+                        $viewparams['waiting_direct_allocation'] = true;
                     }
                 } else {
-                    $allocationDone = true;
+                    if($direct_allocation_end > $today) {
+                        $allocationDone = true;
+                    }
                 }
             } else {
                 // There is no allocation data! Or the allocation data was reset (Chair Member declined the direct allocation!)
@@ -283,7 +289,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                                     }
                                     $index++;
                                 }
-                                $ratingDone = true;
+                                //$ratingDone = true;
                             } else {
                                 // Student has not provided a rating yet.
                                 $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
@@ -308,10 +314,12 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                             $showRatingSelection = true;
                         }
                     } else {
-                        $ratingDone = true;
+                        if($rating_end > $today) {
+                            $ratingDone = true;
 
-                        if($allocation_data->chair_id == -1) {
-                            $viewparams['time_over_rating'] = true;
+                            if($allocation_data->chair_id == -1) {
+                                $viewparams['time_over_rating'] = true;
+                            }
                         }
                     }
                 } else {
@@ -384,7 +392,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                         if (($thesis_alloc_start <= $today) && ($thesis_alloc_end >= $today)) {
                             $viewparams['allocated_chair_name'] = $chair_data->name;
                         } else {
-                            if($stalloc_data->publish_results == 1) {
+                            if($stalloc_data->publish_results == 1 && $thesis_alloc_end > $today) {
                                 $viewparams['results_published'] = true;
                                 $viewparams['chair_name'] = $chair_data->name;
                                 $viewparams['thesis_name'] = $allocation_data->thesis_name;
@@ -430,8 +438,6 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
             }
         }
     }
-
-    $viewparams['role'] = "STUDENT!";
 
 } else if((has_capability('mod/stalloc:chairmember', context_course::instance($course_id)) || has_capability('mod/stalloc:examinationmember', context_course::instance($course_id))) && !is_siteadmin()) {
 
