@@ -58,6 +58,17 @@
         </div>
     {{/allocation_time_over}}
 
+    {{#allocation_time_not_started}}
+        <div class="jumbotron mt-5">
+            <h1 class="display-4">The Allocation Time Phase has not started yet.</h1>
+            <p class="lead">You can currently not allocate the students! Please wait for the Allocation Phase to start.</p>
+            <hr class="my-4">
+            <p>
+
+            </p>
+        </div>
+    {{/allocation_time_not_started}}
+
     {{#no_ratings}}
         <div class="jumbotron mt-5">
             <h1 class="display-4">No Student Ratings</h1>

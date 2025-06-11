@@ -80,7 +80,11 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
             if (($start_time <= $today) && ($end_time >= $today)) {
                 $params_allocation['allocation_can_start'] = true;
             } else {
-                $params_allocation['allocation_time_over'] = true;
+                if($end_time < $today) {
+                    $params_allocation['allocation_time_over'] = true;
+                } else {
+                    $params_allocation['allocation_time_not_started'] = true;
+                }
             }
         } else {
             $params_allocation['allocation_can_start'] = true;

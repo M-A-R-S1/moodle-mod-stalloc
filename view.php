@@ -195,7 +195,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                         $viewparams['waiting_direct_allocation'] = true;
                     }
                 } else {
-                    if($direct_allocation_end > $today) {
+                    if($direct_allocation_end < $today) {
                         $allocationDone = true;
                     }
                 }
