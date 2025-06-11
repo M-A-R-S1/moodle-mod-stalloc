@@ -106,12 +106,7 @@ class distributor {
         shuffle($rating_data);
 
         // Get the total Number of students.
-        $declaration_data = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
-        $declaration = 0;
-        if($declaration_data->active == 1) {
-            $declaration = 1;
-        }
-        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => $declaration]);
+        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
         $student_number = ceil(($student_number + $student_number*STUDENT_BUFFER));
 
         $distrubition_key_total_sum = 0;
@@ -247,7 +242,8 @@ class distributor {
                 if($chair_data->id == $id) {
                     // Calculate the maximum number of students which can be allocated for each chair
                     $max_students = ceil(($student_number * $chair_data->distribution_key) / $distrubition_key_total_sum);
-                    $max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+                    //$max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+                    $max_allocation_students = $max_students;
 
                     $this->graph[$chair][] = new edge($chair, $sink, 0, $max_allocation_students);
                     break;

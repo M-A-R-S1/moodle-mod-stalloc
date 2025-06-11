@@ -94,7 +94,8 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
             $params_chair['chair'][$index]->active = true;
             $max_students = ceil(($student_number * $chair->distribution_key) / $distrubition_key_total_sum);
             $params_chair['chair'][$index]->max_students = $max_students;
-            $params_chair['chair'][$index]->max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+            //$params_chair['chair'][$index]->max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+            $params_chair['chair'][$index]->max_allocation_students = $max_students;
             $allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id]);
             $params_chair['chair'][$index]->students = $allocated_students;
         } else {
