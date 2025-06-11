@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/stalloc/db" VERSION="20251504" COMMENT="XMLDB file for Moodle mod_stalloc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+  <TABLES>
+    <TABLE NAME="stalloc" COMMENT="This table saves information about an instance of mod_stalloc in a course.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the instance of the assignment. Displayed at the top of each page."/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The description of the assignment. This field is used by feature MOD_INTRO."/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The format of the description field of the assignment. This field is used by feature MOD_INTRO."/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The time the settings for this assign module instance were last modified."/>
+        <FIELD NAME="initialized" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Plugin is initialized, 0 -> Plugin is not initialized."/>
+        <FIELD NAME="rating_number" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="How many ratings must a student submit."/>
+        <FIELD NAME="phone_required" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Phone required, 0 -> Phone NOT required."/>
+        <FIELD NAME="allocationstarttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="only set while running"/>
+        <FIELD NAME="allocationstatus" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="-1 -> failure while running allocation, 0 -> allocation has not been running, 1 -> allocation running, 2 -> allocation finished"/>
+        <FIELD NAME="startdate_declaration" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can use the declaration."/>
+        <FIELD NAME="enddate_declaration" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can use the declaration."/>
+        <FIELD NAME="startdate_direct_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can submit their direct allocation chair."/>
+        <FIELD NAME="enddate_direct_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can submit their direct allocation chair."/>
+        <FIELD NAME="startdate_rating" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can submit their ratings."/>
+        <FIELD NAME="enddate_rating" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can submit their ratings."/>
+        <FIELD NAME="startdate_rating_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students will be allocated."/>
+        <FIELD NAME="enddate_rating_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students will be allocated."/>
+        <FIELD NAME="startdate_thesis_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students will receive the thesis name, startdate and examiners."/>
+        <FIELD NAME="enddate_thesis_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students will receive the thesis name, startdate and examiners."/>
+        <FIELD NAME="publish_results" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="1 -> Results published, 0 -> Results NOT published."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this stalloc instance."/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course" COMMENT="The course this stalloc instance belongs to."/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="stalloc_chair" COMMENT="This table saves information about the chairs.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the chair."/>
+        <FIELD NAME="holder" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the chair holder."/>
+        <FIELD NAME="contact_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the chair contact."/>
+        <FIELD NAME="contact_phone" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The phone number of the chair contact."/>
+        <FIELD NAME="contact_mail" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The mail address of the chair contact."/>
+        <FIELD NAME="distribution_key" TYPE="float" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0.00" DECIMALS="2" COMMENT="The distribution key of the chair."/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Chair is active, 0 -> Chair is inactive."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the chair."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="stalloc_chair_member" COMMENT="This table saves information about the chair member.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="chair_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="moodle_user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="is_examiner" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Examiner, 0 -> No Examiner."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the chair member."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+        <KEY NAME="chair_id" TYPE="foreign" FIELDS="chair_id" REFTABLE="stalloc_chair" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="stalloc_student" COMMENT="This table saves information about the student.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="moodle_user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="declaration" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 = declaration confirmed, 0 = declaration not confirmed (yet)."/>
+        <FIELD NAME="permission" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 = permission confirmed, 0 = permission not confirmed (yet)."/>
+        <FIELD NAME="rating" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 = rating done, 0 = rating missing."/>
+        <FIELD NAME="phone1" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="the primary phone number"/>
+        <FIELD NAME="phone2" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="the secondary phone number"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the student."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="stalloc_allocation" COMMENT="This table saves information about the actual allocations.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="chair_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="direct_allocation" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 = direct allocation, 0 = drawn allocation."/>
+        <FIELD NAME="checked" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="1 = allocation was checked by the chair, 0 = allocation was not yet checked by the chair, -1 = student was declined by chair."/>
+        <FIELD NAME="thesis_name" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The name of the thesis."/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp of the thesis beginning"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the allocation."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+        <KEY NAME="chair_id" TYPE="foreign" FIELDS="chair_id" REFTABLE="stalloc_chair" REFFIELDS="id"/>
+        <KEY NAME="user_id" TYPE="foreign" FIELDS="user_id" REFTABLE="stalloc_student" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="stalloc_allocation_examiner" COMMENT="This table saves information about the examiners for the allocation.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="allocation_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="chair_member_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the examiner/allocation."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+        <KEY NAME="allocation_id" TYPE="foreign" FIELDS="allocation_id" REFTABLE="stalloc_allocation" REFFIELDS="id"/>
+        <KEY NAME="chair_member_id" TYPE="foreign" FIELDS="chair_member_id" REFTABLE="stalloc_chair_member" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="stalloc_declaration_text" COMMENT="This table saves information about the declaration text.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 -> declaration is active, 0 -> declaration is inactive."/>
+        <FIELD NAME="text" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the declaration text."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="stalloc_rating" COMMENT="This table saves information about the student ratings.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="chair_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="rating" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" COMMENT="Chairrating of this student. Small Number = Small interest. High number = high interest."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the declaration text."/>
+        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
+        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
+        <KEY NAME="chair_id" TYPE="foreign" FIELDS="chair_id" REFTABLE="stalloc_chair" REFFIELDS="id"/>
+        <KEY NAME="user_id" TYPE="foreign" FIELDS="user_id" REFTABLE="stalloc_student" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+  </TABLES>
+</XMLDB>

@@ -1,0 +1,99 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_stalloc/view
+
+    Display the home site of this plugin.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * none
+}}
+
+{{#accepted_declaration}}
+    <div class="alert alert-success mb-5" role="alert">
+        Declaration Accepted!
+    </div>
+{{/accepted_declaration}}
+
+{{#no_phone_number}}
+    <div class="jumbotron">
+        <h1 class="display-4">Phone number required</h1>
+        <p class="lead">In order to use this plugin you must provide a phone number within moodle.</p>
+        <hr class="my-4">
+        <p>
+            Please access your profile by clicking the link below and provide at least one phone number!<br>
+            On your profile page scroll down and click the 'Optional' Heading. Here you can submit your phone number.
+        </p>
+        <a class="btn btn-success btn-lg" href="{{{profile_link}}}" role="button">Update Profile</a>
+    </div>
+{{/no_phone_number}}
+
+{{#time_over_declaration}}
+    <div class="jumbotron">
+        <h1 class="display-4">Declaration Time Expired</h1>
+        <p class="lead">Unfortunately you were unable to accept the declaration in time.</p>
+        <hr class="my-4">
+        <p>
+            Without your declaration you cannot proceed! We are sorry to inform you, that you are therefore excluded from the current thesis allocation.
+        </p>
+    </div>
+{{/time_over_declaration}}
+
+{{#time_over_rating}}
+    <div class="jumbotron">
+        <h1 class="display-4">Rating Time Expired</h1>
+        <p class="lead">The rating time is over. You can no longer provide or edit your ratings.</p>
+        <hr class="my-4">
+        <p>
+            Now it's time to wait. Please come back soon.
+            If your data is successfully evaluated you will be informed on this page about the chair you are assigned to.
+            Then you may discuss with your chair directly the time and content of your thesis.
+        </p>
+    </div>
+{{/time_over_rating}}
+
+{{#allocated_chair_name}}
+    <div class="jumbotron">
+        <h1 class="display-4">Your Allocation: {{allocated_chair_name}}</h1>
+        <p class="lead">You have been successfully allocated!</p>
+        <hr class="my-4">
+        <p>
+            Please contact your allocated chair now to discuss your thesis contents and start date options.
+        </p>
+    </div>
+{{/allocated_chair_name}}
+
+{{#results_published}}
+    <div class="jumbotron">
+        <h1 class="display-4">Thesis Information</h1>
+        <p class="lead">The chair has released the final information about your Thesis</p>
+        <hr class="my-4">
+
+        <h3>Chair: {{chair_name}}</h3>
+        <h3>Thesis Name: {{thesis_name}}</h3>
+        <h3>Start Date: {{start_date}}</h3>
+        {{#examiner}}
+            <h3>Examiner: {{examiner_lastname}}, {{examiner_firstname}} </h3>
+        {{/examiner}}
+    </div>
+{{/results_published}}
+
+
+

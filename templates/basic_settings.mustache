@@ -1,0 +1,367 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_stalloc/settings
+
+    Display the home site of this plugin.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * none
+}}
+
+<h2 class="mt-3 mb-3 ml-3">BASIC SETTINGS</h2>
+
+{{#saved_declaration}}
+    <div class="alert alert-success mb-5" role="alert">
+        Declaration successfully saved!
+    </div>
+{{/saved_declaration}}
+
+{{#saved_phone}}
+    <div class="alert alert-success mb-5" role="alert">
+        Phone Requirement settings saved!
+    </div>
+{{/saved_phone}}
+
+{{#saved_rating}}
+    <div class="alert alert-success mb-5" role="alert">
+        Rating successfully saved!
+    </div>
+{{/saved_rating}}
+
+{{#saved_declaration_date}}
+    <div class="alert alert-success mb-5" role="alert">
+        Declaration Date successfully saved!
+    </div>
+{{/saved_declaration_date}}
+
+{{#saved_direct_allocation_date}}
+    <div class="alert alert-success mb-5" role="alert">
+        Direct Chair Commitment Date successfully saved!
+    </div>
+{{/saved_direct_allocation_date}}
+
+{{#saved_rating_date}}
+    <div class="alert alert-success mb-5" role="alert">
+        Rating Date successfully saved!
+    </div>
+{{/saved_rating_date}}
+
+{{#saved_allocation_date}}
+    <div class="alert alert-success mb-5" role="alert">
+        Allocation Date successfully saved!
+    </div>
+{{/saved_allocation_date}}
+
+{{#saved_thesis_allocation_date}}
+    <div class="alert alert-success mb-5" role="alert">
+        Thesis Definition Date successfully saved!
+    </div>
+{{/saved_thesis_allocation_date}}
+
+{{#saved_published}}
+    <div class="alert alert-success mb-5" role="alert">
+        Published Settings saved!
+    </div>
+{{/saved_published}}
+
+{{#error_declaration_empty}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! The Declaration Textfield is empty. Please provide an Declaration Text!
+    </div>
+{{/error_declaration_empty}}
+
+{{#error_rating_number}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! The Rating was not saved! Please make sure to provide a number which is smaller then the number of chairs!
+    </div>
+{{/error_rating_number}}
+
+{{#error_end_date_before_start_date}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! The End dates cannot be set before the start date!
+    </div>
+{{/error_end_date_before_start_date}}
+
+{{#error_no_date_pair}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! Start and End Date must both be set! Please provide both date values.
+    </div>
+{{/error_no_date_pair}}
+
+{{#error_declaration_date}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! Declaration Date not saved!
+    </div>
+{{/error_declaration_date}}
+
+{{#error_direct_allocation_date}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! Direct Chair Commitment Date not saved!
+    </div>
+{{/error_direct_allocation_date}}
+
+{{#error_rating_date}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! Rating Date not saved!
+    </div>
+{{/error_rating_date}}
+
+{{#error_allocation_date}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! Allocation Date not saved!
+    </div>
+{{/error_allocation_date}}
+
+{{#error_thesis_allocation_date}}
+    <div class="alert alert-danger mb-5" role="alert">
+        Error! Thesis Definition Date not saved!
+    </div>
+{{/error_thesis_allocation_date}}
+
+
+
+<div id="accordion">
+    <div class="card ml-3">
+        <div class="card-header" id="heading0">
+            <h2 class="mb-0">
+                <button class="btn" data-toggle="collapse" data-target="#collapse0" aria-expanded="false" aria-controls="collapse0">
+                    {{#str}} icon_phone_big, mod_stalloc {{/str}} - Phone Settings
+                </button>
+            </h2>
+        </div>
+        <div id="collapse0" class="collapse" aria-labelledby="heading0" data-parent="#accordion">
+            <div class="card-body">
+                <div class="ml-3">
+                    <form class="col-lg-6 col-sm-12" action="#heading0" method="post" >
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox_phone" name="checkbox_phone" {{checkbox_phone}}>
+                                <label class="form-check-label" for="checkbox_phone">
+                                    Phone Number of students is required?
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" name ="save_phone" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card ml-3">
+        <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    {{#str}} icon_declaration, mod_stalloc {{/str}} - Declaration Settings
+                </button>
+            </h2>
+        </div>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <div class="ml-3">
+                    <form class="col-lg-6 col-sm-12" action="#headingOne" method="post" >
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration" name="checkbox_declaration" {{checkbox_declaration}}>
+                                <label class="form-check-label" for="checkbox_declaration">
+                                    Use Student Declaration?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="text_declaration">Declaration Text</label>
+                            <textarea class="form-control" id="text_declaration" name="text_declaration" rows="10" {{disabled_declaration}}>{{text_declaration}}</textarea>
+                        </div>
+                        <button type="submit" name ="save_declaration" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card ml-3">
+        <div class="card-header" id="heading2">
+            <h2 class="mb-0">
+                <button class="btn" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                    {{#str}} icon_rating, mod_stalloc {{/str}} - Rating Settings
+                </button>
+            </h2>
+        </div>
+        <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+            <div class="card-body">
+                <div class="ml-3">
+                    <form class="col-lg-6 col-sm-12" action="#heading2" method="post" >
+                        <div class="form-group">
+                            <label for="rating_counter">How many ratings should a student make?</label>
+                            <input type="text" class="form-control" name="rating_counter" id="rating_counter" value="{{rating_value}}">
+                            <label for="rating_counter">(This value cannot be higher than the number of active chairs!)</label>
+                        </div>
+                        {{#rating_value_enabled}}
+                            <button type="submit" name ="save_rating" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                        {{/rating_value_enabled}}
+                        {{#rating_change_disabled}}
+                            <div class="alert alert-warning mt-3" role="alert">
+                                The Rating Setting cannot be changed! Your Plugin is in it's active phase. <br>
+                                You can only change this Setting when there are no student ratings or allocations present.
+                            </div>
+                        {{/rating_change_disabled}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card ml-3">
+        <div class="card-header" id="heading3">
+            <h2 class="mb-0">
+                <button class="btn" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                    {{#str}} icon_time, mod_stalloc {{/str}} - Schedule
+                </button>
+            </h2>
+        </div>
+        <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
+            <div class="card-body">
+                <div class="ml-3">
+                    <form class="col-lg-6 col-sm-12" action="" method="post" >
+
+                        <h4>Phase I: Declaration</h4>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date_declaration">Start</label>
+                                    <input type="date" class="form-control" name="start_date_declaration" id="start_date_declaration" value="{{start_date_declaration}}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date_declaration">End</label>
+                                    <input type="date" class="form-control" name="end_date_declaration" id="end_date_declaration" value="{{end_date_declaration}}">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <h4>Phase II: Direct Chair Commitment</h4>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date_direct_alloc">Start</label>
+                                    <input type="date" class="form-control" name="start_date_direct_alloc" id="start_date_direct_alloc" value="{{start_date_direct_alloc}}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date_direct_alloc">End</label>
+                                    <input type="date" class="form-control" name="end_date_direct_alloc" id="end_date_direct_alloc" value="{{end_date_direct_alloc}}">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <h4>Phase III: Rating</h4>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date_rating">Start</label>
+                                    <input type="date" class="form-control" name="start_date_rating" id="start_date_rating" value="{{start_date_rating}}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date_rating">End</label>
+                                    <input type="date" class="form-control" name="end_date_rating" id="end_date_rating" value="{{end_date_rating}}">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <h4>Phase IV: Allocation</h4>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date_alloc">Start</label>
+                                    <input type="date" class="form-control" name="start_date_alloc" id="start_date_alloc" value="{{start_date_alloc}}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date_alloc">End</label>
+                                    <input type="date" class="form-control" name="end_date_alloc" id="end_date_alloc" value="{{end_date_alloc}}">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <h4>Phase V: Thesis Definition</h4>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date_thesis_alloc">Start</label>
+                                    <input type="date" class="form-control" name="start_date_thesis_alloc" id="start_date_thesis_alloc" value="{{start_date_thesis_alloc}}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date_thesis_alloc">End</label>
+                                    <input type="date" class="form-control" name="end_date_thesis_alloc" id="end_date_thesis_alloc" value="{{end_date_thesis_alloc}}">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <button type="submit" name="save_schedule" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card ml-3">
+        <div class="card-header" id="heading4">
+            <h2 class="mb-0">
+                <button class="btn" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                    {{#str}} icon_publish, mod_stalloc {{/str}} - Publish Results
+                </button>
+            </h2>
+        </div>
+        <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
+            <div class="card-body">
+                <div class="ml-3">
+                    <form class="col-lg-6 col-sm-12" action="#heading4" method="post" >
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox_publish" name="checkbox_publish" {{checkbox_publish}}>
+                                <label class="form-check-label" for="checkbox_publish">
+                                    Yes, I want to publish the results? I'am aware that this action closes the current thesis allocation process!
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+

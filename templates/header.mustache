@@ -1,0 +1,71 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_stalloc/header
+
+    Display the header of this plugin.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * none
+}}
+
+<nav class="navbar navbar-expand navbar-dark bg-dark my-0 py-0">
+    <div class="collapse navbar-collapse" id="pluginHeader">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {{home_active}}">
+                <a class="nav-link" href="{{{home_url}}}">HOME</a>
+            </li>
+        </ul>
+
+        {{#admin_header}}
+            <span class="navbar-text nav-item {{allocation_active}}">
+              <a class="nav-link" href="{{{allocation_url}}}">ALLOCATION</a>
+            </span>
+            {{#ratings}}
+                <span class="navbar-text nav-item {{rating_active}}">
+                  <a class="nav-link" href="{{{rating_url}}}">RATINGS</a>
+                </span>
+            {{/ratings}}
+            <span class="navbar-text nav-item {{student_active}}">
+              <a class="nav-link" href="{{{student_url}}}">STUDENTS</a>
+            </span>
+            <span class="navbar-text nav-item {{chair_active}}">
+              <a class="nav-link" href="{{{chair_url}}}">CHAIRS</a>
+            </span>
+            <span class="navbar-text nav-item {{settings_active}}">
+              <a class="nav-link" href="{{{settings_url}}}">SETTINGS</a>
+            </span>
+        {{/admin_header}}
+
+        {{#examination_header}}
+            {{#ratings}}
+                <span class="navbar-text nav-item {{rating_active}}">
+                  <a class="nav-link" href="{{{rating_url}}}">RATINGS</a>
+                </span>
+            {{/ratings}}
+            <span class="navbar-text nav-item {{student_active}}">
+              <a class="nav-link" href="{{{student_url}}}">STUDENTS</a>
+            </span>
+            <span class="navbar-text nav-item {{chair_active}}">
+              <a class="nav-link" href="{{{chair_url}}}">CHAIRS</a>
+            </span>
+        {{/examination_header}}
+    </div>
+</nav>
