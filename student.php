@@ -25,6 +25,7 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/config.php');
 require_once(__DIR__.'/locallib.php');
+require_once($CFG->libdir . '/csvlib.class.php');
 
 $id = required_param('id', PARAM_INT);
 
@@ -47,10 +48,6 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
     $PAGE->set_url(new moodle_url('/mod/stalloc/student.php', ['id' => $id]));
     $PAGE->set_title($course->shortname.': '.$strpage);
 
-    // Output the header.
-    echo $OUTPUT->header();
-    echo $OUTPUT->render_from_template('stalloc/header', $paramsheader);
-
     // Paramater Array.
     $params_student = [];
 
@@ -62,16 +59,23 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
         // How many ratings must a student make?
         $rating_number = $DB->get_record('stalloc', ['id' => $instance->id])->rating_number;
 
+        $export_data = [];
+
         // Prepare the loaded Student data for the template and save this information in a parameter array.
         $index = 0;
         foreach($student_data as $key=>$student) {
             $user_data = $DB->get_record('user', ['id' => $student->moodle_user_id]);
             $params_student['student'][$index] = new stdClass();
+            $export_data[$index] = new stdClass();
             $params_student['student'][$index]->index = $index+1;
+            $export_data[$index]->index = $index+1;
             $params_student['student'][$index]->student_lastname = $user_data->lastname;
             $params_student['student'][$index]->student_firstname = $user_data->firstname;
+            $export_data[$index]->student_name = $user_data->firstname ." ". $user_data->lastname;
             $params_student['student'][$index]->student_number = $user_data->idnumber;
+            $export_data[$index]->student_number = $user_data->idnumber;
             $params_student['student'][$index]->student_mail = $user_data->email;
+            $export_data[$index]->student_mail = $user_data->email;
 
             if($student->phone1 != "") {
                 $params_student['student'][$index]->student_phone = $student->phone1;
@@ -99,6 +103,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
                     // There is an Allocation. Get the Name of the Chair.
                     $chair_data = $DB->get_record('stalloc_chair', ['id' => $allocation_data->chair_id]);
                     $params_student['student'][$index]->student_allocation = $chair_data->name;
+                    $export_data[$index]->student_allocation = $chair_data->name;
 
                     if($allocation_data->direct_allocation == 1) {
                         $params_student['student'][$index]->direct_allocation = true;
@@ -115,9 +120,15 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
 
                     if($allocation_data->checked == 1) {
                         $params_student['student'][$index]->student_thesis = $allocation_data->thesis_name;
+                        $export_data[$index]->student_thesis = $allocation_data->thesis_name;
                         if($allocation_data->startdate != "") {
                             $params_student['student'][$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
+                            $export_data[$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
+                        } else {
+                            $export_data[$index]->student_start_date =  "";
                         }
+
+                        $export_data[$index]->examiners = "";
 
                         $examiner_index = 0;
                         $examiner_data = $DB->get_records('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $allocation_data->id]);
@@ -127,17 +138,29 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
                             $params_student['student'][$index]->examiners[$examiner_index] = new stdClass();
                             $params_student['student'][$index]->examiners[$examiner_index]->examiner_lastname = $moodle_user->lastname;
                             $params_student['student'][$index]->examiners[$examiner_index]->examiner_firstname = $moodle_user->firstname;
+                            $export_data[$index]->examiners .= $moodle_user->firstname ." ". $moodle_user->lastname . ", ";
                             $examiner_index++;
                         }
                     } else {
                         $params_student['student'][$index]->not_checked_allocation = true;
+                        $export_data[$index]->student_thesis = "";
+                        $export_data[$index]->student_start_date = "";
+                        $export_data[$index]->examiners = "";
                     }
 
                 } else {
                     if($allocation_data->checked == -1) {
                         $params_student['student'][$index]->student_allocation = 'Pending...';
+                        $export_data[$index]->student_allocation = 'Pending...';
+                        $export_data[$index]->student_thesis = "";
+                        $export_data[$index]->student_start_date = "";
+                        $export_data[$index]->examiners = "";
                     } else {
                         $params_student['student'][$index]->student_allocation = "-";
+                        $export_data[$index]->student_allocation = '-';
+                        $export_data[$index]->student_thesis = "";
+                        $export_data[$index]->student_start_date = "";
+                        $export_data[$index]->examiners = "";
 
                         if($student->rating == 1) {
                             $params_student['student'][$index]->student_has_rated = true;
@@ -150,6 +173,16 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
 
             $index++;
         }
+
+        // Check for CSV Download Button press.
+        if(isset($_POST['download_csv'])) {
+            export_students($export_data, $cm);
+        }
+
+        // Output the header.
+        echo $OUTPUT->header();
+        echo $OUTPUT->render_from_template('stalloc/header', $paramsheader);
+
         // Output the Chair Template
         echo $OUTPUT->render_from_template('stalloc/student', $params_student);
 
@@ -275,6 +308,10 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
             $params_student['no_allocated'] = true;
         }
 
+        // Output the header.
+        echo $OUTPUT->header();
+        echo $OUTPUT->render_from_template('stalloc/header', $paramsheader);
+
         // Output the Chair Template
         echo $OUTPUT->render_from_template('stalloc/student_chairview', $params_student);
     }
@@ -283,5 +320,36 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
     echo $OUTPUT->footer();
 } else {
     redirect(course_get_url($course->id), "Missing Capability!", 4, 'NOTIFY_ERROR');
+}
+
+
+function export_students($export_data, $cm) {
+
+    $tmpcsvfile = new csv_export_writer ('semicolon', '', 'application/download', true);
+    // Create filename.
+    $filename = clean_filename ($cm->name .'-Student-Export');
+    $tmpcsvfile->set_filename ($filename);
+
+    // Export Rows titles.
+    $header[] = '#';
+    $header[] = 'Student-Name';
+    $header[] = 'ID-Number';
+    $header[] = 'E-Mail';
+    $header[] = 'Chair';
+    $header[] = 'Thesis-Name';
+    $header[] = 'Thesis-Start';
+    $header[] = 'Thesis-Examiner';
+
+    // Save the header to the csv file.
+    $tmpcsvfile->add_data($header);
+
+    // Add the actual data to the export.
+    foreach ($export_data as $data) {
+        $tmpcsvfile->add_data((array) $data);
+    }
+
+    // Download the export file.
+    $tmpcsvfile->download_file();
+    exit;
 }
 
