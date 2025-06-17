@@ -37,8 +37,8 @@ require_login($course, false, $cm);
 // Initialize the header
 $paramsheader = initialize_stalloc_header(PAGE_SETTINGS, $id, $course_id, $instance);
 
-// First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  {
+// First check if the user has the capability to be on this page! -> Admins/Managers.
+if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
 
     // Template Data Array.
     $params_settings = [];
@@ -87,35 +87,29 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
     }
 
     // Load the Dates from the database.
-    if($stalloc_data->startdate_declaration != null) {
-        $params_settings['start_date_declaration'] = date("Y-m-d", $stalloc_data->startdate_declaration);
+    if($stalloc_data->start_phase1 != null) {
+        $params_settings['start_phase1'] = date("Y-m-d", $stalloc_data->start_phase1);
     }
-    if($stalloc_data->enddate_declaration != null) {
-        $params_settings['end_date_declaration'] = date("Y-m-d", $stalloc_data->enddate_declaration);
+    if($stalloc_data->end_phase1 != null) {
+        $params_settings['end_phase1'] = date("Y-m-d", $stalloc_data->end_phase1);
     }
-    if($stalloc_data->startdate_direct_alloc != null) {
-        $params_settings['start_date_direct_alloc'] = date("Y-m-d", $stalloc_data->startdate_direct_alloc);
+    if($stalloc_data->start_phase2 != null) {
+        $params_settings['start_phase2'] = date("Y-m-d", $stalloc_data->start_phase2);
     }
-    if($stalloc_data->enddate_direct_alloc != null) {
-        $params_settings['end_date_direct_alloc'] = date("Y-m-d", $stalloc_data->enddate_direct_alloc);
+    if($stalloc_data->end_phase2 != null) {
+        $params_settings['end_phase2'] = date("Y-m-d", $stalloc_data->end_phase2);
     }
-    if($stalloc_data->startdate_rating != null) {
-        $params_settings['start_date_rating'] = date("Y-m-d", $stalloc_data->startdate_rating);
+    if($stalloc_data->start_phase3 != null) {
+        $params_settings['start_phase3'] = date("Y-m-d", $stalloc_data->start_phase3);
     }
-    if($stalloc_data->enddate_rating != null) {
-        $params_settings['end_date_rating'] = date("Y-m-d", $stalloc_data->enddate_rating);
+    if($stalloc_data->end_phase3 != null) {
+        $params_settings['end_phase3'] = date("Y-m-d", $stalloc_data->end_phase3);
     }
-    if($stalloc_data->startdate_rating_alloc != null) {
-        $params_settings['start_date_alloc'] = date("Y-m-d", $stalloc_data->startdate_rating_alloc);
+    if($stalloc_data->start_phase4 != null) {
+        $params_settings['start_phase4'] = date("Y-m-d", $stalloc_data->start_phase4);
     }
-    if($stalloc_data->enddate_rating_alloc != null) {
-        $params_settings['end_date_alloc'] = date("Y-m-d", $stalloc_data->enddate_rating_alloc);
-    }
-    if($stalloc_data->startdate_thesis_alloc != null) {
-        $params_settings['start_date_thesis_alloc'] = date("Y-m-d", $stalloc_data->startdate_thesis_alloc);
-    }
-    if($stalloc_data->enddate_thesis_alloc != null) {
-        $params_settings['end_date_thesis_alloc'] = date("Y-m-d", $stalloc_data->enddate_thesis_alloc);
+    if($stalloc_data->end_phase4 != null) {
+        $params_settings['end_phase4'] = date("Y-m-d", $stalloc_data->end_phase4);
     }
 
     // Display the page layout.
@@ -224,15 +218,15 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
         // 1. Only Pairs are allowed!
         // 2. Start Date < End Date.
 
-        // Check the Declaration Dates
+        // Check the Declaration and Rating Dates
         $date_check_ok = true;
-        if(isset($_POST['start_date_declaration']) || isset($_POST['end_date_declaration'])) {
+        if(isset($_POST['start_phase1']) || isset($_POST['end_phase1'])) {
             // Both dates submitted?
-            if(isset($_POST['start_date_declaration']) && isset($_POST['end_date_declaration'])) {
+            if(isset($_POST['start_phase1']) && isset($_POST['end_phase1'])) {
                 // Start Date < End Date?
-                if(strtotime ($_POST['start_date_declaration']) < (strtotime ($_POST['end_date_declaration']) + 86400)) {
-                    $start_date_declaration = strtotime ($_POST['start_date_declaration']);
-                    $end_date_declaration = strtotime ($_POST['end_date_declaration']);
+                if(strtotime ($_POST['start_phase1']) < (strtotime ($_POST['end_phase1']) + 86400)) {
+                    $start_phase1 = strtotime ($_POST['start_phase1']);
+                    $end_phase1 = strtotime ($_POST['end_phase1']);
                 } else {
                     $params_settings['error_end_date_before_start_date'] = true;
                     $date_check_ok = false;
@@ -245,26 +239,26 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
             // No Date Errors!
             if($date_check_ok) {
                 // Is the new time different from the time allready saved in the database? If so, save it!
-                if($stalloc_data->startdate_declaration != $start_date_declaration || $stalloc_data->enddate_declaration != $end_date_declaration) {
-                    $updateobject->startdate_declaration = $start_date_declaration;
-                    $updateobject->enddate_declaration = $end_date_declaration;
-                    $params_settings['saved_declaration_date'] = true;
+                if($stalloc_data->start_phase1 != $start_phase1 || $stalloc_data->end_phase1 != $end_phase1) {
+                    $updateobject->start_phase1 = $start_phase1;
+                    $updateobject->end_phase1 = $end_phase1;
+                    $params_settings['saved_phase1'] = true;
                     $update_dates = true;
                 }
             } else {
-                $params_settings['error_declaration_date'] = true;
+                $params_settings['error_phase1'] = true;
             }
         }
 
-        // Check the Direct Allocation Dates
+        // Check the chair confirmation phase
         $date_check_ok = true;
-        if(isset($_POST['start_date_direct_alloc']) || isset($_POST['end_date_direct_alloc'])) {
+        if(isset($_POST['start_phase2']) || isset($_POST['end_phase2'])) {
             // Both dates submitted?
-            if(isset($_POST['start_date_direct_alloc']) && isset($_POST['end_date_direct_alloc'])) {
+            if(isset($_POST['start_phase2']) && isset($_POST['end_phase2'])) {
                 // Start Date < End Date?
-                if(strtotime ($_POST['start_date_direct_alloc']) < (strtotime ($_POST['end_date_direct_alloc']) + 86400)) {
-                    $start_date_direct_alloc = strtotime ($_POST['start_date_direct_alloc']);
-                    $end_date_direct_alloc = strtotime ($_POST['end_date_direct_alloc']);
+                if(strtotime ($_POST['start_phase2']) < (strtotime ($_POST['end_phase2']) + 86400)) {
+                    $start_phase2 = strtotime ($_POST['start_phase2']);
+                    $end_phase2 = strtotime ($_POST['end_phase2']);
                 } else {
                     $params_settings['error_end_date_before_start_date'] = true;
                     $date_check_ok = false;
@@ -277,58 +271,26 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
             // No Date Errors!
             if($date_check_ok) {
                 // Is the new time different from the time allready saved in the database? If so, save it!
-                if($stalloc_data->startdate_direct_alloc != $start_date_direct_alloc || $stalloc_data->enddate_direct_alloc != $end_date_direct_alloc) {
-                    $updateobject->startdate_direct_alloc = $start_date_direct_alloc;
-                    $updateobject->enddate_direct_alloc = $end_date_direct_alloc;
-                    $params_settings['saved_direct_allocation_date'] = true;
+                if($stalloc_data->start_phase2 != $start_phase2 || $stalloc_data->end_phase2 != $end_phase2) {
+                    $updateobject->start_phase2 = $start_phase2;
+                    $updateobject->end_phase2 = $end_phase2;
+                    $params_settings['saved_phase2'] = true;
                     $update_dates = true;
                 }
             } else {
-                $params_settings['error_direct_allocation_date'] = true;
-            }
-        }
-
-        // Check the Rating Dates
-        $date_check_ok = true;
-        if(isset($_POST['start_date_rating']) || isset($_POST['end_date_rating'])) {
-            // Both dates submitted?
-            if(isset($_POST['start_date_rating']) && isset($_POST['end_date_rating'])) {
-                // Start Date < End Date?
-                if(strtotime ($_POST['start_date_rating']) < (strtotime ($_POST['end_date_rating']) + 86400)) {
-                    $start_date_rating = strtotime ($_POST['start_date_rating']);
-                    $end_date_rating = strtotime ($_POST['end_date_rating']);
-                } else {
-                    $params_settings['error_end_date_before_start_date'] = true;
-                    $date_check_ok = false;
-                }
-            }  else {
-                $params_settings['error_no_date_pair'] = true;
-                $date_check_ok = false;
-            }
-
-            // No Date Errors!
-            if($date_check_ok) {
-                // Is the new time different from the time allready saved in the database? If so, save it!
-                if($stalloc_data->startdate_rating != $start_date_rating || $stalloc_data->enddate_rating != $end_date_rating) {
-                    $updateobject->startdate_rating = $start_date_rating;
-                    $updateobject->enddate_rating = $end_date_rating;
-                    $params_settings['saved_rating_date'] = true;
-                    $update_dates = true;
-                }
-            } else {
-                $params_settings['error_rating_date'] = true;
+                $params_settings['error_phase2'] = true;
             }
         }
 
         // Check the Allocation Dates
         $date_check_ok = true;
-        if(isset($_POST['start_date_alloc']) || isset($_POST['end_date_alloc'])) {
+        if(isset($_POST['start_phase3']) || isset($_POST['end_phase3'])) {
             // Both dates submitted?
-            if(isset($_POST['start_date_alloc']) && isset($_POST['end_date_alloc'])) {
+            if(isset($_POST['start_phase3']) && isset($_POST['end_phase3'])) {
                 // Start Date < End Date?
-                if(strtotime ($_POST['start_date_alloc']) < (strtotime ($_POST['end_date_alloc']) + 86400)) {
-                    $start_date_alloc = strtotime ($_POST['start_date_alloc']);
-                    $end_date_alloc = strtotime ($_POST['end_date_alloc']);
+                if(strtotime ($_POST['start_phase3']) < (strtotime ($_POST['end_phase3']) + 86400)) {
+                    $start_phase3 = strtotime ($_POST['start_phase3']);
+                    $end_phase3 = strtotime ($_POST['end_phase3']);
                 } else {
                     $params_settings['error_end_date_before_start_date'] = true;
                     $date_check_ok = false;
@@ -341,26 +303,26 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
             // No Date Errors!
             if($date_check_ok) {
                 // Is the new time different from the time allready saved in the database? If so, save it!
-                if($stalloc_data->startdate_rating_alloc != $start_date_alloc || $stalloc_data->enddate_rating_alloc != $end_date_alloc) {
-                    $updateobject->startdate_rating_alloc = $start_date_alloc;
-                    $updateobject->enddate_rating_alloc = $end_date_alloc;
-                    $params_settings['saved_allocation_date'] = true;
+                if($stalloc_data->start_phase3 != $start_phase3 || $stalloc_data->end_phase3 != $end_phase3) {
+                    $updateobject->start_phase3 = $start_phase3;
+                    $updateobject->end_phase3 = $end_phase3;
+                    $params_settings['saved_phase3'] = true;
                     $update_dates = true;
                 }
             } else {
-                $params_settings['error_allocation_date'] = true;
+                $params_settings['error_phase3'] = true;
             }
         }
 
-        // Check the Thesis Allocation Dates
+        // Check the Thesis Definition Dates
         $date_check_ok = true;
-        if(isset($_POST['start_date_thesis_alloc']) || isset($_POST['end_date_thesis_alloc'])) {
+        if(isset($_POST['start_phase4']) || isset($_POST['end_phase4'])) {
             // Both dates submitted?
-            if(isset($_POST['start_date_thesis_alloc']) && isset($_POST['end_date_thesis_alloc'])) {
+            if(isset($_POST['start_phase4']) && isset($_POST['end_phase4'])) {
                 // Start Date < End Date?
-                if(strtotime ($_POST['start_date_thesis_alloc']) < (strtotime ($_POST['end_date_thesis_alloc']) + 86400)) {
-                    $start_date_thesis_alloc = strtotime ($_POST['start_date_thesis_alloc']);
-                    $end_date_thesis_alloc = strtotime ($_POST['end_date_thesis_alloc']);
+                if(strtotime ($_POST['start_phase4']) < (strtotime ($_POST['end_phase4']) + 86400)) {
+                    $start_phase4 = strtotime ($_POST['start_phase4']);
+                    $end_phase4 = strtotime ($_POST['end_phase4']);
                 } else {
                     $params_settings['error_end_date_before_start_date'] = true;
                     $date_check_ok = false;
@@ -373,14 +335,14 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
             // No Date Errors!
             if($date_check_ok) {
                 // Is the new time different from the time allready saved in the database? If so, save it!
-                if($stalloc_data->startdate_thesis_alloc != $start_date_thesis_alloc || $stalloc_data->enddate_thesis_alloc != $end_date_thesis_alloc) {
-                    $updateobject->startdate_thesis_alloc = $start_date_thesis_alloc;
-                    $updateobject->enddate_thesis_alloc = $end_date_thesis_alloc;
-                    $params_settings['saved_thesis_allocation_date'] = true;
+                if($stalloc_data->start_phase4 != $start_phase4 || $stalloc_data->end_phase4 != $end_phase4) {
+                    $updateobject->start_phase4 = $start_phase4;
+                    $updateobject->end_phase4 = $end_phase4;
+                    $params_settings['saved_phase4'] = true;
                     $update_dates = true;
                 }
             } else {
-                $params_settings['error_thesis_allocation_date'] = true;
+                $params_settings['error_phase4'] = true;
             }
         }
 

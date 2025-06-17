@@ -38,8 +38,8 @@ require_login($course, false, $cm);
 // Initialize the header
 $paramsheader = initialize_stalloc_header(PAGE_CHAIR, $id, $course_id, $instance);
 
-// First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) || has_capability('mod/stalloc:examinationmember', context_course::instance($course_id)))  {
+// First check if the user has the capability to be on this page! -> Admins/Manager.
+if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -66,7 +66,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
         }
 
         $recordid = $DB->insert_record('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'name' => $data->chair_name, 'holder' => $data->chair_holder, 'contact_name' => $data->contact_name,
-            'contact_phone' => $data->contact_phone, 'contact_mail' => $data->contact_mail, 'distribution_key' => $data->distribution_key, 'active' => $active_value]);
+            'contact_phone' => $data->contact_phone, 'contact_mail' => $data->contact_mail, 'distribution_key' => $data->distribution_key, 'active' => $active_value, 'flexnow_id' => $data->flexnow_id]);
 
         // All done! Redirect to the chair page.
         $redirecturl = new moodle_url('/mod/stalloc/chair.php', ['id' => $id]);

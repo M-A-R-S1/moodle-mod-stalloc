@@ -45,77 +45,106 @@
     </div>
 {{/no_phone_number}}
 
-{{#time_over_declaration}}
+{{#no_allocation_after_phase1}}
     <div class="jumbotron">
-        <h1 class="display-4">Declaration Time Expired</h1>
-        <p class="lead">Unfortunately you were unable to accept the declaration in time.</p>
+        <h1 class="display-4">You are excluded from the process</h1>
+        <p class="lead">You did not provide any ratings in the previous step!</p>
         <hr class="my-4">
         <p>
-            Without your declaration you cannot proceed! We are sorry to inform you, that you are therefore excluded from the current thesis allocation.
+            You can no longer participate in this thesis allocation, because you did not provide the needed data during the
+            previous step.
         </p>
     </div>
-{{/time_over_declaration}}
+{{/no_allocation_after_phase1}}
 
-{{#waiting_declaration}}
+{{#waiting_for_phase1}}
     <div class="jumbotron">
-        <h1 class="display-4">We have received your Declaration</h1>
-        <p class="lead">Please wait for the next Phase.</p>
+        <h1 class="display-4">Please wait for the process to start</h1>
+        <p class="lead">You cannot commit your chair ratings yet.</p>
         <hr class="my-4">
         <p>
-            Phase 1 is still active. Please wait for Phase 2 to start and come back then.
+            Please come back later! This process has not started yet.<br>
+            You will be able to commit your Chair Ratings between the <b>{{phase1_start}}</b> and the <b>{{phase1_end}}</b>
         </p>
     </div>
-{{/waiting_declaration}}
+{{/waiting_for_phase1}}
 
-{{#waiting_direct_allocation}}
+{{#waiting_for_phase4}}
     <div class="jumbotron">
-        <h1 class="display-4">We have received your Allocation</h1>
-        <p class="lead">Please wait for the next Phase.</p>
+        <h1 class="display-4">Thank you for your Ratings</h1>
         <hr class="my-4">
         <p>
-            We have received your Allocation. Please wait for Phase 3 to start and come back then.
+            For now it's time to wait. Your Ratings are being analyzed<br>
+            Please come back between <b>{{phase4_start}}</b> and <b>{{phase4_end}}</b> to see which Chair you are allocated to.
         </p>
     </div>
-{{/waiting_direct_allocation}}
+{{/waiting_for_phase4}}
 
-{{#time_over_rating}}
+{{#thesis_not_published}}
     <div class="jumbotron">
-        <h1 class="display-4">Rating Time Expired</h1>
-        <p class="lead">The rating time is over. You can no longer provide or edit your ratings.</p>
+        <h1 class="display-4">Your Thesis information will be published soon</h1>
         <hr class="my-4">
         <p>
-            Now it's time to wait. Please come back soon.
-            If your data is successfully evaluated you will be informed on this page about the chair you are assigned to.
-            Then you may discuss with your chair directly the time and content of your thesis.
+            Your Chair Allocation: <b>{{chair_name}}</b><br><br>
+            The Thesis information are not published yet.<br>
+            The Examination Office needs time to evaluate all thesis information<br>
+            Please come back later.
         </p>
     </div>
-{{/time_over_rating}}
+{{/thesis_not_published}}
+
+{{#thesis_dates_published}}
+    <div class="jumbotron">
+        <h1 class="display-4">Your Thesis Start Date is published</h1>
+        <hr class="my-4">
+        <p>
+            Your Chair Allocation: <b>{{chair_name}}</b><br><br>
+            Congratulations! Your thesis start date is now published!<br>
+            Your thesis will start at the <b>{{start_date}}</b>.<br><br>
+            Please come back at the {{start_date}} to receive more information about your thesis.
+        </p>
+    </div>
+{{/thesis_dates_published}}
+
+{{#thesis_started}}
+    <div class="jumbotron">
+        <h1 class="display-4">Your Thesis time has started</h1>
+        <p class="lead">These are your Thesis information</p>
+        <hr class="my-4">
+        <p>
+            <b>Chair:</b> {{chair_name}}</br>
+            <b>Thesis Name:</b> {{thesis_name}}</br>
+            <b>Start Date:</b> {{start_date}}</br>
+            <b>2nd Examiner:</b> {{examiner_two}}<br>
+        </p>
+    </div>
+{{/thesis_started}}
+
+{{#thesis_no_start_date}}
+    <div class="jumbotron">
+        <h1 class="display-4">Somehting went wrong ...</h1>
+        <p class="lead">Please contact the Examination Office!</p>
+        <hr class="my-4">
+        <p>
+            Your allocated Chair did not provide any thesis information yet!
+            Please contact the Examination office about this issue.
+        </p>
+    </div>
+{{/thesis_no_start_date}}
 
 {{#allocated_chair_name}}
     <div class="jumbotron">
-        <h1 class="display-4">Your Allocation: {{allocated_chair_name}}</h1>
-        <p class="lead">You have been successfully allocated!</p>
+        <h1 class="display-4">Allocation process done</h1>
+        <p class="lead">You have been allocated!</p>
         <hr class="my-4">
         <p>
+            Your Chair Allocation: <b>{{allocated_chair_name}}</b><br>
             Please contact your allocated chair now to discuss your thesis contents and start date options.
         </p>
     </div>
 {{/allocated_chair_name}}
 
-{{#results_published}}
-    <div class="jumbotron">
-        <h1 class="display-4">Thesis Information</h1>
-        <p class="lead">The chair has released the final information about your Thesis</p>
-        <hr class="my-4">
 
-        <h3>Chair: {{chair_name}}</h3>
-        <h3>Thesis Name: {{thesis_name}}</h3>
-        <h3>Start Date: {{start_date}}</h3>
-        {{#examiner}}
-            <h3>Examiner: {{examiner_lastname}}, {{examiner_firstname}} </h3>
-        {{/examiner}}
-    </div>
-{{/results_published}}
 
 
 

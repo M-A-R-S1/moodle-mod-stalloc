@@ -37,8 +37,8 @@ require_login($course, false, $cm);
 // Initialize the header
 $paramsheader = initialize_stalloc_header(PAGE_ALLOCATION, $id, $course_id, $instance);
 
-// First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  {
+// First check if the user has the capability to be on this page! -> Admins/Manager.
+if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -68,12 +68,12 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
     // 2. Is the correct Phase active?
 
     $rating_count = $DB->count_records('stalloc_rating' ,['course_id' => $course_id, 'cm_id' => $id]);
-    $params_allocation['rated_student_count'] = $rating_count / $rating_number;
 
     if($rating_count >= $rating_number && $rating_number > 0) {
+        $params_allocation['rated_student_count'] = $rating_count / $rating_number;
         // Get the Allocation time phase.
-        $start_time = $stalloc_data->startdate_rating_alloc;
-        $end_time = $stalloc_data->enddate_rating_alloc;
+        $start_time = $stalloc_data->start_phase3;
+        $end_time = $stalloc_data->end_phase3;
         $today = strtotime(date("Y-m-d"));
 
         if($start_time != null && $end_time != null) {
@@ -89,34 +89,34 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
         } else {
             $params_allocation['allocation_can_start'] = true;
         }
-    } else {
-        $params_allocation['no_ratings'] = true;
-    }
 
+        // Initialize a rating array.
+        for($i=0; $i<$rating_number; $i++) {
+            $params_allocation['rating'][$i] = new stdClass();
+            $params_allocation['rating'][$i]->count = 0;
+            $params_allocation['rating'][$i]->priority = $i+1;
+        }
 
-    // Initialize a rating array.
-    for($i=0; $i<$rating_number; $i++) {
-        $params_allocation['rating'][$i] = new stdClass();
-        $params_allocation['rating'][$i]->count = 0;
-        $params_allocation['rating'][$i]->priority = $i+1;
-    }
+        // Check for the Student Allocation.
+        $allocation_data = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id]);
 
-    // Check for the Student Allocation.
-    $allocation_data = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id]);
+        if($allocation_data != null) {
+            $params_allocation['allocations'] = true;
+            $params_allocation['unallocated'] = 0;
 
-    if($allocation_data != null) {
-        $params_allocation['allocations'] = true;
-        $params_allocation['unallocated'] = 0;
-
-        foreach ($allocation_data as $allocation) {
-            if($allocation->chair_id != -1) {
-                // There is an Allocation. Get the user ID and check which priority it is.
-                $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $allocation->user_id, 'chair_id' => $allocation->chair_id]);
-                $params_allocation['rating'][$rating_number - $rating_data->rating]->count = $params_allocation['rating'][$rating_number - $rating_data->rating]->count + 1;
-            } else {
-                $params_allocation['unallocated']++;
+            foreach ($allocation_data as $allocation) {
+                if($allocation->chair_id != -1) {
+                    // There is an Allocation. Get the user ID and check which priority it is.
+                    $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $allocation->user_id, 'chair_id' => $allocation->chair_id]);
+                    $params_allocation['rating'][$rating_number - $rating_data->rating]->count = $params_allocation['rating'][$rating_number - $rating_data->rating]->count + 1;
+                } else {
+                    $params_allocation['unallocated']++;
+                }
             }
         }
+
+    } else {
+        $params_allocation['no_ratings'] = true;
     }
 
     // Output the Chair Template

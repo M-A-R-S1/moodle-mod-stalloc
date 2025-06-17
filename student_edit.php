@@ -39,8 +39,8 @@ require_login($course, false, $cm);
 // Initialize the header
 $paramsheader = initialize_stalloc_header(PAGE_STUDENT, $id, $course_id, $instance);
 
-// First check if the user has the capability to be on this page! -> Admins
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  {
+// First check if the user has the capability to be on this page! -> Admins/Managers
+if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -59,7 +59,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
     echo $OUTPUT->footer();
 
     // Check if the user has the capability to be on this page! -> Teacher!
-} else if(has_capability('mod/stalloc:examinationmember', context_course::instance($course_id))){
+} else if(has_capability('mod/stalloc:chairmember', context_module::instance($instance->id))){
 
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
@@ -106,13 +106,9 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
             $params_student['error_date_empty'] = true;
         }
 
-        // Check the Examiners.
-        if($_POST['examiner_1'] != $_POST['examiner_2']) {
-            $examiner_1_id = $_POST['examiner_1'];
-            $examiner_2_id = $_POST['examiner_2'];
-        } else {
-            $post_data_okey = false;
-            $params_student['error_examiner_overlap'] = true;
+        // Check the 2nd Examiner.
+        if(isset($_POST['examiner_two'])) {
+            $examiner_two = trim($_POST['examiner_two']);
         }
 
         // Data looks okey -> Update the Database!
@@ -122,14 +118,8 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
             $updateobject->id = $alloc_id;
             $updateobject->thesis_name = $thesis_name;
             $updateobject->startdate = $start_date;
+            $updateobject->examiner_two = $examiner_two;
             $DB->update_record('stalloc_allocation', $updateobject);
-
-            $DB->delete_records('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $alloc_id]);
-            $DB->insert_record('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $alloc_id, 'chair_member_id' => $examiner_1_id]);
-            if($examiner_2_id != -1) {
-                $DB->insert_record('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $alloc_id, 'chair_member_id' => $examiner_2_id]);
-            }
-
             $params_student['saved_student'] = true;
         }
     }
@@ -137,35 +127,8 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)))  
     $allocation_data = $DB->get_record('stalloc_allocation', ['id' => $alloc_id]);
     $params_student['thesis_name'] = $allocation_data->thesis_name;
     $params_student['start_date'] = date("Y-m-d", $allocation_data->startdate);
+    $params_student['examiner_two'] = $allocation_data->examiner_two;
     $params_student['back_link'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
-
-    $chair_member_data = $DB->get_records('stalloc_chair_member', ['chair_id' => $allocation_data->chair_id]);
-
-    $index = 0;
-    $examiner_count = 0;
-    foreach ($chair_member_data as $chair_member) {
-        $moodle_user_data = $DB->get_record('user', ['id' => $chair_member->moodle_user_id]);
-        $params_student['examiners'][$index] = new stdClass();
-        $params_student['examiners'][$index]->examiner_lastname = $moodle_user_data->lastname;
-        $params_student['examiners'][$index]->examiner_firstname = $moodle_user_data->firstname;
-        $params_student['examiners'][$index]->examiner_id = $chair_member->id;
-
-        $examiner_data = $DB->get_record('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $alloc_id, 'chair_member_id' => $chair_member->id]);
-        if($examiner_data != null) {
-            if($examiner_count == 0) {
-                $params_student['examiners'][$index]->examiner_selected_1 = 'selected';
-                $examiner_count++;
-            } else {
-                $params_student['examiners'][$index]->examiner_selected_2 = 'selected';
-                $examiner_count++;
-            }
-        }
-        $index++;
-    }
-
-    if($examiner_count <= 1) {
-        $params_student['examiner_none'] = 'selected';
-    }
 
     // Output the Chair Template
     echo $OUTPUT->render_from_template('stalloc/student_edit', $params_student);

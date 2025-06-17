@@ -25,6 +25,11 @@ $string['pluginname'] = 'Student Allocation';
 $string['modulename'] = 'Student Allocation';
 $string['pluginadministration'] = 'Student Allocation Administration';
 $string['modulenameplural'] = 'Student Allocations';
+$string['stalloc:addinstance'] = 'Add new instance of Student Allocation';
+$string['stalloc:view'] = 'View instances of Student Allocation';
+$string['stalloc:student'] = 'Student Abilities for Student Allocation';
+$string['stalloc:chairmember'] = 'Chairmember Abilities for Student Allocation';
+$string['stalloc:examination_member'] = 'Examination Member Abilities for Student Allocation';
 
 // ICONS
 $string['icon_active'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">

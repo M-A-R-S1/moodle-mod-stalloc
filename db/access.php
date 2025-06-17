@@ -30,7 +30,6 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
-            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
@@ -43,35 +42,29 @@ $capabilities = [
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
         ],
     ],
     'mod/stalloc:student' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
-            'student' => CAP_ALLOW,
+            'student' => CAP_ALLOW
         ],
     ],
     'mod/stalloc:chairmember' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW
         ],
     ],
-    'mod/stalloc:examinationmember' => [
+    'mod/stalloc:examination_member' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
-            'editingteacher' => CAP_ALLOW,
-        ],
-    ],
-    'mod/stalloc:admin' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
         ],
     ],
 ];

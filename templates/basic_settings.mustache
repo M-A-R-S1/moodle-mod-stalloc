@@ -46,35 +46,30 @@
     </div>
 {{/saved_rating}}
 
-{{#saved_declaration_date}}
+{{#saved_phase1}}
     <div class="alert alert-success mb-5" role="alert">
-        Declaration Date successfully saved!
+        Declaration and Rating Phase Schedule successfully saved!
     </div>
-{{/saved_declaration_date}}
+{{/saved_phase1}}
 
-{{#saved_direct_allocation_date}}
+{{#saved_phase2}}
     <div class="alert alert-success mb-5" role="alert">
-        Direct Chair Commitment Date successfully saved!
+        Chair Confirmation Phase Schedule successfully saved!
     </div>
-{{/saved_direct_allocation_date}}
+{{/saved_phase2}}
 
-{{#saved_rating_date}}
-    <div class="alert alert-success mb-5" role="alert">
-        Rating Date successfully saved!
-    </div>
-{{/saved_rating_date}}
 
-{{#saved_allocation_date}}
+{{#saved_phase3}}
     <div class="alert alert-success mb-5" role="alert">
-        Allocation Date successfully saved!
+        Random Allocation Phase Schedule successfully saved!
     </div>
-{{/saved_allocation_date}}
+{{/saved_phase3}}
 
-{{#saved_thesis_allocation_date}}
+{{#saved_phase4}}
     <div class="alert alert-success mb-5" role="alert">
-        Thesis Definition Date successfully saved!
+        Thesis Definition Phase Schedule successfully saved!
     </div>
-{{/saved_thesis_allocation_date}}
+{{/saved_phase4}}
 
 {{#saved_published}}
     <div class="alert alert-success mb-5" role="alert">
@@ -106,35 +101,29 @@
     </div>
 {{/error_no_date_pair}}
 
-{{#error_declaration_date}}
+{{#error_phase1}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Declaration Date not saved!
+        Error! Declaration and Rating Phase Schedule not saved!
     </div>
-{{/error_declaration_date}}
+{{/error_phase1}}
 
-{{#error_direct_allocation_date}}
+{{#error_phase2}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Direct Chair Commitment Date not saved!
+        Error! Chair Confirmation Phase Schedule not saved!
     </div>
-{{/error_direct_allocation_date}}
+{{/error_phase2}}
 
-{{#error_rating_date}}
+{{#error_phase3}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Rating Date not saved!
+        Error! Random Allocation Phase Schedule not saved!
     </div>
-{{/error_rating_date}}
+{{/error_phase3}}
 
-{{#error_allocation_date}}
+{{#error_phase4}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Allocation Date not saved!
+        Error! Thesis Definition Phase Schedule not saved!
     </div>
-{{/error_allocation_date}}
-
-{{#error_thesis_allocation_date}}
-    <div class="alert alert-danger mb-5" role="alert">
-        Error! Thesis Definition Date not saved!
-    </div>
-{{/error_thesis_allocation_date}}
+{{/error_phase4}}
 
 
 
@@ -242,86 +231,69 @@
                 <div class="ml-3">
                     <form class="col-lg-6 col-sm-12" action="" method="post" >
 
-                        <h4>Phase I: Declaration</h4>
+                        <h4>Phase 1: Declaration and Ratings</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_date_declaration">Start</label>
-                                    <input type="date" class="form-control" name="start_date_declaration" id="start_date_declaration" value="{{start_date_declaration}}">
+                                    <label for="start_phase1">Start</label>
+                                    <input type="date" class="form-control" name="start_phase1" id="start_phase1" value="{{start_phase1}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_date_declaration">End</label>
-                                    <input type="date" class="form-control" name="end_date_declaration" id="end_date_declaration" value="{{end_date_declaration}}">
+                                    <label for="end_phase1">End</label>
+                                    <input type="date" class="form-control" name="end_phase1" id="end_phase1" value="{{end_phase1}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <h4>Phase II: Direct Chair Commitment</h4>
+                        <h4>Phase 2: Confirmations by Chairs</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_date_direct_alloc">Start</label>
-                                    <input type="date" class="form-control" name="start_date_direct_alloc" id="start_date_direct_alloc" value="{{start_date_direct_alloc}}">
+                                    <label for="start_phase2">Start</label>
+                                    <input type="date" class="form-control" name="start_phase2" id="start_phase2" value="{{start_phase2}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_date_direct_alloc">End</label>
-                                    <input type="date" class="form-control" name="end_date_direct_alloc" id="end_date_direct_alloc" value="{{end_date_direct_alloc}}">
+                                    <label for="end_phase2">End</label>
+                                    <input type="date" class="form-control" name="end_phase2" id="end_phase2" value="{{end_phase2}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <h4>Phase III: Rating</h4>
+                        <h4>Phase 3: Random Allocation</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_date_rating">Start</label>
-                                    <input type="date" class="form-control" name="start_date_rating" id="start_date_rating" value="{{start_date_rating}}">
+                                    <label for="start_phase3">Start</label>
+                                    <input type="date" class="form-control" name="start_phase3" id="start_phase3" value="{{start_phase3}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_date_rating">End</label>
-                                    <input type="date" class="form-control" name="end_date_rating" id="end_date_rating" value="{{end_date_rating}}">
+                                    <label for="end_phase3">End</label>
+                                    <input type="date" class="form-control" name="end_phase3" id="end_phase3" value="{{end_phase3}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <h4>Phase IV: Allocation</h4>
+                        <h4>Phase 4: Thesis Definition</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_date_alloc">Start</label>
-                                    <input type="date" class="form-control" name="start_date_alloc" id="start_date_alloc" value="{{start_date_alloc}}">
+                                    <label for="start_phase4">Start</label>
+                                    <input type="date" class="form-control" name="start_phase4" id="start_phase4" value="{{start_phase4}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_date_alloc">End</label>
-                                    <input type="date" class="form-control" name="end_date_alloc" id="end_date_alloc" value="{{end_date_alloc}}">
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-
-                        <h4>Phase V: Thesis Definition</h4>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="start_date_thesis_alloc">Start</label>
-                                    <input type="date" class="form-control" name="start_date_thesis_alloc" id="start_date_thesis_alloc" value="{{start_date_thesis_alloc}}">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="end_date_thesis_alloc">End</label>
-                                    <input type="date" class="form-control" name="end_date_thesis_alloc" id="end_date_thesis_alloc" value="{{end_date_thesis_alloc}}">
+                                    <label for="end_phase4">End</label>
+                                    <input type="date" class="form-control" name="end_phase4" id="end_phase4" value="{{end_phase4}}">
                                 </div>
                             </div>
                         </div>

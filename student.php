@@ -39,7 +39,7 @@ require_login($course, false, $cm);
 $paramsheader = initialize_stalloc_header(PAGE_STUDENT, $id, $course_id, $instance);
 
 // First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) || has_capability('mod/stalloc:examinationmember', context_course::instance($course_id)))  {
+if (has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)) || has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -52,13 +52,13 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
     $params_student = [];
 
     // Admin View.
-    if(has_capability('mod/stalloc:admin', context_course::instance($course_id))) {
+    if(has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
         // Load students from the database which are connected to this course module.
         $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
+        $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
 
         // How many ratings must a student make?
-        $rating_number = $DB->get_record('stalloc', ['id' => $instance->id])->rating_number;
-
+        $rating_number = $stalloc_data->rating_number;
         $export_data = [];
 
         // Prepare the loaded Student data for the template and save this information in a parameter array.
@@ -104,6 +104,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
                     $chair_data = $DB->get_record('stalloc_chair', ['id' => $allocation_data->chair_id]);
                     $params_student['student'][$index]->student_allocation = $chair_data->name;
                     $export_data[$index]->student_allocation = $chair_data->name;
+                    $export_data[$index]->flexnow_id = $chair_data->flexnow_id;
 
                     if($allocation_data->direct_allocation == 1) {
                         $params_student['student'][$index]->direct_allocation = true;
@@ -121,6 +122,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
                     if($allocation_data->checked == 1) {
                         $params_student['student'][$index]->student_thesis = $allocation_data->thesis_name;
                         $export_data[$index]->student_thesis = $allocation_data->thesis_name;
+
                         if($allocation_data->startdate != "") {
                             $params_student['student'][$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
                             $export_data[$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
@@ -128,24 +130,14 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
                             $export_data[$index]->student_start_date =  "";
                         }
 
-                        $export_data[$index]->examiners = "";
+                        $params_student['student'][$index]->student_examiner =  $allocation_data->examiner_two;
+                        $export_data[$index]->student_examiner = $allocation_data->examiner_two;
 
-                        $examiner_index = 0;
-                        $examiner_data = $DB->get_records('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $allocation_data->id]);
-                        foreach ($examiner_data as $examiner) {
-                            $examiner_user = $DB->get_record('stalloc_chair_member', ['id' => $examiner->chair_member_id]);
-                            $moodle_user = $DB->get_record('user', ['id' => $examiner_user->moodle_user_id]);
-                            $params_student['student'][$index]->examiners[$examiner_index] = new stdClass();
-                            $params_student['student'][$index]->examiners[$examiner_index]->examiner_lastname = $moodle_user->lastname;
-                            $params_student['student'][$index]->examiners[$examiner_index]->examiner_firstname = $moodle_user->firstname;
-                            $export_data[$index]->examiners .= $moodle_user->firstname ." ". $moodle_user->lastname . ", ";
-                            $examiner_index++;
-                        }
                     } else {
                         $params_student['student'][$index]->not_checked_allocation = true;
                         $export_data[$index]->student_thesis = "";
                         $export_data[$index]->student_start_date = "";
-                        $export_data[$index]->examiners = "";
+                        $export_data[$index]->student_examiner = "";
                     }
 
                 } else {
@@ -154,13 +146,13 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
                         $export_data[$index]->student_allocation = 'Pending...';
                         $export_data[$index]->student_thesis = "";
                         $export_data[$index]->student_start_date = "";
-                        $export_data[$index]->examiners = "";
+                        $export_data[$index]->student_examiner = "";
                     } else {
                         $params_student['student'][$index]->student_allocation = "-";
                         $export_data[$index]->student_allocation = '-';
                         $export_data[$index]->student_thesis = "";
                         $export_data[$index]->student_start_date = "";
-                        $export_data[$index]->examiners = "";
+                        $export_data[$index]->student_examiner = "";
 
                         if($student->rating == 1) {
                             $params_student['student'][$index]->student_has_rated = true;
@@ -187,11 +179,28 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
         echo $OUTPUT->render_from_template('stalloc/student', $params_student);
 
         // Teacher view!
-    } else if (has_capability('mod/stalloc:examinationmember', context_course::instance($course_id))) {
+    } else if (has_capability('mod/stalloc:chairmember', context_module::instance($instance->id))) {
         // Get Data of the current Chair Member.
         $chairmember_data = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
         // Load all pending students of this chair.
         $pending_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 0]);
+        $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
+
+        // Phase 4 Schedule Data.
+        $start_phase4 = $stalloc_data->start_phase4;
+        $end_phase4 = $stalloc_data->end_phase4;
+        $today = strtotime(date("Y-m-d"));
+
+        // Phase 4 is active -> Thesis Definition Phase.
+        if($start_phase4 != null && $end_phase4 != null) {
+            if (($start_phase4 <= $today) && ($end_phase4 >= $today)) {
+                $params_student['edit_student'] = true;
+            } else {
+                $params_student['dont_edit_student'] = true;
+            }
+        } else {
+            $params_student['dont_edit_student'] = true;
+        }
 
         //Check for POST Events -> Was a student accepted or declined?
         foreach ($pending_students as $pending_student) {
@@ -245,7 +254,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
 
         // Prepare the pending student data for the template.
         $index = 0;
-        foreach($pending_students as $key=>$pending_student) {
+        foreach($pending_students as $pending_student) {
             $student_data = $DB->get_record('stalloc_student', ['id' => $pending_student->user_id]);
             $user_data = $DB->get_record('user', ['id' => $student_data->moodle_user_id]);
 
@@ -257,23 +266,22 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
             $params_student['pending_student'][$index]->student_mail = $user_data->email;
             $params_student['pending_student'][$index]->student_id = $student_data->id;
 
-            // check if this chair can accept more direct students.
-            if($direct_allocated_students_number >= $max_direct_students) {
-                $params_student['pending_student'][$index]->disable_pending = 'disabled';
+            // check if this chair can accept more direct students [If a chair is disabled, it can always accept direct students].
+            if($this_chair_data->active == 1) {
+                if($direct_allocated_students_number >= $max_direct_students) {
+                    $params_student['pending_student'][$index]->disable_pending = 'disabled';
+                }
             }
-
             $index++;
         }
 
         if($index != 0) {
             $params_student['pending'] = true;
-        } else {
-            $params_student['no_pending'] = true;
         }
 
         // Prepare the allocated student data for the template.
         $index = 0;
-        foreach($allocated_students as $key=>$allocated_student) {
+        foreach($allocated_students as $allocated_student) {
             $student_data = $DB->get_record('stalloc_student', ['id' => $allocated_student->user_id]);
             $user_data = $DB->get_record('user', ['id' => $student_data->moodle_user_id]);
 
@@ -284,28 +292,16 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
             $params_student['allocated_student'][$index]->student_number = $user_data->idnumber;
             $params_student['allocated_student'][$index]->student_mail = $user_data->email;
             $params_student['allocated_student'][$index]->student_thesis = $allocated_student->thesis_name;
+            $params_student['allocated_student'][$index]->student_examiner = $allocated_student->examiner_two;
             if($allocated_student->startdate != "") {
                 $params_student['allocated_student'][$index]->student_start_date =  date('d.m.Y',$allocated_student->startdate);
             }
             $params_student['allocated_student'][$index]->edit_student_url = new moodle_url('/mod/stalloc/student_edit.php', ['student_id' => $allocated_student->user_id, 'alloc_id' => $allocated_student->id, 'id' => $id]);
-
-            $examiner_index = 0;
-            $examiner_data = $DB->get_records('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id, 'allocation_id' => $allocated_student->id]);
-            foreach ($examiner_data as $examiner) {
-                $examiner_user = $DB->get_record('stalloc_chair_member', ['id' => $examiner->chair_member_id]);
-                $moodle_user = $DB->get_record('user', ['id' => $examiner_user->moodle_user_id]);
-                $params_student['allocated_student'][$index]->examiners[$examiner_index] = new stdClass();
-                $params_student['allocated_student'][$index]->examiners[$examiner_index]->examiner_lastname = $moodle_user->lastname;
-                $params_student['allocated_student'][$index]->examiners[$examiner_index]->examiner_firstname = $moodle_user->firstname;
-                $examiner_index++;
-            }
             $index++;
         }
 
         if($index != 0) {
             $params_student['allocated'] = true;
-        } else {
-            $params_student['no_allocated'] = true;
         }
 
         // Output the header.
@@ -336,9 +332,10 @@ function export_students($export_data, $cm) {
     $header[] = 'ID-Number';
     $header[] = 'E-Mail';
     $header[] = 'Chair';
+    $header[] = 'Flexnow-ID';
     $header[] = 'Thesis-Name';
     $header[] = 'Thesis-Start';
-    $header[] = 'Thesis-Examiner';
+    $header[] = 'Thesis-2nd-Examiner';
 
     // Save the header to the csv file.
     $tmpcsvfile->add_data($header);

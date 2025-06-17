@@ -121,9 +121,6 @@ class distributor {
         // Perform all allocation manipulation / inserts in one transaction.
         $transaction = $DB->start_delegated_transaction();
 
-        //Delte all records from the stalloc_allocation_examiner table .. just to be sure.
-        $DB->delete_records('stalloc_allocation_examiner', ['course_id' => $course_id, 'cm_id' => $id]);
-
         foreach ($distributions as $chair_id => $users) {
             foreach ($users as $user_id) {
                 //$DB->insert_record_raw('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $choice_id, 'user_id' => $user_id, 'direct_allocation' => 0, 'checked' => 1]);

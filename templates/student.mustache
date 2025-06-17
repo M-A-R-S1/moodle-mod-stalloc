@@ -49,7 +49,7 @@
                         <th scope="col">Rated</th>
                         <th scope="col">Allocation</th>
                         <th scope="col">Thesis Name</th>
-                        <th scope="col">Examiner</th>
+                        <th scope="col">2nd Examiner</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">Remove</th>
                     </tr>
@@ -95,11 +95,7 @@
                                 {{/not_checked_allocation}}
                             </td>
                             <td>{{student_thesis}}</td>
-                            <td>
-                                {{#examiners}}
-                                    {{examiner_lastname}}, {{examiner_firstname}} <br>
-                                {{/examiners}}
-                            </td>
+                            <td>{{student_examiner}}</td>
                             <td>{{student_start_date}}</td>
                             <td>
                                 <a href="{{{delete_student_url}}}"> {{#str}} icon_delete, mod_stalloc {{/str}}</a>

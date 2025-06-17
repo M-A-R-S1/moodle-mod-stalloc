@@ -62,6 +62,12 @@ class mod_stalloc_form_chair_edit extends moodleform {
         $mform->setType('chair_holder', PARAM_TEXT);
         $mform->setDefault('chair_holder', $chair_data->holder);
 
+        // Flexnow ID element.
+        $mform->addElement('text', 'flexnow_id', "Flexnow ID");
+        $mform->addRule('flexnow_id', null, 'required');
+        $mform->setType('flexnow_id', PARAM_INT);
+        $mform->setDefault('flexnow_id', $chair_data->flexnow_id);
+
         // Contact Name element.
         $mform->addElement('text', 'contact_name', "Contact Name");
         $mform->addRule('contact_name', null, 'required');

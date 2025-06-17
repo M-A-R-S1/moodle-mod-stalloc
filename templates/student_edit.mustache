@@ -52,18 +52,13 @@
     </div>
 {{/error_date_empty}}
 
-{{#error_examiner_overlap}}
-    <div class="alert alert-danger mb-5" role="alert">
-        Error! The Examiners must be unique! Examiner 1 and Examiner 2 can't be the same person!
-    </div>
-{{/error_examiner_overlap}}
 
 
 <div id="accordion">
     <div class="card ml-3">
         <div class="card-body">
             <div class="ml-3">
-                <form class="col-lg-6 col-sm-12" action="" method="post" >
+                <form class="col-lg-6 col-sm-12" action="" method="post">
                     <div class="form-group">
                         <label for="thesis_name">Thesis Name</label>
                         <input type="text" class="form-control" name="thesis_name" id="thesis_name" value="{{thesis_name}}">
@@ -73,21 +68,8 @@
                         <input type="date" class="form-control" name="start_date" id="start_date" value="{{start_date}}">
                     </div>
                     <div class="form-group">
-                        <label for="examiner_1">1. Examiner</label>
-                        <select id="examiner_1" name="examiner_1" class="form-control">
-                            {{#examiners}}
-                                <option {{examiner_selected_1}} value="{{examiner_id}}">{{examiner_lastname}}, {{examiner_firstname}}</option>
-                            {{/examiners}}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="examiner_2">2. Examiner</label>
-                        <select id="examiner_2" name="examiner_2" class="form-control">
-                            <option {{examiner_none}} value="-1">None</option>
-                            {{#examiners}}
-                                <option {{examiner_selected_2}} value="{{examiner_id}}">{{examiner_lastname}}, {{examiner_firstname}}</option>
-                            {{/examiners}}
-                        </select>
+                        <label for="examiner_two">2nd Examiner</label>
+                        <input type="text" class="form-control" name="examiner_two" id="examiner_two" value="{{examiner_two}}">
                     </div>
                     <button type="submit" name ="save_student" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
                     <a href="{{{back_link}}}" type="button" class="btn btn-secondary">BACK</a>

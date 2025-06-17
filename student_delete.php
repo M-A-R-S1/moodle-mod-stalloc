@@ -39,8 +39,8 @@ require_login($course, false, $cm);
 // Initialize the header
 $paramsheader = initialize_stalloc_header(PAGE_STUDENT, $id, $course_id, $instance);
 
-// First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) || has_capability('mod/stalloc:examinationmember', context_course::instance($course_id)))  {
+// First check if the user has the capability to be on this page! -> Admins/Manger.
+if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -71,7 +71,6 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
         $allocation_data = $DB->get_record('stalloc_allocation', ['user_id' => $student_id]);
         if($allocation_data != null) {
             $DB->delete_records('stalloc_allocation', ['user_id' => $student_id]);
-            $DB->delete_records('stalloc_allocation_examiner', ['allocation_id' => $allocation_data->id]);
         }
         // Delete all ratings of this student.
         $DB->delete_records('stalloc_rating', ['user_id' => $student_id]);

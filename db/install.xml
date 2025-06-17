@@ -14,16 +14,14 @@
         <FIELD NAME="phone_required" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Phone required, 0 -> Phone NOT required."/>
         <FIELD NAME="allocationstarttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="only set while running"/>
         <FIELD NAME="allocationstatus" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="-1 -> failure while running allocation, 0 -> allocation has not been running, 1 -> allocation running, 2 -> allocation finished"/>
-        <FIELD NAME="startdate_declaration" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can use the declaration."/>
-        <FIELD NAME="enddate_declaration" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can use the declaration."/>
-        <FIELD NAME="startdate_direct_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can submit their direct allocation chair."/>
-        <FIELD NAME="enddate_direct_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can submit their direct allocation chair."/>
-        <FIELD NAME="startdate_rating" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can submit their ratings."/>
-        <FIELD NAME="enddate_rating" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can submit their ratings."/>
-        <FIELD NAME="startdate_rating_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students will be allocated."/>
-        <FIELD NAME="enddate_rating_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students will be allocated."/>
-        <FIELD NAME="startdate_thesis_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students will receive the thesis name, startdate and examiners."/>
-        <FIELD NAME="enddate_thesis_alloc" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students will receive the thesis name, startdate and examiners."/>
+        <FIELD NAME="start_phase1" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students can use the declaration and make ratings."/>
+        <FIELD NAME="end_phase1" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students can use the declaration and make ratings."/>
+        <FIELD NAME="start_phase2" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where chairs can confirm students"/>
+        <FIELD NAME="end_phase2" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where chairs can confirm students."/>
+        <FIELD NAME="start_phase3" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where students will be allocated."/>
+        <FIELD NAME="end_phase3" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students will be allocated."/>
+        <FIELD NAME="start_phase4" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where chairs will commit the thesis name, startdate and examiners."/>
+        <FIELD NAME="end_phase4" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where chairs will commit the thesis name, startdate and examiners."/>
         <FIELD NAME="publish_results" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="1 -> Results published, 0 -> Results NOT published."/>
       </FIELDS>
       <KEYS>
@@ -46,6 +44,7 @@
         <FIELD NAME="contact_mail" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The mail address of the chair contact."/>
         <FIELD NAME="distribution_key" TYPE="float" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0.00" DECIMALS="2" COMMENT="The distribution key of the chair."/>
         <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Chair is active, 0 -> Chair is inactive."/>
+        <FIELD NAME="flexnow_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the chair."/>
@@ -61,7 +60,6 @@
         <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="chair_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="moodle_user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="is_examiner" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> Examiner, 0 -> No Examiner."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the chair member."/>
@@ -101,6 +99,7 @@
         <FIELD NAME="checked" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="1 = allocation was checked by the chair, 0 = allocation was not yet checked by the chair, -1 = student was declined by chair."/>
         <FIELD NAME="thesis_name" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The name of the thesis."/>
         <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp of the thesis beginning"/>
+        <FIELD NAME="examiner_two" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The name of the second examiner."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the allocation."/>
@@ -108,23 +107,6 @@
         <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
         <KEY NAME="chair_id" TYPE="foreign" FIELDS="chair_id" REFTABLE="stalloc_chair" REFFIELDS="id"/>
         <KEY NAME="user_id" TYPE="foreign" FIELDS="user_id" REFTABLE="stalloc_student" REFFIELDS="id"/>
-      </KEYS>
-    </TABLE>
-
-    <TABLE NAME="stalloc_allocation_examiner" COMMENT="This table saves information about the examiners for the allocation.">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="allocation_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="chair_member_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the examiner/allocation."/>
-        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
-        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
-        <KEY NAME="allocation_id" TYPE="foreign" FIELDS="allocation_id" REFTABLE="stalloc_allocation" REFFIELDS="id"/>
-        <KEY NAME="chair_member_id" TYPE="foreign" FIELDS="chair_member_id" REFTABLE="stalloc_chair_member" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
 

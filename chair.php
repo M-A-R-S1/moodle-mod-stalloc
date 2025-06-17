@@ -38,7 +38,7 @@ require_login($course, false, $cm);
 $paramsheader = initialize_stalloc_header(PAGE_CHAIR, $id, $course_id, $instance);
 
 // First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) || has_capability('mod/stalloc:examinationmember', context_course::instance($course_id)))  {
+if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)) || has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -70,7 +70,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
     $student_number = ceil(($student_number + $student_number*STUDENT_BUFFER));
 
 
-    if (has_capability('mod/stalloc:admin', context_course::instance($course_id))) {
+    if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
         $params_chair['admin_settings'] = true;
     } else {
         // Load the chair of the current chair member.
@@ -89,6 +89,7 @@ if (has_capability('mod/stalloc:admin', context_course::instance($course_id)) ||
         $params_chair['chair'][$index]->chair_contact_phone = $chair->contact_phone;
         $params_chair['chair'][$index]->chair_contact_mail = $chair->contact_mail;
         $params_chair['chair'][$index]->chair_distribution_key = $chair->distribution_key;
+        $params_chair['chair'][$index]->chair_flexnow_id = $chair->flexnow_id;
 
         if($chair->active == 1) {
             $params_chair['chair'][$index]->active = true;
