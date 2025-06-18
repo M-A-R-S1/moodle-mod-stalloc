@@ -27,11 +27,11 @@
 }}
 
 {{#pending}}
-    <div id="accordion">
+    <div id="accordion" class="mt-5">
         <form class="col-lg-12 col-sm-12" action="" method="post" >
             <div class="card ml-3">
                 <div class="card-body">
-                    <h2 class="mt-3 mb-3 ml-3">PENDING STUDENTS</h2>
+                    <h2 class="ml-3">PENDING STUDENTS</h2>
 
                     <div class="table-responsive">
                         <table class="table border mb-0">
@@ -46,18 +46,25 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             {{#pending_student}}
                                 <tr>
                                     <th scope="row">{{index}}</th>
                                     <td>{{student_lastname}}, {{student_firstname}}</td>
                                     <td>{{student_number}}</td>
                                     <td>{{student_mail}}</td>
-                                    <td>
-                                        <button type="submit" name ="accept_{{student_id}}" class="btn btn-success" {{disable_pending}}>Accept</button>
-                                    </td>
-                                    <td>
-                                        <button type="submit" name ="decline_{{student_id}}" class="btn btn-danger">Decline</button>
-                                    </td>
+                                    {{#in_phase2}}
+                                        <td>
+                                            <button type="submit" name ="accept_{{student_id}}" class="btn btn-success" {{disable_pending}}>Accept</button>
+                                        </td>
+                                        <td>
+                                            <button type="submit" name ="decline_{{student_id}}" class="btn btn-danger">Decline</button>
+                                        </td>
+                                    {{/in_phase2}}
+                                    {{#not_in_phase2}}
+                                        <td></td>
+                                        <td></td>
+                                    {{/not_in_phase2}}
                                 </tr>
                             {{/pending_student}}
                             </tbody>

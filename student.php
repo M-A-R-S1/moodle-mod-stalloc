@@ -186,10 +186,26 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
         $pending_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 0]);
         $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
 
+        // Phase 2 Schedule Data.
+        $start_phase2 = $stalloc_data->start_phase2;
+        $end_phase2 = $stalloc_data->end_phase2;
+        $today = strtotime(date("Y-m-d"));
+
+        // Phase 2 is active -> Confirmations by Chairs Phase.
+        if($start_phase2 != null && $end_phase2 != null) {
+            if (($start_phase2 <= $today) && ($end_phase2 >= $today)) {
+                $params_student['in_phase2'] = true;
+            } else {
+                $params_student['not_in_phase2'] = true;
+            }
+        } else {
+            $params_student['not_in_phase2'] = true;
+        }
+
+
         // Phase 4 Schedule Data.
         $start_phase4 = $stalloc_data->start_phase4;
         $end_phase4 = $stalloc_data->end_phase4;
-        $today = strtotime(date("Y-m-d"));
 
         // Phase 4 is active -> Thesis Definition Phase.
         if($start_phase4 != null && $end_phase4 != null) {

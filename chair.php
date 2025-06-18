@@ -97,7 +97,7 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
             $params_chair['chair'][$index]->max_students = $max_students;
             //$params_chair['chair'][$index]->max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
             $params_chair['chair'][$index]->max_allocation_students = $max_students;
-            $allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id]);
+            $allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id, 'checked' => 1]);
             $params_chair['chair'][$index]->students = $allocated_students;
         } else {
             $params_chair['chair'][$index]->inactive = true;
