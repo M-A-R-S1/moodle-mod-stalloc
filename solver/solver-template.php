@@ -239,8 +239,7 @@ class distributor {
                 if($chair_data->id == $id) {
                     // Calculate the maximum number of students which can be allocated for each chair
                     $max_students = ceil(($student_number * $chair_data->distribution_key) / $distrubition_key_total_sum);
-                    //$max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
-                    $max_allocation_students = $max_students;
+                    $max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
 
                     $this->graph[$chair][] = new edge($chair, $sink, 0, $max_allocation_students);
                     break;

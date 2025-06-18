@@ -45,6 +45,7 @@ function initialize_stalloc_header($activeElement, $id, $course_id, $instance) {
     $params['student_url'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
     $params['allocation_url'] = new moodle_url('/mod/stalloc/allocation.php', ['id' => $id]);
     $params['rating_url'] = new moodle_url('/mod/stalloc/rating.php', ['id' => $id]);
+    $params['chairmember_url'] = new moodle_url('/mod/stalloc/chairmember.php', ['id' => $id]);
 
     // Check if the user has the full rights to use the admin function of this plugin.
     if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
@@ -76,6 +77,8 @@ function initialize_stalloc_header($activeElement, $id, $course_id, $instance) {
         $params['allocation_active'] = 'font-weight-bold';
     } else if($activeElement == PAGE_RATING) {
         $params['rating_active'] = 'font-weight-bold';
+    } else if($activeElement == PAGE_CHAIRMEMBER) {
+        $params['chairmember_active'] = 'font-weight-bold';
     }
 
     return $params;
