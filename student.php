@@ -266,7 +266,14 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
         $max_students = ceil(($student_number * $this_chair_data->distribution_key) / $distrubition_key_total_sum);
         $max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
         $max_direct_students = $max_students - $max_allocation_students;
-        $params_student['direct_allocated_students'] = $direct_allocated_students_number . '/' . $max_direct_students;
+
+        if($this_chair_data->active == 1) {
+            if( ($max_direct_students - $direct_allocated_students_number) <= 0) {
+                $params_student['no_direct_open_slots'] = true;
+            } else {
+                $params_student['direct_open_slots'] = $max_direct_students - $direct_allocated_students_number;
+            }
+        }
 
         // Prepare the pending student data for the template.
         $index = 0;
