@@ -58,65 +58,65 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
 
     // Paramater Array.
     $params_allocation = [];
-
-    // How many ratings can a student make?
     $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
-    $rating_number = $stalloc_data->rating_number;
 
-    // Check if the Allocation process can start
-    // 1. Are there ratings?
-    // 2. Is the correct Phase active?
+    $start_time = $stalloc_data->start_phase3;
+    $end_time = $stalloc_data->end_phase3;
+    $today = strtotime(date("Y-m-d"));
 
-    $rating_count = $DB->count_records('stalloc_rating' ,['course_id' => $course_id, 'cm_id' => $id]);
-
-    if($rating_count >= $rating_number && $rating_number > 0) {
-        $params_allocation['rated_student_count'] = $rating_count / $rating_number;
-        // Get the Allocation time phase.
-        $start_time = $stalloc_data->start_phase3;
-        $end_time = $stalloc_data->end_phase3;
-        $today = strtotime(date("Y-m-d"));
-
-        if($start_time != null && $end_time != null) {
-            if (($start_time <= $today) && ($end_time >= $today)) {
-                $params_allocation['allocation_can_start'] = true;
-            } else {
-                if($end_time < $today) {
-                    $params_allocation['allocation_time_over'] = true;
-                } else {
-                    $params_allocation['allocation_time_not_started'] = true;
-                }
-            }
-        } else {
+    if($start_time != null && $end_time != null) {
+        if (($start_time <= $today) && ($end_time >= $today)) {
             $params_allocation['allocation_can_start'] = true;
-        }
 
-        // Initialize a rating array.
-        for($i=0; $i<$rating_number; $i++) {
-            $params_allocation['rating'][$i] = new stdClass();
-            $params_allocation['rating'][$i]->count = 0;
-            $params_allocation['rating'][$i]->priority = $i+1;
-        }
+            // How many ratings can a student make?
+            $rating_number = $stalloc_data->rating_number;
+            $all_rating_data = $DB->get_records('stalloc_rating' ,['course_id' => $course_id, 'cm_id' => $id]);
 
-        // Check for the Student Allocation.
-        $allocation_data = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id]);
+            if($all_rating_data != null && $rating_number > 0) {
+                $rating_count = 0;
 
-        if($allocation_data != null) {
-            $params_allocation['allocations'] = true;
-            $params_allocation['unallocated'] = 0;
-
-            foreach ($allocation_data as $allocation) {
-                if($allocation->chair_id != -1) {
-                    // There is an Allocation. Get the user ID and check which priority it is.
-                    $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $allocation->user_id, 'chair_id' => $allocation->chair_id]);
-                    $params_allocation['rating'][$rating_number - $rating_data->rating]->count = $params_allocation['rating'][$rating_number - $rating_data->rating]->count + 1;
-                } else {
-                    $params_allocation['unallocated']++;
+                foreach ($all_rating_data as $rating) {
+                    $rating_count++;
                 }
+                $params_allocation['rated_student_count'] = $rating_count / $rating_number;
+
+                // Initialize a rating array.
+                for ($i = 0; $i < $rating_number; $i++) {
+                    $params_allocation['rating'][$i] = new stdClass();
+                    $params_allocation['rating'][$i]->count = 0;
+                    $params_allocation['rating'][$i]->priority = $i + 1;
+                }
+
+                // Check for the Student Allocation.
+                $allocation_data = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id]);
+
+                if ($allocation_data != null) {
+                    $params_allocation['allocations'] = true;
+                    $params_allocation['unallocated'] = 0;
+
+                    foreach ($allocation_data as $allocation) {
+                        if ($allocation->chair_id != -1) {
+                            // There is an Allocation. Get the user ID and check which priority it is.
+                            $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $allocation->user_id, 'chair_id' => $allocation->chair_id]);
+                            $params_allocation['rating'][$rating_number - $rating_data->rating]->count = $params_allocation['rating'][$rating_number - $rating_data->rating]->count + 1;
+                        } else {
+                            $params_allocation['unallocated']++;
+                        }
+                    }
+                }
+            } else {
+                $params_allocation['no_ratings'] = true;
+            }
+
+        } else {
+            if($end_time < $today) {
+                $params_allocation['allocation_time_over'] = true;
+            } else {
+                $params_allocation['allocation_time_not_started'] = true;
             }
         }
-
     } else {
-        $params_allocation['no_ratings'] = true;
+        $params_allocation['allocation_time_needed'] = true;
     }
 
     // Output the Chair Template
