@@ -226,6 +226,8 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
                 $updateobject->id = $pending_student->id;
                 $updateobject->checked = 1;
                 $DB->update_record('stalloc_allocation', $updateobject);
+                // Delete all ratings of this student.
+                $DB->delete_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $pending_student->user_id]);
             } else if (isset($_POST['decline_' . $pending_student->user_id])) {
                 // Update the Database for this allocation! -> Student was declined by the chair.
                 $updateobject  = new stdClass();
