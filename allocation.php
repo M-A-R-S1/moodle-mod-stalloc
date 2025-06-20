@@ -66,7 +66,6 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
 
     if($start_time != null && $end_time != null) {
         if (($start_time <= $today) && ($end_time >= $today)) {
-            $params_allocation['allocation_can_start'] = true;
 
             // How many ratings can a student make?
             $rating_number = $stalloc_data->rating_number;
@@ -74,6 +73,7 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
 
             if($all_rating_data != null && $rating_number > 0) {
                 $rating_count = 0;
+                $params_allocation['allocation_can_start'] = true;
 
                 foreach ($all_rating_data as $rating) {
                     $rating_count++;
@@ -95,7 +95,7 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
                     $params_allocation['unallocated'] = 0;
 
                     foreach ($allocation_data as $allocation) {
-                        if ($allocation->chair_id != -1) {
+                        if ($allocation->chair_id != -1 && $allocation->direct_allocation == 0) {
                             // There is an Allocation. Get the user ID and check which priority it is.
                             $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $allocation->user_id, 'chair_id' => $allocation->chair_id]);
                             $params_allocation['rating'][$rating_number - $rating_data->rating]->count = $params_allocation['rating'][$rating_number - $rating_data->rating]->count + 1;
