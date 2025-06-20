@@ -77,6 +77,12 @@
     </div>
 {{/saved_published}}
 
+{{#plugin_resetted}}
+    <div class="alert alert-success mb-5" role="alert">
+        Plugin successfully resetted!
+    </div>
+{{/plugin_resetted}}
+
 {{#error_declaration_empty}}
     <div class="alert alert-danger mb-5" role="alert">
         Error! The Declaration Textfield is empty. Please provide an Declaration Text!
@@ -124,6 +130,12 @@
         Error! Thesis Definition Phase Schedule not saved!
     </div>
 {{/error_phase4}}
+
+{{#error_plugin_reset_checkbox}}
+    <div class="alert alert-warning mb-5" role="alert">
+        Warning! The Plugin was not resetted! Safety checkbox was not checked!
+    </div>
+{{/error_plugin_reset_checkbox}}
 
 
 
@@ -327,6 +339,36 @@
                             </div>
                         </div>
                         <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card ml-3">
+        <div class="card-header" id="heading5">
+            <h2 class="mb-0">
+                <button class="btn" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                    {{#str}} icon_reset, mod_stalloc {{/str}} - Reset
+                </button>
+            </h2>
+        </div>
+        <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordion">
+            <div class="card-body">
+                <div class="ml-3">
+                    <form class="col-lg-6 col-sm-12" action="#heading5" method="post" >
+                        <div class="form-group">
+                            <p>
+                                By resetting the Plugin all Student, Rating and Allocation Data will be deleted!
+                            </p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox_reset" name="checkbox_reset">
+                                <label class="form-check-label" for="checkbox_reset">
+                                    Yes, I want to reset the Plugin! I'am aware, that this will delete all student related data from the plugin.
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" name="reset_plugin" class="btn btn-danger">Reset</button>
                     </form>
                 </div>
             </div>

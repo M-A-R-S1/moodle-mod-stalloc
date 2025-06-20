@@ -365,6 +365,21 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
         // Update the database entry.
         $DB->update_record('stalloc', $updateobject);
         $params_settings['saved_published'] = true;
+    } else if(isset($_POST['reset_plugin'])) {
+
+        if(isset($_POST['checkbox_reset'])) {
+            // Delete all Student records.
+            $DB->delete_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
+            // Delete all Rating records.
+            $DB->delete_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id]);
+            // Delete all Allocation records.
+            $DB->delete_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id]);
+
+            $params_settings['plugin_resetted'] = true;
+        } else {
+            $params_settings['error_plugin_reset_checkbox'] = true;
+        }
+
     }
 
     return $params_settings;
