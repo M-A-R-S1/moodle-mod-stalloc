@@ -176,6 +176,9 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
                     $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
                     $ratings = true;
 
+                    $viewparams['ratings_present'] = true;
+                    $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
+
                     while($index < $stalloc_data->rating_number) {
                         $viewparams['rating'][$index] = new stdClass();
                         $viewparams['rating'][$index]->index = ($index+1);
