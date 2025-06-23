@@ -38,19 +38,21 @@
                         <th scope="col">#</th>
                         <th scope="col">Chair</th>
                         <th scope="col">Holder</th>
-                        <th scope="col">Flexnow-ID</th>
-                        <th scope="col">Member</th>
+                        {{#examination_view}}
+                            <th scope="col">Flexnow-ID</th>
+                            <th scope="col">Member</th>
+                        {{/examination_view}}
                         <th scope="col">Contact Name</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Mail</th>
                         <th scope="col">Distribution Key</th>
-                        <th scope="col">Max. Students</th>
+                        <th scope="col">Direct Students</th>
                         <th scope="col">Students</th>
                         <th scope="col">Active</th>
-                        {{#admin_settings}}
+                        {{#examination_view}}
                             <th scope="col">Edit</th>
                             <th scope="col">Delete</th>
-                        {{/admin_settings}}
+                        {{/examination_view}}
                     </tr>
                     </thead>
                     <tbody>
@@ -60,29 +62,31 @@
                                 <th scope="row">{{index}}</th>
                                 <td>{{chair_name}}</td>
                                 <td>{{chair_holder}}</td>
-                                <td>{{chair_flexnow_id}}</td>
-                                <td>
-                                    {{#chair_member}}
-                                        {{member_lastname}}, {{member_firstname}}<br>
-                                    {{/chair_member}}
-                                </td>
+                                {{#examination_view}}
+                                    <td>{{chair_flexnow_id}}</td>
+                                    <td>
+                                        {{#chair_member}}
+                                            {{member_lastname}}, {{member_firstname}}<br>
+                                        {{/chair_member}}
+                                    </td>
+                                {{/examination_view}}
                                 <td>{{chair_contact_name}}</td>
                                 <td>{{chair_contact_phone}}</td>
                                 <td>{{chair_contact_mail}}</td>
                                 <td>{{chair_distribution_key}}</td>
-                                <td>{{max_students}}</td>
-                                <td>{{students}}/{{max_allocation_students}}</td>
+                                <td>{{direct_students}}/{{max_direct_students}}</td>
+                                <td>{{students}}/{{max_students}}</td>
                                 <td>
                                     {{#str}} icon_inactive, mod_stalloc {{/str}}
                                 </td>
-                                {{#admin_settings}}
+                                {{#examination_view}}
                                     <td>
                                         <a href="{{{edit_chair_url}}}">{{#str}} icon_edit, mod_stalloc {{/str}}</a>
                                     </td>
                                     <td>
                                         <a href="{{{delete_chair_url}}}"> {{#str}} icon_delete, mod_stalloc {{/str}}</a>
                                     </td>
-                                {{/admin_settings}}
+                                {{/examination_view}}
                             </tr>
                         {{/inactive}}
                         {{#active}}
@@ -90,29 +94,31 @@
                                 <th scope="row">{{index}}</th>
                                 <td>{{chair_name}}</td>
                                 <td>{{chair_holder}}</td>
-                                <td>{{chair_flexnow_id}}</td>
-                                <td>
-                                    {{#chair_member}}
-                                        {{member_lastname}}, {{member_firstname}}<br>
-                                    {{/chair_member}}
-                                </td>
+                                {{#examination_view}}
+                                    <td>{{chair_flexnow_id}}</td>
+                                    <td>
+                                        {{#chair_member}}
+                                            {{member_lastname}}, {{member_firstname}}<br>
+                                        {{/chair_member}}
+                                    </td>
+                                {{/examination_view}}
                                 <td>{{chair_contact_name}}</td>
                                 <td>{{chair_contact_phone}}</td>
                                 <td>{{chair_contact_mail}}</td>
                                 <td>{{chair_distribution_key}}</td>
-                                <td>{{max_students}}</td>
-                                <td>{{students}}/{{max_allocation_students}}</td>
+                                <td>{{direct_students}}/{{max_direct_students}}</td>
+                                <td>{{students}}/{{max_students}}</td>
                                 <td>
                                     {{#str}} icon_active, mod_stalloc {{/str}}
                                 </td>
-                                {{#admin_settings}}
+                                {{#examination_view}}
                                     <td>
                                         <a href="{{{edit_chair_url}}}">{{#str}} icon_edit, mod_stalloc {{/str}}</a>
                                     </td>
                                     <td>
                                         <a href="{{{delete_chair_url}}}"> {{#str}} icon_delete, mod_stalloc {{/str}}</a>
                                     </td>
-                                {{/admin_settings}}
+                                {{/examination_view}}
                             </tr>
                         {{/active}}
                     {{/chair}}

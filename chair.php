@@ -71,11 +71,12 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
 
 
     if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
-        $params_chair['admin_settings'] = true;
+        $params_chair['examination_view'] = true;
     } else {
         // Load the chair of the current chair member.
         $current_chair_id = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id])->chair_id;
         $chair_data = $DB->get_records('stalloc_chair', ['id' => $current_chair_id]);
+        $params_chair['chair_view'] = true;
     }
 
     // Prepare the loaded Chair data for the template and save this information in a parameter array.
@@ -95,10 +96,12 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
             $params_chair['chair'][$index]->active = true;
             $max_students = ceil(($student_number * $chair->distribution_key) / $distrubition_key_total_sum);
             $params_chair['chair'][$index]->max_students = $max_students;
-            //$params_chair['chair'][$index]->max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
-            $params_chair['chair'][$index]->max_allocation_students = $max_students;
-            $allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id, 'checked' => 1]);
-            $params_chair['chair'][$index]->students = $allocated_students;
+            $params_chair['chair'][$index]->max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+            $params_chair['chair'][$index]->max_direct_students = $max_students - floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+            $all_allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id, 'checked' => 1]);
+            $direct_allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id, 'checked' => 1, 'direct_allocation' => 1]);
+            $params_chair['chair'][$index]->students = $all_allocated_students;
+            $params_chair['chair'][$index]->direct_students = $direct_allocated_students;
         } else {
             $params_chair['chair'][$index]->inactive = true;
             $params_chair['chair'][$index]->max_students = "-";
