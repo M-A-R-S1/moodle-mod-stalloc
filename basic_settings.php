@@ -72,6 +72,7 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
 
     if($rating_count > 0 || $allocation_count > 0) {
         $params_settings['rating_change_disabled'] = true;
+        $params_settings['rating_disabled'] = 'disabled';
     } else {
         $params_settings['rating_value_enabled'] = true;
     }

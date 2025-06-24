@@ -45,7 +45,6 @@ echo $OUTPUT->header();
 $viewparams['student_name'] = $USER->firstname. " " . $USER->lastname;
 $phoneNumber = false;
 $showDeclaration = false;
-$showDirectAllocation = false;
 $showChairSelection = false;
 $showRatingSelection = false;
 
@@ -116,7 +115,6 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
         $end_phase1 = $stalloc_data->end_phase1;
         $today = strtotime(date("Y-m-d"));
         $declaration = false;
-        $directAllocation = false;
         $ratings = false;
 
         // Is Phase 1 active? -> Delcaration and Rating Phase
@@ -135,38 +133,33 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
                 $declaration = true;
             }
 
-            // Proceed to the Direct Chair Allocation question.
+            // Proceed to the Direct Chair Allocation and Rating question.
             if($declaration) {
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id]);
-                $allocationDone = false;
 
-                // There is no allocation yet -> Show the Chair Selection to the student.
-                if($allocation_data == null) {
-                    // Get All Chairs of this Course Module.
-                    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id]);
-                    // Set the 'NO' Selection.
-                    $viewparams['chair'][0] = new stdClass();
-                    $viewparams['chair'][0]->id = -1;
-                    $viewparams['chair'][0]->chair_name = 'NO';
+                // Get All Chairs of this Course Module.
+                $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id]);
+                // Set the 'NO' Selection.
+                $viewparams['chair'][0] = new stdClass();
+                $viewparams['chair'][0]->id = -1;
+                $viewparams['chair'][0]->chair_name = 'NO';
 
-                    // Go through each chair and save the data to the template array.
-                    $index = 1;
-                    foreach($chair_data as $key=>$chair) {
-                        $viewparams['chair'][$index] = new stdClass();
-                        $viewparams['chair'][$index]->id = $chair->id;
-                        $viewparams['chair'][$index]->chair_name = $chair->name;
-                        $index++;
+                // Go through each chair and save the data to the template array.
+                $index = 1;
+                foreach($chair_data as $key=>$chair) {
+                    $viewparams['chair'][$index] = new stdClass();
+                    $viewparams['chair'][$index]->id = $chair->id;
+                    $viewparams['chair'][$index]->chair_name = $chair->name;
+
+                    if($allocation_data != null) {
+                        if($allocation_data->chair_id == $chair->id) {
+                            $viewparams['chair'][$index]->active_selection = 'selected';
+                        }
                     }
-
-                    $showDirectAllocation = true;
-                } else {
-                    // The Student has already selected a direct chair.
-                    $directAllocation = true;
+                    $index++;
                 }
-            }
 
-            // Proceed to the Chair Rating question.
-            if($directAllocation) {
+                // Chair Rating Question Code.
                 // Get Rating Data for this student.
                 $rating_data = $DB->get_records('stalloc_rating', ['user_id' => $student_data->id], "rating DESC");
                 $index = 0;
@@ -208,7 +201,7 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
                         $viewparams['rating'][$index]->option[0] = new stdClass();
                         $viewparams['rating'][$index]->option[0]->chair_id = -1;
                         $viewparams['rating'][$index]->option[0]->chair_name = "Choose...";
-                        $viewparams['rating'][$index]->option[0]->selected = true;
+                        $viewparams['rating'][$index]->option[0]->selected = 'selected';
 
                         $option_index = 1;
                         foreach ($chair_data as $chair) {
@@ -220,8 +213,10 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
                         $index++;
                     }
                 }
+
                 $showRatingSelection = true;
             }
+
         } else {
             // Is Phase 1 already over?
             if($today > $end_phase1) {
@@ -317,12 +312,10 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
 
 if($showDeclaration) {
     echo $OUTPUT->render_from_template('stalloc/declaration', $viewparams);
-} else if($showDirectAllocation) {
-    echo $OUTPUT->render_from_template('stalloc/direct_allocation', $viewparams);
 } else if($showChairSelection) {
     echo $OUTPUT->render_from_template('stalloc/chair_selection', $viewparams);
 } else if ($showRatingSelection) {
-    echo $OUTPUT->render_from_template('stalloc/rating_selection', $viewparams);
+    echo $OUTPUT->render_from_template('stalloc/direct_allocation', $viewparams);
 } else {
     // Initialize the header -> Only for chair members, examination members and admins!
     if((has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)) || has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))) {
@@ -372,40 +365,8 @@ function checkFormActions(int $course_id, int $id, int $student_id, int $instanc
         }
     }
 
-    if(isset($_POST['save_direct_allocation'])) {
-        $selected_chair_id = $_POST['chair_select'];
-
-        // Get Allocation Data for this student.
-        $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_id]);
-
-        if($allocation_data == null) {
-            // Create a new Allocation record.
-            if($selected_chair_id == -1) {
-                $direct_allocation = 0;
-            } else {
-                $direct_allocation = 1;
-            }
-
-            $DB->insert_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_id, 'chair_id' => $selected_chair_id, 'direct_allocation' => $direct_allocation, 'checked' => 0, 'thesis_name' => ""]);
-        } else {
-            // Update an existing Allocation record.
-            $updateobject  = new stdClass();
-            $updateobject->id = $allocation_data->id;
-            $updateobject->checked = 0;
-            $updateobject->chair_id = $selected_chair_id;
-
-            if($selected_chair_id == -1) {
-                $direct_allocation = 0;
-            } else {
-                $direct_allocation = 1;
-            }
-
-            $updateobject->direct_allocation = $direct_allocation;
-            $DB->update_record('stalloc_allocation', $updateobject);
-        }
-    }
-
     if(isset($_POST['save_ratings'])) {
+
         $stalloc_data = $DB->get_record('stalloc', ['id' => $instance_id]);
         $max_index = $stalloc_data->rating_number;
         $chair_ids = [];
@@ -444,6 +405,36 @@ function checkFormActions(int $course_id, int $id, int $student_id, int $instanc
             // Update the database entry.
             $DB->update_record('stalloc_student', $updateobject);
 
+
+            $selected_chair_id = $_POST['chair_select'];
+            // Get Allocation Data for this student.
+            $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_id]);
+
+            if($allocation_data == null) {
+                // Create a new Allocation record.
+                if($selected_chair_id == -1) {
+                    $direct_allocation = 0;
+                } else {
+                    $direct_allocation = 1;
+                }
+
+                $DB->insert_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_id, 'chair_id' => $selected_chair_id, 'direct_allocation' => $direct_allocation, 'checked' => 0, 'thesis_name' => ""]);
+            } else {
+                // Update an existing Allocation record.
+                $updateobject  = new stdClass();
+                $updateobject->id = $allocation_data->id;
+                $updateobject->checked = 0;
+                $updateobject->chair_id = $selected_chair_id;
+
+                if($selected_chair_id == -1) {
+                    $direct_allocation = 0;
+                } else {
+                    $direct_allocation = 1;
+                }
+
+                $updateobject->direct_allocation = $direct_allocation;
+                $DB->update_record('stalloc_allocation', $updateobject);
+            }
 
         } else {
             $viewparams['error_save_ratings'] = true;

@@ -72,8 +72,12 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
             $all_rating_data = $DB->get_records('stalloc_rating' ,['course_id' => $course_id, 'cm_id' => $id]);
 
             if($all_rating_data != null && $rating_number > 0) {
+
+                if($stalloc_data->allocationstatus == 0) {
+                    $params_allocation['allocation_can_start'] = true;
+                }
+
                 $rating_count = 0;
-                $params_allocation['allocation_can_start'] = true;
 
                 foreach ($all_rating_data as $rating) {
                     $rating_count++;

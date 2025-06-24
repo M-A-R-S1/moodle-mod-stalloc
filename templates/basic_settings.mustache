@@ -212,7 +212,7 @@
                     <form class="col-lg-6 col-sm-12" action="#heading2" method="post" >
                         <div class="form-group">
                             <label for="rating_counter">How many ratings should a student make?</label>
-                            <input type="text" class="form-control" name="rating_counter" id="rating_counter" value="{{rating_value}}">
+                            <input type="text" class="form-control" name="rating_counter" id="rating_counter" value="{{rating_value}}" {{rating_disabled}}>
                             <label for="rating_counter">(This value cannot be higher than the number of active chairs!)</label>
                         </div>
                         {{#rating_value_enabled}}

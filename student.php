@@ -98,6 +98,12 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
             $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
             $params_student['student'][$index]->student_allocation = 'Pending...';
 
+            // Check for ratings.
+            $rating_count = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
+            if($rating_count != null) {
+                $params_student['student'][$index]->student_has_rated = true;
+            }
+
             if($allocation_data) {
                 if($allocation_data->chair_id != -1) {
                     // There is an Allocation. Get the Name of the Chair.
@@ -112,10 +118,6 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
                         $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'chair_id' => $allocation_data->chair_id]);
                         if($rating_data != null) {
                             $params_student['student'][$index]->student_rating = '(' . $rating_number - ($rating_data->rating -1) . ')';
-                        }
-
-                        if($student->rating == 1) {
-                            $params_student['student'][$index]->student_has_rated = true;
                         }
                     }
 
@@ -154,9 +156,6 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
                         $export_data[$index]->student_start_date = "";
                         $export_data[$index]->student_examiner = "";
 
-                        if($student->rating == 1) {
-                            $params_student['student'][$index]->student_has_rated = true;
-                        }
                     }
                 }
             }
