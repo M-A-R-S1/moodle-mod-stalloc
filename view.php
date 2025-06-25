@@ -71,17 +71,18 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
     $updateobject  = new stdClass();
     $updateobject->id = $student_data->id;
     $update_phone = false;
+    $phone_pattern = "/^(\+49|0)\d{6,14}$/";
 
-    $phone1 = preg_replace("/[^0-9]/", '', $USER->phone1);
-    if(strlen($phone1) >= 4) {
+    $phone1 = str_replace('-', '', $USER->phone1);
+    if (preg_match($phone_pattern, $phone1)) {
         if($phone1 != $student_data->phone1) {
             // New Phone Data -> Update the current user.
             $updateobject->phone1 = $phone1;
             $update_phone = true;
         }
     }
-    $phone2 = preg_replace("/[^0-9]/", '', $USER->phone2);
-    if(strlen($phone2) >= 4) {
+    $phone2 = str_replace('-', '', $USER->phone2);
+    if (preg_match($phone_pattern, $phone2)) {
         if($phone2 != $student_data->phone2) {
             // New Phone Data -> Update the current user.
             $updateobject->phone2 = $phone2;
@@ -115,7 +116,6 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
         $end_phase1 = $stalloc_data->end_phase1;
         $today = strtotime(date("Y-m-d"));
         $declaration = false;
-        $ratings = false;
 
         // Is Phase 1 active? -> Delcaration and Rating Phase
         if( ($start_phase1 <= $today) && ($end_phase1 >= $today) ) {
@@ -161,13 +161,12 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
 
                 // Chair Rating Question Code.
                 // Get Rating Data for this student.
-                $rating_data = $DB->get_records('stalloc_rating', ['user_id' => $student_data->id], "rating DESC");
+                $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id], "rating DESC");
                 $index = 0;
 
                 // There is already a student rating! Load and display it.
                 if($rating_data != null) {
                     $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
-                    $ratings = true;
 
                     $viewparams['ratings_present'] = true;
                     $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
@@ -196,24 +195,51 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
                     // Student has not provided a rating yet.
                     $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
                     while($index < $stalloc_data->rating_number) {
+                        $post_chair_id = -1;
+
                         $viewparams['rating'][$index] = new stdClass();
                         $viewparams['rating'][$index]->index = ($index+1);
                         $viewparams['rating'][$index]->option[0] = new stdClass();
                         $viewparams['rating'][$index]->option[0]->chair_id = -1;
                         $viewparams['rating'][$index]->option[0]->chair_name = "Choose...";
-                        $viewparams['rating'][$index]->option[0]->selected = 'selected';
+
+                        if(isset($_POST['save_ratings'])) {
+                            if($_POST['rating_select_'.($index+1)] != -1) {
+                                $post_chair_id =  $_POST['rating_select_' . ($index+1)];
+                            } else {
+                                $viewparams['rating'][$index]->is_invalid = 'is-invalid';
+                            }
+                        }
+
+                        if($post_chair_id == -1) {
+                            $viewparams['rating'][$index]->option[0]->selected = 'selected';
+                        }
 
                         $option_index = 1;
                         foreach ($chair_data as $chair) {
                             $viewparams['rating'][$index]->option[$option_index] = new stdClass();
                             $viewparams['rating'][$index]->option[$option_index]->chair_id = $chair->id;
                             $viewparams['rating'][$index]->option[$option_index]->chair_name = $chair->name;
+                            if($post_chair_id == $chair->id) {
+                                $viewparams['rating'][$index]->option[$option_index]->selected = 'selected';
+
+                                // Check if this selection is unique! Walk through all other post events and check if another selection has the same chair id.
+                                for($current_index = 1; $current_index <= $stalloc_data->rating_number; $current_index++) {
+                                    // Do not compare the same selection!
+                                    if($current_index != ($index+1)) {
+                                        if($_POST['rating_select_'.$current_index] == $chair->id) {
+                                            $viewparams['rating'][$index]->is_invalid = 'is-invalid';
+                                        }
+                                    }
+                                }
+                            }
                             $option_index++;
                         }
                         $index++;
                     }
-                }
 
+
+                }
                 $showRatingSelection = true;
             }
 
@@ -221,7 +247,7 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
             // Is Phase 1 already over?
             if($today > $end_phase1) {
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id]);
-                $rating_data = $DB->get_records('stalloc_rating', ['user_id' => $student_data->id], "rating DESC");
+                $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id], "rating DESC");
 
                 // Check if the student should be here -> Is there a proper allocation?
                 if($allocation_data != null && $rating_data != null) {
@@ -346,10 +372,14 @@ echo $OUTPUT->footer();
  */
 function checkFormActions(int $course_id, int $id, int $student_id, int $instance_id, moodle_database $DB, array $viewparams): array {
     if(isset($_POST['accept_declaration'])) {
-        $declarationCheckbox = isset($_POST['checkbox_declaration']);
-        // Check if the Declaration was accepted.
-        if($declarationCheckbox) {
+        $declarationCheckbox_1 = isset($_POST['checkbox_declaration_1']);
+        $declarationCheckbox_2 = isset($_POST['checkbox_declaration_2']);
+        $declarationCheckbox_3 = isset($_POST['checkbox_declaration_3']);
+        $declarationCheckbox_4 = isset($_POST['checkbox_declaration_4']);
+        $declarationCheckbox_5 = isset($_POST['checkbox_declaration_5']);
 
+        // Check if the Declaration was accepted.
+        if($declarationCheckbox_1 && $declarationCheckbox_2 && $declarationCheckbox_3 && $declarationCheckbox_4 && $declarationCheckbox_5) {
             // Update the student entry
             $updateobject  = new stdClass();
             $updateobject->id = $student_id;
@@ -437,7 +467,13 @@ function checkFormActions(int $course_id, int $id, int $student_id, int $instanc
             }
 
         } else {
-            $viewparams['error_save_ratings'] = true;
+            $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_id]);
+            if($rating_data == null) {
+                $viewparams['error_save_ratings'] = true;
+            } else {
+                $viewparams['error_update_ratings'] = true;
+            }
+
         }
 
     }

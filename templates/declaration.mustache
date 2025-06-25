@@ -28,7 +28,7 @@
 
 {{#error_declaration_not_accepted}}
     <div class="alert alert-danger mb-5" role="alert">
-        Warning! The Declaration was not Accepted! In order to proceed, you have to accept the declaration.
+        Warning! The Declaration was not Accepted! In order to proceed, you have to accept all points of the declaration below.
     </div>
 {{/error_declaration_not_accepted}}
 
@@ -38,17 +38,44 @@
             <form class="col-lg-6 col-sm-12" action="" method="post" >
 
                 <h2 class="mt-3 mb-3">Declaration</h2>
-                <div class="card-image-style bg-light p-2 mb-3" style="outline: 0px solid transparent; height: auto; min-height: 150px;">
+                <div class="card-image-style bg-light p-2 mb-3" style="outline: 0px solid transparent; height: auto; min-height: 250px;">
                     {{{delcaration_text}}}
                 </div>
 
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration" name="checkbox_declaration">
-                    <label class="form-check-label" for="checkbox_declaration">
-                        I accept the delcaration
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration_1" name="checkbox_declaration_1">
+                    <label class="form-check-label" for="checkbox_declaration_1">
+                        I am aware that I can be assigned to any of the examiners on the preference list to work on my Bachelor's thesis.
                     </label>
                 </div>
-                <button type="submit" name ="accept_declaration" class="btn btn-success">SUBMIT</button>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration_2" name="checkbox_declaration_2">
+                    <label class="form-check-label" for="checkbox_declaration_2">
+                        I am aware that the topic of the Bachelor's thesis can only be returned once and only within the first week (1-subject Bachelor) / within the first two weeks (2-subject Bachelor) of the processing time.
+                        I am aware that if I return the topic, I will be assigned a new topic by the same examiner immediately afterwards.
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration_3" name="checkbox_declaration_3">
+                    <label class="form-check-label" for="checkbox_declaration_3">
+                        I am enrolled as a regular student in the Bachelor of Science degree program “Management and Economics”/Bachelor of Arts “Economics”.
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration_4" name="checkbox_declaration_4">
+                    <label class="form-check-label" for="checkbox_declaration_4">
+                        I am aware that I will not be admitted to the Bachelor's thesis if I have not provided proof of all necessary admission requirements by the published deadline.
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration_5" name="checkbox_declaration_5">
+                    <label class="form-check-label" for="checkbox_declaration_5">
+                        I hereby register bindingly for the Bachelor thesis.
+                    </label>
+                </div>
+
+
+                <button type="submit" name ="accept_declaration" class="btn btn-success btn-lg">SUBMIT</button>
             </form>
         </div>
     </div>
