@@ -40,7 +40,7 @@ require_login($course, false, $cm);
 $paramsheader = initialize_stalloc_header(PAGE_STUDENT, $id, $course_id, $instance);
 
 // First check if the user has the capability to be on this page! -> Admins/Managers
-if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
+if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -59,7 +59,7 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
     echo $OUTPUT->footer();
 
     // Check if the user has the capability to be on this page! -> Teacher!
-} else if(has_capability('mod/stalloc:chairmember', context_module::instance($instance->id))){
+} else if(has_capability('mod/stalloc:chairmember', context_course::instance($course_id))){
 
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');

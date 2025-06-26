@@ -39,7 +39,7 @@ require_login($course, false, $cm);
 $paramsheader = initialize_stalloc_header(PAGE_STUDENT, $id, $course_id, $instance);
 
 // First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)) || has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
+if (has_capability('mod/stalloc:chairmember', context_course::instance($course_id)) || has_capability('mod/stalloc:examination_member', context_course::instance($course_id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -52,7 +52,7 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
     $params_student = [];
 
     // Admin View.
-    if(has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
+    if(has_capability('mod/stalloc:examination_member', context_course::instance($course_id))) {
         // Load students from the database which are connected to this course module.
         $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
         $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
@@ -178,7 +178,7 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
         echo $OUTPUT->render_from_template('stalloc/student', $params_student);
 
         // Teacher view!
-    } else if (has_capability('mod/stalloc:chairmember', context_module::instance($instance->id))) {
+    } else if (has_capability('mod/stalloc:chairmember', context_course::instance($course_id))) {
         // Get Data of the current Chair Member.
         $chairmember_data = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
         // Load all pending students of this chair.

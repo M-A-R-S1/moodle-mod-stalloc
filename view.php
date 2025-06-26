@@ -32,7 +32,6 @@ $instance = $DB->get_record('stalloc', ['id'=> $cm->instance], '*', MUST_EXIST);
 $course_id = $course->id;
 require_login($course, false, $cm);
 
-
 // Display the page layout.
 $strpage = get_string('pluginname', 'mod_stalloc');
 $PAGE->set_pagelayout('incourse');
@@ -49,7 +48,7 @@ $showChairSelection = false;
 $showRatingSelection = false;
 
 // Is the User a student?
-if(has_capability('mod/stalloc:student', context_module::instance($instance->id)) && !is_siteadmin()) {
+if(has_capability('mod/stalloc:student', context_course::instance($course_id)) && !is_siteadmin()) {
     // Get Student data.
     $student_data = $DB->get_record('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
     // Get basic module date from database.
@@ -311,7 +310,7 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
         }
     }
 
-} else if(has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)) && !is_siteadmin()) {
+} else if(has_capability('mod/stalloc:chairmember', context_course::instance($course_id)) && !is_siteadmin()) {
 
     // Check for Post Events.
     if(isset($_POST['save_chair_selection'])) {
@@ -348,7 +347,7 @@ if($showDeclaration) {
     echo $OUTPUT->render_from_template('stalloc/direct_allocation', $viewparams);
 } else {
     // Initialize the header -> Only for chair members, examination members and admins!
-    if((has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)) || has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))) {
+    if((has_capability('mod/stalloc:chairmember', context_course::instance($course_id)) || has_capability('mod/stalloc:examination_member', context_course::instance($course_id)))) {
         $paramsheader = initialize_stalloc_header(PAGE_HOME, $id, $course_id, $instance);
         echo $OUTPUT->render_from_template('stalloc/header', $paramsheader);
     }

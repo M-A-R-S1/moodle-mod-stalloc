@@ -38,7 +38,7 @@ require_login($course, false, $cm);
 $paramsheader = initialize_stalloc_header(PAGE_CHAIR, $id, $course_id, $instance);
 
 // First check if the user has the capability to be on this page! -> Admins/Teachers.
-if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)) || has_capability('mod/stalloc:chairmember', context_module::instance($instance->id)))  {
+if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id)) || has_capability('mod/stalloc:chairmember', context_course::instance($course_id)))  {
     // Display the page layout.
     $strpage = get_string('pluginname', 'mod_stalloc');
     $PAGE->set_pagelayout('incourse');
@@ -70,7 +70,7 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
     $student_number = ceil(($student_number + $student_number*STUDENT_BUFFER));
 
 
-    if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
+    if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id))) {
         $params_chair['examination_view'] = true;
     } else {
         // Load the chair of the current chair member.

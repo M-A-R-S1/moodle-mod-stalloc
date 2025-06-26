@@ -38,7 +38,7 @@ require_login($course, false, $cm);
 $paramsheader = initialize_stalloc_header(PAGE_SETTINGS, $id, $course_id, $instance);
 
 // First check if the user has the capability to be on this page! -> Admins/Managers.
-if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id)))  {
+if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id)))  {
 
     // Template Data Array.
     $params_settings = [];

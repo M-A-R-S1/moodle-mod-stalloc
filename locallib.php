@@ -48,13 +48,13 @@ function initialize_stalloc_header($activeElement, $id, $course_id, $instance) {
     $params['chairmember_url'] = new moodle_url('/mod/stalloc/chairmember.php', ['id' => $id]);
 
     // Check if the user has the full rights to use the admin function of this plugin.
-    if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
+    if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id))) {
         $params['admin'] = true;
         $params['admin_header'] = true;
-    } else if(has_capability('mod/stalloc:chairmember', context_module::instance($instance->id))) {
+    } else if(has_capability('mod/stalloc:chairmember', context_course::instance($course_id))) {
         $params['chairmember'] = true;
         $params['chairmember_header'] = true;
-    } else if(has_capability('mod/stalloc:student', context_module::instance($instance->id))) {
+    } else if(has_capability('mod/stalloc:student', context_course::instance($course_id))) {
         $params['student'] = true;
     }
 
@@ -115,7 +115,7 @@ function process_action_start_distribution($id, $course_id, $instance)
 {
     global $DB, $PAGE;
     // Start distribution and call default page after finishing.
-    if (has_capability('mod/stalloc:examination_member', context_module::instance($instance->id))) {
+    if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id))) {
 
         // Try to get some more memory, 500 users in 10 groups take about 15mb.
         raise_memory_limit(MEMORY_EXTRA);
