@@ -294,7 +294,12 @@ if (has_capability('mod/stalloc:chairmember', context_module::instance($instance
             if($this_chair_data->active == 1) {
                 if($direct_allocated_students_number >= $max_direct_students) {
                     $params_student['pending_student'][$index]->disable_pending = 'disabled';
+                    $params_student['pending_student'][$index]->accept_button_color = 'secondary';
+                } else {
+                    $params_student['pending_student'][$index]->accept_button_color = 'success';
                 }
+            } else {
+                $params_student['pending_student'][$index]->accept_button_color = 'success';
             }
             $index++;
         }

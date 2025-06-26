@@ -376,6 +376,12 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
             // Delete all Allocation records.
             $DB->delete_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id]);
 
+            // Reset the Allocation Status to 0.
+            $updateobject  = new stdClass();
+            $updateobject->id = $instance_id;
+            $updateobject->allocationstatus = 0;
+            $DB->update_record('stalloc', $updateobject);
+
             $params_settings['plugin_resetted'] = true;
         } else {
             $params_settings['error_plugin_reset_checkbox'] = true;

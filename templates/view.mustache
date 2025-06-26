@@ -34,12 +34,15 @@
 
 {{#no_phone_number}}
     <div class="jumbotron">
-        <h1 class="display-4">Phone number required</h1>
-        <p class="lead">In order to use this plugin you must provide a phone number within moodle.</p>
-        <hr class="my-4">
+        <h2>Phone number required</h2>
+        <p>In order to use this plugin you must provide a phone number within moodle.</p>
         <p>
             Please access your profile by clicking the link below and provide at least one phone number!<br>
             On your profile page scroll down and click the 'Optional' Heading. Here you can submit your phone number.
+        </p>
+        <p>
+            Please note that the Phone number has to start with either 0 or +49.<br>
+            (E.g. of a correct phone number: 0234-12345)
         </p>
         <a class="btn btn-success btn-lg" href="{{{profile_link}}}" role="button">Update Profile</a>
     </div>
@@ -47,9 +50,8 @@
 
 {{#no_allocation_after_phase1}}
     <div class="jumbotron">
-        <h1 class="display-4">You are excluded from the process</h1>
-        <p class="lead">You did not provide any ratings in the previous step!</p>
-        <hr class="my-4">
+        <h2>You are excluded from the process</h2>
+        <p>You did not provide any ratings in the previous step!</p>
         <p>
             You can no longer participate in this thesis allocation, because you did not provide the needed data during the
             previous step.
@@ -59,9 +61,8 @@
 
 {{#waiting_for_phase1}}
     <div class="jumbotron">
-        <h1 class="display-4">Please wait for the process to start</h1>
-        <p class="lead">You cannot commit your chair ratings yet.</p>
-        <hr class="my-4">
+        <h2>Please wait for the process to start</h2>
+        <p>You cannot commit your chair ratings yet.</p>
         <p>
             Please come back later! This process has not started yet.<br>
             You will be able to commit your Chair Ratings between the <b>{{phase1_start}}</b> and the <b>{{phase1_end}}</b>
@@ -71,8 +72,7 @@
 
 {{#waiting_for_phase4}}
     <div class="jumbotron">
-        <h1 class="display-4">Thank you for your Ratings</h1>
-        <hr class="my-4">
+        <h2>Thank you for your Ratings</h2>
         <p>
             For now it's time to wait. Your Ratings are being analyzed<br>
             Please come back at the <b>{{phase4_start}}</b> to see which Chair you are allocated to.
@@ -82,8 +82,7 @@
 
 {{#thesis_not_published}}
     <div class="jumbotron">
-        <h1 class="display-4">Your Thesis information will be published soon</h1>
-        <hr class="my-4">
+        <h2>Your Thesis information will be published soon</h2>
         <p>
             Your Chair Allocation: <b>{{chair_name}}</b><br><br>
             The Thesis information are not published yet.<br>
@@ -95,8 +94,7 @@
 
 {{#thesis_dates_published}}
     <div class="jumbotron">
-        <h1 class="display-4">Your Thesis Start Date is published</h1>
-        <hr class="my-4">
+        <h2>Your Thesis Start Date is published</h2>
         <p>
             Your Chair Allocation: <b>{{chair_name}}</b><br><br>
             Congratulations! Your thesis start date is now published!<br>
@@ -108,9 +106,8 @@
 
 {{#thesis_started}}
     <div class="jumbotron">
-        <h1 class="display-4">Your Thesis time has started</h1>
-        <p class="lead">These are your Thesis information</p>
-        <hr class="my-4">
+        <h2>Your Thesis time has started</h2>
+        <p>These are your Thesis information.</p>
         <p>
             <b>Chair:</b> {{chair_name}}</br>
             <b>Thesis Name:</b> {{thesis_name}}</br>
@@ -122,9 +119,8 @@
 
 {{#thesis_no_start_date}}
     <div class="jumbotron">
-        <h1 class="display-4">Somehting went wrong ...</h1>
-        <p class="lead">Please contact the Examination Office!</p>
-        <hr class="my-4">
+        <h2>Somehting went wrong ...</h2>
+        <p>Please contact the Examination Office!</p>
         <p>
             Your allocated Chair did not provide any thesis information yet!
             Please contact the Examination office about this issue.
@@ -134,9 +130,8 @@
 
 {{#allocated_chair_name}}
     <div class="jumbotron">
-        <h1 class="display-4">Allocation process done</h1>
-        <p class="lead">You have been allocated!</p>
-        <hr class="my-4">
+        <h2>Allocation process done</h2>
+        <p>You have been allocated!</p>
         <p>
             Your Chair Allocation: <b>{{allocated_chair_name}}</b><br>
             Please contact your allocated chair now to discuss your thesis contents and start date options.

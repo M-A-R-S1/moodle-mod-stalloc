@@ -47,12 +47,10 @@
 
 
 {{#ratings_present}}
-    <div id="accordion">
+    <div id="accordion" class="col-lg-6 col-sm-12">
         <div class="jumbotron mt-5">
-            <h1 class="display-4">Thank you for your submission.</h1>
-            <p class="lead">We have received and saved your chair selections.</p>
-            <hr class="my-4">
-            <p>
+            <h2>Thank you for your submission.</h2>
+            <p>We have received and saved your chair selections.<br>
                 You can adjust your selection until the <b>{{phase1_end}}</b> down below.
             </p>
         </div>
@@ -65,7 +63,7 @@
         <div class="card-body">
             <div class="ml-3">
                 <h2 class="mt-3 mb-3">Have you a direct chair agreement for your thesis?</h2>
-                <div class="form-row mt-3 mb-5">
+                <div class="form-row mt-3">
                     <div class="col-sm-6 col-xs-12 mb-3">
                         <label for="chair_select">Chair:</label>
                         <select id="chair_select" name="chair_select" class="form-control">
@@ -78,9 +76,11 @@
             </div>
         </div>
 
-        <div class="card-body mt-5">
+        <hr>
+
+        <div class="card-body mt-2">
             <div class="ml-3">
-                <h2 class="mt-3 mb-3">Please provide your ratings.</h2>
+                <h2 class="mb-3">Please provide your ratings.</h2>
                 {{#rating}}
                     <div class="form-row mt-3 mb-3">
                         <div class="col-sm-6 col-xs-12 mb-3">

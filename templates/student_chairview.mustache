@@ -36,10 +36,12 @@
                         <p class="mb-3 ml-3">You can accept {{direct_open_slots}} more student/s.</p>
                     {{/direct_open_slots}}
                     {{#no_direct_open_slots}}
-                        <p class="mb-3 ml-3">You cannot accept more pending students.</p>
+                        <div class="alert alert-danger mb-2" role="alert">
+                            You cannot accept more pending students.
+                        </div>
                     {{/no_direct_open_slots}}
                     <div class="table-responsive">
-                        <table class="table border mb-0">
+                        <table class="table table-striped table-hover border mb-0">
                             <thead class="bg-light">
                             <tr>
                                 <th scope="col">#</th>
@@ -60,7 +62,7 @@
                                     <td>{{student_mail}}</td>
                                     {{#in_phase2}}
                                         <td>
-                                            <button type="submit" name ="accept_{{student_id}}" class="btn btn-success" {{disable_pending}}>Accept</button>
+                                            <button type="submit" name ="accept_{{student_id}}" class="btn btn-{{accept_button_color}}" {{disable_pending}}>Accept</button>
                                         </td>
                                         <td>
                                             <button type="submit" name ="decline_{{student_id}}" class="btn btn-danger">Decline</button>
@@ -91,7 +93,7 @@
                 <div class="card-body">
                     <h2 class="ml-3 mb-3">ALLOCATED STUDENTS</h2>
 
-                    <table class="table border mb-0">
+                    <table class="table table-striped table-hover border mb-0">
                         <thead class="bg-light">
                         <tr>
                             <th scope="col">#</th>

@@ -74,6 +74,8 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
     $phone_pattern = "/^(\+49|0)\d{6,14}$/";
 
     $phone1 = str_replace('-', '', $USER->phone1);
+    $phone1 = str_replace(" ", "", $phone1);
+    $phone1 = str_replace("/", "", $phone1);
     if (preg_match($phone_pattern, $phone1)) {
         if($phone1 != $student_data->phone1) {
             // New Phone Data -> Update the current user.
@@ -82,6 +84,8 @@ if(has_capability('mod/stalloc:student', context_module::instance($instance->id)
         }
     }
     $phone2 = str_replace('-', '', $USER->phone2);
+    $phone2 = str_replace(" ", "", $phone2);
+    $phone2 = str_replace("/", "", $phone2);
     if (preg_match($phone_pattern, $phone2)) {
         if($phone2 != $student_data->phone2) {
             // New Phone Data -> Update the current user.

@@ -73,9 +73,12 @@ if (has_capability('mod/stalloc:examination_member', context_module::instance($i
 
             if($all_rating_data != null && $rating_number > 0) {
 
-                if($stalloc_data->allocationstatus == 0) {
-                    $params_allocation['allocation_can_start'] = true;
-                }
+                // TODO ... Change it back! This permits the examination office to perform the allocation process only once!
+                //if($stalloc_data->allocationstatus == 0) {
+                //    $params_allocation['allocation_can_start'] = true;
+                //}
+                // TODO ... Remove this line after testing!
+                $params_allocation['allocation_can_start'] = true;
 
                 $rating_count = 0;
 
