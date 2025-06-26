@@ -124,24 +124,6 @@ function process_action_start_distribution($id, $course_id, $instance)
         $timeneeded = distrubute_choices($id, $course_id, $instance);
         redirect(new moodle_url($PAGE->url->out()), 'Allocation successfully saved.', null, \core\output\notification::NOTIFY_SUCCESS);
 
-        //$stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
-
-        /*if ($stalloc_data->allocationstatus == ALLOCATION_RUNNING) {
-            // Don't run, if an instance is already running.
-            redirect(new moodle_url('/mod/stalloc/allocation.php', ['id' => $id]), 'The Allocation is currently running, please wait!', null, \core\output\notification::NOTIFY_INFO);
-        } else {
-            //$this->clear_distribute_unallocated_tasks();
-
-            // Try to get some more memory, 500 users in 10 groups take about 15mb.
-            raise_memory_limit(MEMORY_EXTRA);
-            core_php_time_limit::raise();
-
-            // Distribute choices.
-            $timeneeded = distrubute_choices($id, $course_id, $instance);
-
-            redirect(new moodle_url($PAGE->url->out()), 'Allocation successfully saved.', null, \core\output\notification::NOTIFY_SUCCESS);
-        }*/
-
     } else {
         redirect(course_get_url($course_id), "Missing Capability!", null, 'NOTIFY_ERROR');
     }

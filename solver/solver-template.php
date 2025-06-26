@@ -216,6 +216,7 @@ class distributor {
      */
     protected function setup_graph($choicecount, $user_count, $fromuserid, $fromchairid, $rating_data, $chairdata, $source, $sink, $weightmult = 1, $student_number, $distrubition_key_total_sum) {
         require_once(__DIR__.'/../config.php');
+        global $DB;
         // Construct the datastructures for the algorithm
         // A directed weighted bipartite graph.
         // A source is connected to all users with unit cost.
@@ -239,13 +240,14 @@ class distributor {
                 if($chair_data->id == $id) {
                     // Calculate the maximum number of students which can be allocated for each chair
                     $max_students = ceil(($student_number * $chair_data->distribution_key) / $distrubition_key_total_sum);
-                    $max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+                    //$max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+                    $direct_allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $chair_data->course_id, 'cm_id' => $chair_data->cm_id, 'chair_id' => $chair_data->id, 'checked' => 1, 'direct_allocation' => 1]);
+                    $max_allocation_students = $max_students - $direct_allocated_students;
 
                     $this->graph[$chair][] = new edge($chair, $sink, 0, $max_allocation_students);
                     break;
                 }
             }
-
 
             //$this->graph[$chair][] = new edge($chair, $sink, 0, $chairdata[$id]->maxsize);
 
