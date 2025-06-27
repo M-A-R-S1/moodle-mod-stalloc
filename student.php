@@ -196,6 +196,8 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                 $params_student['in_phase2'] = true;
             } else {
                 $params_student['not_in_phase2'] = true;
+                $params_student['start_phase2'] = date('d.m.Y',$start_phase2);
+                $params_student['end_phase2'] = date('d.m.Y',$end_phase2);
             }
         } else {
             $params_student['not_in_phase2'] = true;
@@ -231,7 +233,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                 // Update the Database for this allocation! -> Student was declined by the chair.
                 $updateobject  = new stdClass();
                 $updateobject->id = $pending_student->id;
-                $updateobject->checked = -1;
+                $updateobject->checked = 0;
                 $updateobject->direct_allocation = 0;
                 $updateobject->chair_id = -1;
                 $DB->update_record('stalloc_allocation', $updateobject);

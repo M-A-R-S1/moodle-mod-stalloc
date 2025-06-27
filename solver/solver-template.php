@@ -99,14 +99,13 @@ class distributor {
         // Load all ratings from this course module.
         $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id]);
 
-        // Check how many students need to be allocated.
-        $user_count = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => -1]);
+        $userids = $DB->get_fieldset('stalloc_allocation', 'user_id', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => -1]);
 
         // Randomize the order of the ratings to prevent advantages for early entry.
         shuffle($rating_data);
 
         // Get the total Number of students.
-        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
+        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 1]);
         $student_number = ceil(($student_number + $student_number*STUDENT_BUFFER));
 
         $distrubition_key_total_sum = 0;
@@ -116,7 +115,7 @@ class distributor {
             }
         }
 
-        $distributions = $this->compute_distributions($chair_data, $rating_data, $user_count, $student_number, $distrubition_key_total_sum);
+        $distributions = $this->compute_distributions($chair_data, $rating_data, $userids, $student_number, $distrubition_key_total_sum);
 
         // Perform all allocation manipulation / inserts in one transaction.
         $transaction = $DB->start_delegated_transaction();
@@ -164,11 +163,11 @@ class distributor {
 
     /**
      * Setup conversions between ids of users and choices to their node-ids in the graph
-     * @param type $user_count
-     * @param type $rating_data
+     * @param array $userids
+     * @param array $chairdata
      * @return array($fromuserid, $touserid, $fromchairid, $tochairid);
      */
-    public static function setup_id_conversions($user_count, $rating_data) {
+    public static function setup_id_conversions($userids, $chairdata) {
         // These tables convert userids to their index in the graph
         // The range is [1..$usercount].
         $fromuserid = array();
@@ -178,23 +177,18 @@ class distributor {
         $fromchairid = array();
         $tochairid = array();
 
-        // User counter.
-        $ui = 1;
-        // Group counter.
-        $gi = $user_count + 1;
+        $i = 1;
 
         // Fill the conversion tables for group and user ids.
-        foreach ($rating_data as $rating) {
-            if (!array_key_exists($rating->user_id, $fromuserid)) {
-                $fromuserid[$rating->user_id] = $ui;
-                $touserid[$ui] = $rating->user_id;
-                $ui++;
-            }
-            if (!array_key_exists($rating->chair_id, $fromchairid)) {
-                $fromchairid[$rating->chair_id] = $gi;
-                $tochairid[$gi] = $rating->chair_id;
-                $gi++;
-            }
+        foreach ($userids as $userid) {
+            $fromuserid[$userid] = $i;
+            $touserid[$i] = $userid;
+            $i++;
+        }
+        foreach ($chairdata as $chair) {
+            $fromchairid[$chair->id] = $i;
+            $tochairid[$i] = $chair->id;
+            $i++;
         }
 
         return array($fromuserid, $touserid, $fromchairid, $tochairid);
@@ -216,6 +210,7 @@ class distributor {
      */
     protected function setup_graph($choicecount, $user_count, $fromuserid, $fromchairid, $rating_data, $chairdata, $source, $sink, $weightmult = 1, $student_number, $distrubition_key_total_sum) {
         require_once(__DIR__.'/../config.php');
+        global $DB;
         // Construct the datastructures for the algorithm
         // A directed weighted bipartite graph.
         // A source is connected to all users with unit cost.
@@ -239,13 +234,14 @@ class distributor {
                 if($chair_data->id == $id) {
                     // Calculate the maximum number of students which can be allocated for each chair
                     $max_students = ceil(($student_number * $chair_data->distribution_key) / $distrubition_key_total_sum);
-                    $max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+                    //$max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+                    $direct_allocated_students = $DB->count_records('stalloc_allocation', ['course_id' => $chair_data->course_id, 'cm_id' => $chair_data->cm_id, 'chair_id' => $chair_data->id, 'checked' => 1, 'direct_allocation' => 1]);
+                    $max_allocation_students = $max_students - $direct_allocated_students;
 
                     $this->graph[$chair][] = new edge($chair, $sink, 0, $max_allocation_students);
                     break;
                 }
             }
-
 
             //$this->graph[$chair][] = new edge($chair, $sink, 0, $chairdata[$id]->maxsize);
 
@@ -253,10 +249,10 @@ class distributor {
 
         // Add the edges representing the ratings to the graph.
         foreach ($rating_data as $id => $rating) {
-            $user = $fromuserid[$rating->user_id];
-            $chair = $fromchairid[$rating->chair_id];
+            $user = $fromuserid[$rating->user_id] ?? null;
+            $chair = $fromchairid[$rating->chair_id] ?? null;
             $weight = $rating->rating;
-            if ($weight > 0) {
+            if ($weight > 0 && $chair && $user) {
                 $this->graph[$user][] = new edge($user, $chair, $weightmult * $weight);
             }
         }
