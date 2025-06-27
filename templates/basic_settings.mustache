@@ -36,7 +36,7 @@
 
 {{#saved_phone}}
     <div class="alert alert-success mb-5" role="alert">
-        Phone Requirement settings saved!
+        Phone requirement settings saved!
     </div>
 {{/saved_phone}}
 
@@ -48,92 +48,92 @@
 
 {{#saved_phase1}}
     <div class="alert alert-success mb-5" role="alert">
-        Declaration and Rating Phase Schedule successfully saved!
+        Declaration and rating phase schedule successfully saved!
     </div>
 {{/saved_phase1}}
 
 {{#saved_phase2}}
     <div class="alert alert-success mb-5" role="alert">
-        Chair Confirmation Phase Schedule successfully saved!
+        Chair confirmation phase schedule successfully saved!
     </div>
 {{/saved_phase2}}
 
 
 {{#saved_phase3}}
     <div class="alert alert-success mb-5" role="alert">
-        Random Allocation Phase Schedule successfully saved!
+        Random allocation phase schedule successfully saved!
     </div>
 {{/saved_phase3}}
 
 {{#saved_phase4}}
     <div class="alert alert-success mb-5" role="alert">
-        Thesis Definition Phase Schedule successfully saved!
+        Thesis definition phase schedule successfully saved!
     </div>
 {{/saved_phase4}}
 
 {{#saved_published}}
     <div class="alert alert-success mb-5" role="alert">
-        Published Settings saved!
+        Published settings saved!
     </div>
 {{/saved_published}}
 
 {{#plugin_resetted}}
     <div class="alert alert-success mb-5" role="alert">
-        Plugin successfully resetted!
+        Plugin successfully reset!
     </div>
 {{/plugin_resetted}}
 
 {{#error_declaration_empty}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The Declaration Textfield is empty. Please provide an Declaration Text!
+        Error! The Declaration text field is empty. Please provide a declaration text!
     </div>
 {{/error_declaration_empty}}
 
 {{#error_rating_number}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The Rating was not saved! Please make sure to provide a number which is smaller then the number of chairs!
+        Error! The rating was not saved! Please make sure to provide a number which is smaller than the number of chairs!
     </div>
 {{/error_rating_number}}
 
 {{#error_end_date_before_start_date}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The End dates cannot be set before the start date!
+        Error! The end dates cannot be set before the start date!
     </div>
 {{/error_end_date_before_start_date}}
 
 {{#error_no_date_pair}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Start and End Date must both be set! Please provide both date values.
+        Error! The start and end date must both be set! Please provide both date values.
     </div>
 {{/error_no_date_pair}}
 
 {{#error_phase1}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Declaration and Rating Phase Schedule not saved!
+        Error! Declaration and rating phase schedule not saved!
     </div>
 {{/error_phase1}}
 
 {{#error_phase2}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Chair Confirmation Phase Schedule not saved!
+        Error! Chair confirmation phase schedule not saved!
     </div>
 {{/error_phase2}}
 
 {{#error_phase3}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Random Allocation Phase Schedule not saved!
+        Error! Random allocation phase schedule not saved!
     </div>
 {{/error_phase3}}
 
 {{#error_phase4}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Thesis Definition Phase Schedule not saved!
+        Error! Thesis definition phase schedule not saved!
     </div>
 {{/error_phase4}}
 
 {{#error_plugin_reset_checkbox}}
     <div class="alert alert-warning mb-5" role="alert">
-        Warning! The Plugin was not resetted! Safety checkbox was not checked!
+        Warning! The Plugin was not reset! Safety checkbox was not checked!
     </div>
 {{/error_plugin_reset_checkbox}}
 
@@ -156,7 +156,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_phone" name="checkbox_phone" {{checkbox_phone}}>
                                 <label class="form-check-label" for="checkbox_phone">
-                                    Phone Number of students is required?
+                                    Require phone number from students?
                                 </label>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
         <div class="card-header" id="headingOne">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    {{#str}} icon_declaration, mod_stalloc {{/str}} - Declaration Settings
+                    {{#str}} icon_declaration, mod_stalloc {{/str}} - Declaration settings
                 </button>
             </h2>
         </div>
@@ -183,7 +183,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration" name="checkbox_declaration" {{checkbox_declaration}}>
                                 <label class="form-check-label" for="checkbox_declaration">
-                                    Use Student Declaration?
+                                    Use student declaration?
                                 </label>
                             </div>
                         </div>
@@ -202,7 +202,7 @@
         <div class="card-header" id="heading2">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                    {{#str}} icon_rating, mod_stalloc {{/str}} - Rating Settings
+                    {{#str}} icon_rating, mod_stalloc {{/str}} - Rating settings
                 </button>
             </h2>
         </div>
@@ -220,8 +220,8 @@
                         {{/rating_value_enabled}}
                         {{#rating_change_disabled}}
                             <div class="alert alert-warning mt-3" role="alert">
-                                The Rating Setting cannot be changed! Your Plugin is in it's active phase. <br>
-                                You can only change this Setting when there are no student ratings or allocations present.
+                                The rating setting cannot be changed! Your plugin is in its active phase. <br>
+                                You can only change this setting when there are no student ratings or allocations present.
                             </div>
                         {{/rating_change_disabled}}
                     </form>
@@ -243,7 +243,7 @@
                 <div class="ml-3">
                     <form class="col-lg-6 col-sm-12" action="" method="post" >
 
-                        <h4>Phase 1: Declaration and Ratings</h4>
+                        <h4>Phase 1: Declaration and ratings</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -260,7 +260,7 @@
                         </div>
                         <hr>
 
-                        <h4>Phase 2: Confirmations by Chairs</h4>
+                        <h4>Phase 2: Confirmations by chairs</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -277,7 +277,7 @@
                         </div>
                         <hr>
 
-                        <h4>Phase 3: Random Allocation</h4>
+                        <h4>Phase 3: Random allocation</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -294,7 +294,7 @@
                         </div>
                         <hr>
 
-                        <h4>Phase 4: Thesis Definition</h4>
+                        <h4>Phase 4: Thesis definition</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -334,7 +334,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_publish" name="checkbox_publish" {{checkbox_publish}}>
                                 <label class="form-check-label" for="checkbox_publish">
-                                    Yes, I want to publish the results? I'am aware that this action closes the current thesis allocation process!
+                                    Yes, I want to publish the results. I am aware that this action closes the current thesis allocation process!
                                 </label>
                             </div>
                         </div>
@@ -359,12 +359,12 @@
                     <form class="col-lg-6 col-sm-12" action="#heading5" method="post" >
                         <div class="form-group">
                             <p>
-                                By resetting the Plugin all Student, Rating and Allocation Data will be deleted!
+                                By resetting the plugin, all student, rating, and allocation data will be deleted!
                             </p>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_reset" name="checkbox_reset">
                                 <label class="form-check-label" for="checkbox_reset">
-                                    Yes, I want to reset the Plugin! I'am aware, that this will delete all student related data from the plugin.
+                                    Yes, I want to reset the Plugin! I am aware that this will delete all student related data from the plugin.
                                 </label>
                             </div>
                         </div>
@@ -374,8 +374,4 @@
             </div>
         </div>
     </div>
-
-
 </div>
-
-
