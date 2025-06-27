@@ -34,18 +34,20 @@ class solver_edmonds_karp extends distributor {
         return 'edmonds_karp';
     }
 
-    public function compute_distributions($chair_data, $rating_data, $user_count, $student_number, $distrubition_key_total_sum) {
+    public function compute_distributions($chair_data, $rating_data, $userids, $student_number, $distrubition_key_total_sum) {
         $chairdata = array();
         foreach ($chair_data as $chair) {
             $chairdata[$chair->id] = $chair;
         }
+
+        $user_count = count($userids);
 
         $choicecount = count($chairdata);
         // Index of source and sink in the graph.
         $source = 0;
         $sink = $choicecount + $user_count + 1;
 
-        list($fromuserid, $touserid, $fromchairid, $tochairid) = $this->setup_id_conversions($user_count, $rating_data);
+        list($fromuserid, $touserid, $fromchairid, $tochairid) = $this->setup_id_conversions($userids, $chairdata);
         $this->setup_graph($choicecount, $user_count, $fromuserid, $fromchairid, $rating_data, $chairdata, $source, $sink, -1, $student_number, $distrubition_key_total_sum);
 
         // Now that the datastructure is complete, we can start the algorithm
