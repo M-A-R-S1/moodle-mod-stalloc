@@ -105,7 +105,7 @@ class distributor {
         shuffle($rating_data);
 
         // Get the total Number of students.
-        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
+        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 1]);
         $student_number = ceil(($student_number + $student_number*STUDENT_BUFFER));
 
         $distrubition_key_total_sum = 0;
