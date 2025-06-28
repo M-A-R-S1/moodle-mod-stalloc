@@ -30,6 +30,12 @@ $string['stalloc:view'] = 'View instances of Student Allocation';
 $string['stalloc:student'] = 'Student Abilities for Student Allocation';
 $string['stalloc:chairmember'] = 'Chairmember Abilities for Student Allocation';
 $string['stalloc:examination_member'] = 'Examination Member Abilities for Student Allocation';
+$string['distribution_key'] = 'Verteilungsschlüssel';
+$string['distribution_key_help'] = 'Vom Prüfungsamt auf Basis der Daten des Dekanats hinterlegter Verteilungsschlüssel';
+$string['direct_students'] = 'Feste Zusagen';
+$string['direct_students_help'] = 'Feste Zusagen, bereits vergeben worden sind <b>/</b> Zusagen, die vergeben werden dürfen';
+$string['students'] = 'Arbeiten insg.';
+$string['students_help'] = 'Aktuell zu betreuende Bachelorarbeiten (feste Zusagen + Zulosungen) <b>/</b> maximale Zahl der zu betreuenden Bachelorarbeiten';
 
 // ICONS
 $string['icon_active'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
