@@ -251,7 +251,7 @@ class distributor {
         foreach ($rating_data as $id => $rating) {
             $user = $fromuserid[$rating->user_id] ?? null;
             $chair = $fromchairid[$rating->chair_id] ?? null;
-            $weight = $rating->rating;
+            $weight = pow($rating->rating, 0.99); // Slightly favor an improvement in lower priorities over on in higher priorities.
             if ($weight > 0 && $chair && $user) {
                 $this->graph[$user][] = new edge($user, $chair, $weightmult * $weight);
             }
