@@ -61,6 +61,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
         $params_settings['checkbox_declaration'] = 'checked';
     }
     $params_settings['text_declaration'] = $declaration_data->text;
+    $params_settings['delcaration_edit_url'] = new moodle_url('/mod/stalloc/declaration_edit.php', ['declaration_id' => $declaration_data->id, 'id' => $id]);
 
     // Load the rating values from the database.
     $params_settings['rating_value'] = $stalloc_data->rating_number;

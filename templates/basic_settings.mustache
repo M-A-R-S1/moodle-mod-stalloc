@@ -187,11 +187,12 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="text_declaration">Declaration Text</label>
-                            <textarea class="form-control" id="text_declaration" name="text_declaration" rows="10" {{disabled_declaration}}>{{text_declaration}}</textarea>
+                        <div class="card-image-style bg-light p-2 mb-3" style="outline: 0px solid transparent; height: auto; min-height: 250px;">
+                            {{{text_declaration}}}
                         </div>
-                        <button type="submit" name ="save_declaration" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+
+                        <a href="{{{delcaration_edit_url}}}" type="button" class="btn btn-primary">{{#str}} icon_edit, mod_stalloc {{/str}} Edit</a>
+                        <button type="submit" name ="save_declaration" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
                     </form>
                 </div>
             </div>
@@ -216,7 +217,7 @@
                             <label for="rating_counter">(This value cannot be higher than the number of active chairs!)</label>
                         </div>
                         {{#rating_value_enabled}}
-                            <button type="submit" name ="save_rating" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                            <button type="submit" name ="save_rating" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
                         {{/rating_value_enabled}}
                         {{#rating_change_disabled}}
                             <div class="alert alert-warning mt-3" role="alert">
@@ -311,7 +312,7 @@
                         </div>
                         <hr>
 
-                        <button type="submit" name="save_schedule" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                        <button type="submit" name="save_schedule" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
                     </form>
                 </div>
             </div>
@@ -338,7 +339,7 @@
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                        <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
                     </form>
                 </div>
             </div>
