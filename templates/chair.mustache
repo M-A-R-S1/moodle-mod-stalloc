@@ -45,9 +45,9 @@
                         <th scope="col">Contact name</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Mail</th>
-                        <th scope="col">Distribution key</th>
-                        <th scope="col">Direct students</th>
-                        <th scope="col">Students</th>
+                        <th scope="col">{{#str}} distribution_key, mod_stalloc {{/str}}{{#distribution_key_help}}{{> core/help_icon }}{{/distribution_key_help}} </th>
+                        <th scope="col">{{#str}} direct_students, mod_stalloc {{/str}}{{#direct_students_help}}{{> core/help_icon }}{{/direct_students_help}}</th>
+                        <th scope="col">{{#str}} students, mod_stalloc {{/str}}{{#students_help}}{{> core/help_icon }}{{/students_help}}</th>
                         <th scope="col">Active</th>
                         {{#examination_view}}
                             <th scope="col">Edit</th>

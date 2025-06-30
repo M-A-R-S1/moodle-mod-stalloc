@@ -30,6 +30,12 @@ $string['stalloc:view'] = 'View instances of Student Allocation';
 $string['stalloc:student'] = 'Student Abilities for Student Allocation';
 $string['stalloc:chairmember'] = 'Chairmember Abilities for Student Allocation';
 $string['stalloc:examination_member'] = 'Examination Member Abilities for Student Allocation';
+$string['distribution_key'] = 'Distribution key';
+$string['direct_students'] = 'Freely choosable supervisions';
+$string['students'] = 'Total supervisions';
+$string['distribution_key_help'] = 'Distribution key as set by the examination office on the basis of data from the dean\'s office';
+$string['direct_students_help'] = 'Amount of already commited freely choosable thesis supervisions <b>/</b> maximum amount of freely choosable thesis supervisions';
+$string['students_help'] = 'Current amount of thesis supervisions (freely choosable commitments + random allocations) <b>/</b> maximum possible amount of thesis supervisions';
 
 // ICONS
 $string['icon_active'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">

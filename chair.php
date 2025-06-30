@@ -79,6 +79,10 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
         $params_chair['chair_view'] = true;
     }
 
+    $params_chair['distribution_key_help'] = (new \core\output\help_icon('distribution_key', 'mod_stalloc'))->export_for_template($OUTPUT);
+    $params_chair['direct_students_help'] = (new \core\output\help_icon('direct_students', 'mod_stalloc'))->export_for_template($OUTPUT);
+    $params_chair['students_help'] = (new \core\output\help_icon('students', 'mod_stalloc'))->export_for_template($OUTPUT);
+
     // Prepare the loaded Chair data for the template and save this information in a parameter array.
     $index = 0;
     foreach($chair_data as $key=>$chair) {
@@ -125,7 +129,6 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
         $index++;
     }
     $params_chair['new_chair_url'] = new moodle_url('/mod/stalloc/chair_add.php', ['id' => $id]);
-
     // Output the Chair Template
     echo $OUTPUT->render_from_template('stalloc/chair', $params_chair);
 
