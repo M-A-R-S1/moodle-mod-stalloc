@@ -28,6 +28,9 @@ require_once(__DIR__.'/locallib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 $id = required_param('id', PARAM_INT);
+$declaration_filter = optional_param('d', -1, PARAM_INT);
+$rating_filter = optional_param('r', -1, PARAM_INT);
+$allocation_filter = optional_param('a', -1, PARAM_INT);
 
 list ($course, $cm) = get_course_and_cm_from_cmid($id, 'stalloc');
 $instance = $DB->get_record('stalloc', ['id'=> $cm->instance], '*', MUST_EXIST);
@@ -48,121 +51,207 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
     $PAGE->set_url(new moodle_url('/mod/stalloc/student.php', ['id' => $id]));
     $PAGE->set_title($course->shortname.': '.$strpage);
 
-    // Paramater Array.
+    // Parameter Array.
     $params_student = [];
 
     // Admin View.
     if(has_capability('mod/stalloc:examination_member', context_course::instance($course_id))) {
-        // Load students from the database which are connected to this course module.
-        $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
+        // Load basic plugin data from the database.
         $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
 
         // How many ratings must a student make?
         $rating_number = $stalloc_data->rating_number;
         $export_data = [];
 
+        // Check Declaration filters.
+        if($declaration_filter == -1 && $rating_filter == -1) {
+            $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
+            $params_student['declaration_filter_titel'] = 'Declaration';
+            $params_student['rating_filter_titel'] = 'Rating';
+            $params_student['allocation_filter_titel'] = 'Allocation';
+        } else {
+            if ($declaration_filter == 0) {
+                $params_student['declaration_filter_titel'] = 'Declaration: Not Accepted';
+                $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 0]);
+            } else if ($declaration_filter == 1) {
+                $params_student['declaration_filter_titel'] = 'Declaration: Accepted';
+                $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 1]);
+            } else {
+                $params_student['declaration_filter_titel'] = 'Declaration';
+            }
+
+            // Check Rating filters.
+            if($rating_filter == -1) {
+                $params_student['rating_filter_titel'] = 'Rating';
+            } else if ($rating_filter == 0) {
+                $params_student['rating_filter_titel'] = 'Rating: False';
+                $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'rating' => 0]);
+            } else if ($rating_filter == 1) {
+                $params_student['rating_filter_titel'] = 'Rating: True';
+                $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'rating' => 1]);
+            }
+        }
+
+        // Check Allocation filters.
+        if($allocation_filter == -1) {
+            $params_student['allocation_filter_titel'] = 'Allocation';
+        } else if ($allocation_filter == 0) {
+            $params_student['allocation_filter_titel'] = 'Allocation: None';
+        } else if ($allocation_filter == 1) {
+            $params_student['allocation_filter_titel'] = 'Allocation: Direct & Accepted';
+        } else if ($allocation_filter == 2) {
+            $params_student['allocation_filter_titel'] = 'Allocation: Direct & Not Accepted';
+        } else if ($allocation_filter == 3) {
+            $params_student['allocation_filter_titel'] = 'Allocation: Drawn';
+        } else if ($allocation_filter == 4) {
+            $params_student['allocation_filter_titel'] = 'Allocation: Pending';
+        }
+
+
+        // Set Filter URLS.
+        $params_student['delclaration_url_all'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
+        $params_student['delclaration_url_not_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'd' => 0]);
+        $params_student['delclaration_url_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'd' => 1]);
+        $params_student['rating_url_all'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
+        $params_student['rating_url_false'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'r' => 0]);
+        $params_student['rating_url_true'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'r' => 1]);
+        $params_student['allocation_url_all'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
+        $params_student['allocation_url_none'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 0]);
+        $params_student['allocation_url_direct_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 1]);
+        $params_student['allocation_url_direct_not_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 2]);
+        $params_student['allocation_url_drawn'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 3]);
+        $params_student['allocation_url_pending'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 4]);
+        $params_student['reset_filter_url'] =  new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
+
+
         // Prepare the loaded Student data for the template and save this information in a parameter array.
         $index = 0;
         foreach($student_data as $key=>$student) {
             $user_data = $DB->get_record('user', ['id' => $student->moodle_user_id]);
-            $params_student['student'][$index] = new stdClass();
-            $export_data[$index] = new stdClass();
-            $params_student['student'][$index]->index = $index+1;
-            $export_data[$index]->index = $index+1;
-            $params_student['student'][$index]->student_lastname = $user_data->lastname;
-            $params_student['student'][$index]->student_firstname = $user_data->firstname;
-            $export_data[$index]->student_name = $user_data->firstname ." ". $user_data->lastname;
-            $params_student['student'][$index]->student_number = $user_data->idnumber;
-            $export_data[$index]->student_number = $user_data->idnumber;
-            $params_student['student'][$index]->student_mail = $user_data->email;
-            $export_data[$index]->student_mail = $user_data->email;
-
-            if($student->phone1 != "") {
-                $params_student['student'][$index]->student_phone = $student->phone1;
-            }
-            if($student->phone2 != "") {
-                $params_student['student'][$index]->student_mobile = $student->phone2;
-            }
-            if($student->declaration == 1) {
-                $params_student['student'][$index]->student_declaration_true = true;
-            } else {
-                $params_student['student'][$index]->student_declaration_false = true;
-            }
-            if($student->permission == 1) {
-                $params_student['student'][$index]->student_permission_true = true;
-            } else {
-                $params_student['student'][$index]->student_permission_false = true;
-            }
+            $is_pending = false;
 
             // Check for the Student Allocation.
-            $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
-            $params_student['student'][$index]->student_allocation = 'Pending...';
-
-            // Check for ratings.
-            $rating_count = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
-            if($rating_count != null) {
-                $params_student['student'][$index]->student_has_rated = true;
+            if($allocation_filter == -1) {
+                // Allocations: All.
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
+            } else if($allocation_filter == 0) {
+                // Allocations: None.
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'chair_id' => -1, 'checked' => 0]);
+            } else if($allocation_filter == 1) {
+                // Allocations: Direct and Checked.
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 1, 'checked' => 1]);
+            } else if($allocation_filter == 2) {
+                // Allocations: Direct and not Checked.
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 1, 'checked' => 0]);
+            } else if($allocation_filter == 3) {
+                // Allocations: Random Allocated
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 0, 'checked' => 1]);
+            } else if ($allocation_filter == 4) {
+                // Allocations: Pending
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
+                if($allocation_data == null) {
+                    $is_pending = true;
+                }
+                $allocation_data = null;
             }
 
-            if($allocation_data) {
-                if($allocation_data->chair_id != -1) {
-                    // There is an Allocation. Get the Name of the Chair.
-                    $chair_data = $DB->get_record('stalloc_chair', ['id' => $allocation_data->chair_id]);
-                    $params_student['student'][$index]->student_allocation = $chair_data->name;
-                    $export_data[$index]->student_allocation = $chair_data->name;
-                    $export_data[$index]->flexnow_id = $chair_data->flexnow_id;
+            if($allocation_filter == -1 || $allocation_data != null || $is_pending) {
+                $params_student['student'][$index] = new stdClass();
+                $export_data[$index] = new stdClass();
+                $params_student['student'][$index]->index = $index+1;
+                $export_data[$index]->index = $index+1;
+                $params_student['student'][$index]->student_lastname = $user_data->lastname;
+                $params_student['student'][$index]->student_firstname = $user_data->firstname;
+                $export_data[$index]->student_name = $user_data->firstname ." ". $user_data->lastname;
+                $params_student['student'][$index]->student_number = $user_data->idnumber;
+                $export_data[$index]->student_number = $user_data->idnumber;
+                $params_student['student'][$index]->student_mail = $user_data->email;
+                $export_data[$index]->student_mail = $user_data->email;
 
-                    if($allocation_data->direct_allocation == 1) {
-                        $params_student['student'][$index]->direct_allocation = true;
-                    } else {
-                        $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'chair_id' => $allocation_data->chair_id]);
-                        if($rating_data != null) {
-                            $params_student['student'][$index]->student_rating = '(' . $rating_number - ($rating_data->rating -1) . ')';
-                        }
-                    }
-
-                    if($allocation_data->checked == 1) {
-                        $params_student['student'][$index]->student_thesis = $allocation_data->thesis_name;
-                        $export_data[$index]->student_thesis = $allocation_data->thesis_name;
-
-                        if($allocation_data->startdate != "") {
-                            $params_student['student'][$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
-                            $export_data[$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
-                        } else {
-                            $export_data[$index]->student_start_date =  "";
-                        }
-
-                        $params_student['student'][$index]->student_examiner =  $allocation_data->examiner_two;
-                        $export_data[$index]->student_examiner = $allocation_data->examiner_two;
-
-                    } else {
-                        $params_student['student'][$index]->not_checked_allocation = true;
-                        $export_data[$index]->student_thesis = "";
-                        $export_data[$index]->student_start_date = "";
-                        $export_data[$index]->student_examiner = "";
-                    }
-
+                if($student->phone1 != "") {
+                    $params_student['student'][$index]->student_phone = $student->phone1;
+                }
+                if($student->phone2 != "") {
+                    $params_student['student'][$index]->student_mobile = $student->phone2;
+                }
+                if($student->declaration == 1) {
+                    $params_student['student'][$index]->student_declaration_true = true;
                 } else {
-                    if($allocation_data->checked == -1) {
-                        $params_student['student'][$index]->student_allocation = 'Pending...';
-                        $export_data[$index]->student_allocation = 'Pending...';
-                        $export_data[$index]->student_thesis = "";
-                        $export_data[$index]->student_start_date = "";
-                        $export_data[$index]->student_examiner = "";
-                    } else {
-                        $params_student['student'][$index]->student_allocation = "-";
-                        $export_data[$index]->student_allocation = '-';
-                        $export_data[$index]->student_thesis = "";
-                        $export_data[$index]->student_start_date = "";
-                        $export_data[$index]->student_examiner = "";
+                    $params_student['student'][$index]->student_declaration_false = true;
+                }
+                if($student->permission == 1) {
+                    $params_student['student'][$index]->student_permission_true = true;
+                } else {
+                    $params_student['student'][$index]->student_permission_false = true;
+                }
+                if($student->rating == 1) {
+                    $params_student['student'][$index]->student_has_rated = true;
+                }
 
+                //$allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
+                $params_student['student'][$index]->student_allocation = 'Pending...';
+
+                if($allocation_data) {
+                    if($allocation_data->chair_id != -1) {
+                        // There is an Allocation. Get the Name of the Chair.
+                        $chair_data = $DB->get_record('stalloc_chair', ['id' => $allocation_data->chair_id]);
+                        $params_student['student'][$index]->student_allocation = $chair_data->name;
+                        $export_data[$index]->student_allocation = $chair_data->name;
+                        $export_data[$index]->flexnow_id = $chair_data->flexnow_id;
+
+                        if($allocation_data->direct_allocation == 1) {
+                            $params_student['student'][$index]->direct_allocation = true;
+                        } else {
+                            $rating_data = $DB->get_record('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'chair_id' => $allocation_data->chair_id]);
+                            if($rating_data != null) {
+                                $params_student['student'][$index]->student_rating = '(' . $rating_number - ($rating_data->rating -1) . ')';
+                            }
+                        }
+
+                        if($allocation_data->checked == 1) {
+                            $params_student['student'][$index]->student_thesis = $allocation_data->thesis_name;
+                            $export_data[$index]->student_thesis = $allocation_data->thesis_name;
+
+                            if($allocation_data->startdate != "") {
+                                $params_student['student'][$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
+                                $export_data[$index]->student_start_date =  date('d.m.Y',$allocation_data->startdate);
+                            } else {
+                                $export_data[$index]->student_start_date =  "";
+                            }
+
+                            $params_student['student'][$index]->student_examiner =  $allocation_data->examiner_two;
+                            $export_data[$index]->student_examiner = $allocation_data->examiner_two;
+
+                        } else {
+                            $params_student['student'][$index]->not_checked_allocation = true;
+                            $export_data[$index]->student_thesis = "";
+                            $export_data[$index]->student_start_date = "";
+                            $export_data[$index]->student_examiner = "";
+                        }
+
+                    } else {
+                        if($allocation_data->checked == -1) {
+                            $params_student['student'][$index]->student_allocation = 'Pending...';
+                            $export_data[$index]->student_allocation = 'Pending...';
+                            $export_data[$index]->student_thesis = "";
+                            $export_data[$index]->student_start_date = "";
+                            $export_data[$index]->student_examiner = "";
+                        } else {
+                            $params_student['student'][$index]->student_allocation = "-";
+                            $export_data[$index]->student_allocation = '-';
+                            $export_data[$index]->student_thesis = "";
+                            $export_data[$index]->student_start_date = "";
+                            $export_data[$index]->student_examiner = "";
+
+                        }
                     }
                 }
+
+                $params_student['student'][$index]->delete_student_url = new moodle_url('/mod/stalloc/student_delete.php', ['student_id' => $student->id, 'id' => $id]);
+                $index++;
+
             }
 
-            $params_student['student'][$index]->delete_student_url = new moodle_url('/mod/stalloc/student_delete.php', ['student_id' => $student->id, 'id' => $id]);
-
-            $index++;
         }
 
         // Check for CSV Download Button press.
