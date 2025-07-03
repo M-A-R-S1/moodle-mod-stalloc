@@ -469,6 +469,10 @@ function checkFormActions(int $course_id, int $id, int $student_id, int $instanc
                 $DB->update_record('stalloc_allocation', $updateobject);
             }
 
+            // Send confirmation mail.
+            if(!prepare_student_mail($id, $course_id, $student_id, MAIL_STUDENT_RATINGS_SAVED)) {
+                $viewparams['error_mail_not_send'] = true;
+            }
         } else {
             $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_id]);
             if($rating_data == null) {

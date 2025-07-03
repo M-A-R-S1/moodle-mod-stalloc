@@ -26,7 +26,7 @@
     * none
 }}
 
-<h2 class="mt-3 mb-3 ml-3">STUDENT LIST</h2>
+<h2 class="mt-3 mb-3 ml-3">STUDENTEN LISTE</h2>
 
 <div id="accordion">
     <div class="card ml-3">
@@ -40,10 +40,10 @@
                             {{declaration_filter_titel}}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class='dropdown-item' href='{{{delclaration_url_accepted}}}'>Accepted</a></li>
-                            <li><a class='dropdown-item' href='{{{delclaration_url_not_accepted}}}'>Not Accepted</a></li>
+                            <li><a class='dropdown-item' href='{{{delclaration_url_accepted}}}'>Akzeptiert</a></li>
+                            <li><a class='dropdown-item' href='{{{delclaration_url_not_accepted}}}'>Nicht Akzeptiert</a></li>
                             <li><hr class='dropdown-divider'></li>
-                            <li><a class='dropdown-item' href='{{{delclaration_url_all}}}'>All</a></li>
+                            <li><a class='dropdown-item' href='{{{delclaration_url_all}}}'>Alle</a></li>
                         </ul>
                     </div>
 
@@ -52,10 +52,10 @@
                             {{{rating_filter_titel}}}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class='dropdown-item' href='{{{rating_url_true}}}'>True</a></li>
-                            <li><a class='dropdown-item' href='{{{rating_url_false}}}'>False</a></li>
+                            <li><a class='dropdown-item' href='{{{rating_url_true}}}'>Vorhanden</a></li>
+                            <li><a class='dropdown-item' href='{{{rating_url_false}}}'>Nicht vorhanden</a></li>
                             <li><hr class='dropdown-divider'></li>
-                            <li><a class='dropdown-item' href='{{{rating_url_all}}}'>All</a></li>
+                            <li><a class='dropdown-item' href='{{{rating_url_all}}}'>Alle</a></li>
                         </ul>
                     </div>
 
@@ -64,23 +64,23 @@
                             {{{allocation_filter_titel}}}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class='dropdown-item' href='{{{allocation_url_direct_accepted}}}'>Direct & Accepted</a></li>
-                            <li><a class='dropdown-item' href='{{{allocation_url_direct_not_accepted}}}'>Direct & Not Accepted</a></li>
-                            <li><a class='dropdown-item' href='{{{allocation_url_drawn}}}'>Drawn</a></li>
-                            <li><a class='dropdown-item' href='{{{allocation_url_pending}}}'>Pending</a></li>
-                            <li><a class='dropdown-item' href='{{{allocation_url_none}}}'>None</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_direct_accepted}}}'>Fest Zugewiesen</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_direct_not_accepted}}}'>Feste Zuweisung ausstehend</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_drawn}}}'>Zugelost</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_pending}}}'>Ausstehend</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_none}}}'>Keine Zuweisung</a></li>
                             <li><hr class='dropdown-divider'></li>
-                            <li><a class='dropdown-item' href='{{{allocation_url_all}}}'>All</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_all}}}'>Alle</a></li>
                         </ul>
                     </div>
 
                     <div class="btn-group my-1" role="group">
-                        <a class='btn btn-info' role='button' href='{{{reset_filter_url}}}'>Reset Filter</a>
+                        <a class='btn btn-info' role='button' href='{{{reset_filter_url}}}'>Filter zurücksetzen</a>
                     </div>
 
                     <div class="btn-group my-1 mx-5" role="group">
                         <form action="" method="post" >
-                            <button type="submit" name="download_csv" class="btn btn-block btn-success">{{#str}} icon_download, mod_stalloc {{/str}} Export students</button>
+                            <button type="submit" name="download_csv" class="btn btn-block btn-success">{{#str}} icon_download, mod_stalloc {{/str}} Studenten Exportieren</button>
                         </form>
                     </div>
                 </div>
@@ -93,16 +93,16 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">ID-Number</th>
+                        <th scope="col">Matrikelnummer</th>
                         <th scope="col">E-Mail</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Accepted declaration</th>
-                        <th scope="col">Rated</th>
-                        <th scope="col">Allocation</th>
-                        <th scope="col">Thesis name</th>
-                        <th scope="col">2nd examiner</th>
-                        <th scope="col">Start date</th>
-                        <th scope="col">Remove</th>
+                        <th scope="col">Telefonnummer</th>
+                        <th scope="col">Erklärung Akzeptiert</th>
+                        <th scope="col">Prioritäten</th>
+                        <th scope="col">Zuweisung</th>
+                        <th scope="col">Bachelorarbeit Thema</th>
+                        <th scope="col">2ter Prüfer</th>
+                        <th scope="col">Startdatum</th>
+                        <th scope="col">Löschen</th>
                     </tr>
                     </thead>
                     <tbody>

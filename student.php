@@ -66,45 +66,45 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         // Check Declaration filters.
         if($declaration_filter == -1 && $rating_filter == -1) {
             $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id]);
-            $params_student['declaration_filter_titel'] = 'Declaration';
-            $params_student['rating_filter_titel'] = 'Rating';
-            $params_student['allocation_filter_titel'] = 'Allocation';
+            $params_student['declaration_filter_titel'] = 'Erklärung';
+            $params_student['rating_filter_titel'] = 'Prioritäten';
+            $params_student['allocation_filter_titel'] = 'Zuweisung';
         } else {
             if ($declaration_filter == 0) {
-                $params_student['declaration_filter_titel'] = 'Declaration: Not Accepted';
+                $params_student['declaration_filter_titel'] = 'Erklärung: Nicht Akzeptiert';
                 $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 0]);
             } else if ($declaration_filter == 1) {
-                $params_student['declaration_filter_titel'] = 'Declaration: Accepted';
+                $params_student['declaration_filter_titel'] = 'Erklärung: Akzeptiert';
                 $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 1]);
             } else {
-                $params_student['declaration_filter_titel'] = 'Declaration';
+                $params_student['declaration_filter_titel'] = 'Erklärung';
             }
 
             // Check Rating filters.
             if($rating_filter == -1) {
-                $params_student['rating_filter_titel'] = 'Rating';
+                $params_student['rating_filter_titel'] = 'Prioritäten';
             } else if ($rating_filter == 0) {
-                $params_student['rating_filter_titel'] = 'Rating: False';
+                $params_student['rating_filter_titel'] = 'Prioritäten: Nicht vorhanden';
                 $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'rating' => 0]);
             } else if ($rating_filter == 1) {
-                $params_student['rating_filter_titel'] = 'Rating: True';
+                $params_student['rating_filter_titel'] = 'Prioritäten: Vorhanden';
                 $student_data = $DB->get_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'rating' => 1]);
             }
         }
 
         // Check Allocation filters.
         if($allocation_filter == -1) {
-            $params_student['allocation_filter_titel'] = 'Allocation';
+            $params_student['allocation_filter_titel'] = 'Zuweisung';
         } else if ($allocation_filter == 0) {
-            $params_student['allocation_filter_titel'] = 'Allocation: None';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Keine Zuweisung';
         } else if ($allocation_filter == 1) {
-            $params_student['allocation_filter_titel'] = 'Allocation: Direct & Accepted';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Fest Zugewiesen';
         } else if ($allocation_filter == 2) {
-            $params_student['allocation_filter_titel'] = 'Allocation: Direct & Not Accepted';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Feste Zuweisung ausstehend';
         } else if ($allocation_filter == 3) {
-            $params_student['allocation_filter_titel'] = 'Allocation: Drawn';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Zugelost';
         } else if ($allocation_filter == 4) {
-            $params_student['allocation_filter_titel'] = 'Allocation: Pending';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Ausstehend';
         }
 
 
@@ -189,7 +189,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                 }
 
                 //$allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
-                $params_student['student'][$index]->student_allocation = 'Pending...';
+                $params_student['student'][$index]->student_allocation = 'Ausstehend...';
 
                 if($allocation_data) {
                     if($allocation_data->chair_id != -1) {
@@ -231,8 +231,8 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
 
                     } else {
                         if($allocation_data->checked == -1) {
-                            $params_student['student'][$index]->student_allocation = 'Pending...';
-                            $export_data[$index]->student_allocation = 'Pending...';
+                            $params_student['student'][$index]->student_allocation = 'Ausstehend...';
+                            $export_data[$index]->student_allocation = 'Ausstehend...';
                             $export_data[$index]->student_thesis = "";
                             $export_data[$index]->student_start_date = "";
                             $export_data[$index]->student_examiner = "";
@@ -311,6 +311,10 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         //Check for POST Events -> Was a student accepted or declined?
         foreach ($pending_students as $pending_student) {
             if(isset($_POST['accept_' . $pending_student->user_id])) {
+                // Send Mail to student.
+                if(!prepare_student_mail($id, $course_id, $pending_student->user_id, MAIL_DIRECT_CHAIR_ACCEPTED )){
+                    $params_student['error_mail_not_send'] = true;
+                }
                 // Update the Database for this allocation! -> Student was accepted by the chair.
                 $updateobject  = new stdClass();
                 $updateobject->id = $pending_student->id;
@@ -319,6 +323,10 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                 // Delete all ratings of this student.
                 $DB->delete_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $pending_student->user_id]);
             } else if (isset($_POST['decline_' . $pending_student->user_id])) {
+                // Send Mail to student.
+                if(!prepare_student_mail($id, $course_id, $pending_student->user_id, MAIL_DIRECT_CHAIR_DECLINED )){
+                    $params_student['error_mail_not_send'] = true;
+                }
                 // Update the Database for this allocation! -> Student was declined by the chair.
                 $updateobject  = new stdClass();
                 $updateobject->id = $pending_student->id;
@@ -449,13 +457,13 @@ function export_students($export_data, $cm) {
     // Export Rows titles.
     $header[] = '#';
     $header[] = 'Student-Name';
-    $header[] = 'ID-Number';
+    $header[] = 'Matrikelnummer';
     $header[] = 'E-Mail';
-    $header[] = 'Chair';
+    $header[] = 'Lehrstuhl';
     $header[] = 'Flexnow-ID';
-    $header[] = 'Thesis-Name';
-    $header[] = 'Thesis-Start';
-    $header[] = 'Thesis-2nd-Examiner';
+    $header[] = 'Bachelorarbeit-Thema';
+    $header[] = 'Startdatum';
+    $header[] = '2ter-Prüfer';
 
     // Save the header to the csv file.
     $tmpcsvfile->add_data($header);

@@ -1,0 +1,199 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_stalloc/student_rating_mail
+
+    Display the home site of this plugin.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * none
+}}
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>WiWi-Bos Email</title>
+    <style media="all" type="text/css">
+        @media all {
+            .btn-primary table td:hover {
+                background-color: #8dae10 !important;
+            }
+
+            .btn-primary a:hover {
+                background-color: #8dae10 !important;
+                border-color: #8dae10 !important;
+            }
+        }
+        @media only screen and (max-width: 640px) {
+            .main p,
+            .main td,
+            .main span {
+                font-size: 16px !important;
+            }
+
+            .wrapper {
+                padding: 8px !important;
+            }
+
+            .content {
+                padding: 0 !important;
+            }
+
+            .container {
+                padding: 0 !important;
+                padding-top: 8px !important;
+                width: 100% !important;
+            }
+
+            .main {
+                border-left-width: 0 !important;
+                border-radius: 0 !important;
+                border-right-width: 0 !important;
+            }
+
+            .btn table {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .btn a {
+                font-size: 16px !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+        }
+        @media all {
+            .ExternalClass {
+                width: 100%;
+            }
+
+            .ExternalClass,
+            .ExternalClass p,
+            .ExternalClass span,
+            .ExternalClass font,
+            .ExternalClass td,
+            .ExternalClass div {
+                line-height: 100%;
+            }
+
+            .apple-link a {
+                color: inherit !important;
+                font-family: inherit !important;
+                font-size: inherit !important;
+                font-weight: inherit !important;
+                line-height: inherit !important;
+                text-decoration: none !important;
+            }
+
+            #MessageViewBody a {
+                color: inherit;
+                text-decoration: none;
+                font-size: inherit;
+                font-family: inherit;
+                font-weight: inherit;
+                line-height: inherit;
+            }
+        }
+    </style>
+</head>
+
+<body style="font-family: Helvetica, sans-serif; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.3; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; background-color: #e7e7e7; margin: 0; padding: 0;">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #e7e7e7; width: 100%;" width="100%" bgcolor="#e7e7e7">
+    <tr>
+        <td style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top;" valign="top">&nbsp;</td>
+        <td class="container" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; max-width: 600px; padding: 0; padding-top: 24px; width: 600px; margin: 0 auto;" width="600" valign="top">
+            <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px; padding: 0;">
+
+                <!-- START CENTERED WHITE CONTAINER -->
+                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Diese E-Mail fasst deine Lehrstuhlangaben zusammen.</span>
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #ffffff; border: 1px solid #eaebed; border-radius: 16px; width: 100%;" width="100%">
+
+                    <!-- START MAIN CONTENT AREA -->
+                    <tr>
+                        <td class="wrapper" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; box-sizing: border-box; padding: 24px;" valign="top">
+                            <h2 style="font-family: Helvetica, sans-serif; font-size: 26px; font-weight: bold; margin: 0; color:#17365c; margin-bottom: 16px;">Lehrstuhl Prioritäten gespeichert</h2>
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
+                                Hallo {{student_name}},</p>
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
+                                wir haben folgende Informationen von Dir erhalten und gespeichert.
+                            </p>
+
+                            <hr style="margin-bottom: 16px;">
+
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
+                                <b>Feste Lehrstuhl Zuweisung:</b> {{direct_chair}}
+                            </p>
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: bold; margin: 0;">Gesetzte Prioritäten:</p>
+                            {{#ratings}}
+                                <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0;">{{priority}}: {{chair_name}}</p>
+                            {{/ratings}}
+
+                            <hr style="margin-top: 16px;">
+
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-top: 20px; margin-bottom: 20px;">
+                                Du kannst deine Angaben bei Bedarf noch bis zum <b>{{phase1_end}}</b> anpassen. Nutze dazu den nachfolgenden Link, um direkt zum WiWi-BOS System zu gelangen.
+                            </p>
+
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; box-sizing: border-box; width: 100%; min-width: 100%;" width="100%">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; padding-bottom: 20px;" valign="top">
+                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 60%;">
+                                            <tbody>
+                                            <tr>
+                                                <td style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; border-radius: 4px; text-align: center; background-color: #17365c;" valign="top" align="center" bgcolor="#17365c">
+                                                    <a href="https://wiwibos-moodle.ruhr-uni-bochum.de/" target="_blank" style="border: solid 2px #17365c; border-radius: 4px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 16px; font-weight: bold; margin: 0; padding: 12px 24px; text-decoration: none; text-transform: capitalize; background-color: #17365c; border-color: #17365c; color: #ffffff;">ZUR WEBSITE</a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            {{#direct_chair_info}}
+                                <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px; margin-top: 30px;">
+                                    Die Angabe deiner festen Lehrstuhl Zuweisung wird von deinem gewählten Lehrstuhl bis zum <b>{{phase2_end}}</b> geprüft.
+                                </p>
+                            {{/direct_chair_info}}
+                            {{#no_direct_chair_info}}
+                                <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px; margin-top: 30px;">
+                                    Da keine feste Lehrstuhl Zuweisung vorhanden ist, wirst Du automatisch am Losverfahren teilnehmen und bis zum <b>{{phase3_end}}</b> einem Lehrstuhl aus deinen Prioritäten zugeordnet.
+                                </p>
+                            {{/no_direct_chair_info}}
+
+                        </td>
+                    </tr>
+
+                    <!-- END MAIN CONTENT AREA -->
+                </table>
+
+                <!-- END CENTERED WHITE CONTAINER --></div>
+        </td>
+        <td style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top;" valign="top">&nbsp;</td>
+    </tr>
+</table>
+</body>
+</html>

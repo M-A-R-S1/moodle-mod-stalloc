@@ -26,114 +26,114 @@
     * none
 }}
 
-<h2 class="mt-3 mb-3 ml-3">BASIC SETTINGS</h2>
+<h2 class="mt-3 mb-3 ml-3">EINSTELLUNGEN</h2>
 
 {{#saved_declaration}}
     <div class="alert alert-success mb-5" role="alert">
-        Declaration successfully saved!
+        Studentische Erklärung erfolgreich gespeichert.
     </div>
 {{/saved_declaration}}
 
 {{#saved_phone}}
     <div class="alert alert-success mb-5" role="alert">
-        Phone requirement settings saved!
+        Telefon Einstellungen erfolgreich gespeichert.
     </div>
 {{/saved_phone}}
 
 {{#saved_rating}}
     <div class="alert alert-success mb-5" role="alert">
-        Rating successfully saved!
+        Prioritäten Einstellungen erfolgreich gespeichert.
     </div>
 {{/saved_rating}}
 
 {{#saved_phase1}}
     <div class="alert alert-success mb-5" role="alert">
-        Declaration and rating phase schedule successfully saved!
+        Phase 1 Zeitangaben erfolgreich gespeichert.
     </div>
 {{/saved_phase1}}
 
 {{#saved_phase2}}
     <div class="alert alert-success mb-5" role="alert">
-        Chair confirmation phase schedule successfully saved!
+        Phase 2 Zeitangaben erfolgreich gespeichert.
     </div>
 {{/saved_phase2}}
 
 
 {{#saved_phase3}}
     <div class="alert alert-success mb-5" role="alert">
-        Random allocation phase schedule successfully saved!
+        Phase 3 Zeitangaben erfolgreich gespeichert.
     </div>
 {{/saved_phase3}}
 
 {{#saved_phase4}}
     <div class="alert alert-success mb-5" role="alert">
-        Thesis definition phase schedule successfully saved!
+        Phase 4 Zeitangaben erfolgreich gespeichert.
     </div>
 {{/saved_phase4}}
 
 {{#saved_published}}
     <div class="alert alert-success mb-5" role="alert">
-        Published settings saved!
+        Die Ergebnisse wurden erfolgreich veröffentlicht.
     </div>
 {{/saved_published}}
 
 {{#plugin_resetted}}
     <div class="alert alert-success mb-5" role="alert">
-        Plugin successfully reset!
+        Das Plugin wurde erfolgreich zurückgesetzt.
     </div>
 {{/plugin_resetted}}
 
 {{#error_declaration_empty}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The Declaration text field is empty. Please provide a declaration text!
+        Fehler! Die Studentische Erklärung darf nicht leer sein! Bitte stelle einen Text für die Erklärung zur Verfügung.
     </div>
 {{/error_declaration_empty}}
 
 {{#error_rating_number}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The rating was not saved! Please make sure to provide a number which is smaller than the number of chairs!
+        Fehler! Die Prioritäten Einstellungen wurden nicht gespeichert. Die angegebene Anzahl an Prioritäten war größer, als die Anzahl der aktiven Lehrstühle.
     </div>
 {{/error_rating_number}}
 
 {{#error_end_date_before_start_date}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The end dates cannot be set before the start date!
+        Fehler! Flache Zeitangabe vorgenommen. Bitte beachte dass die 'von' Zeitangabe vor der 'bis' Zeitangabe liegen muss.
     </div>
 {{/error_end_date_before_start_date}}
 
 {{#error_no_date_pair}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! The start and end date must both be set! Please provide both date values.
+        Fehler! Zeitangabe fehlt. Es muss sowohl die 'von', als auch die 'bis' Zeitangabe gesetzt werden.
     </div>
 {{/error_no_date_pair}}
 
 {{#error_phase1}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Declaration and rating phase schedule not saved!
+        Fehler! Zeitlicher Ablauf von Phase 1 wurde nicht gespeichert. Beachte die anderen Fehlermeldungen.
     </div>
 {{/error_phase1}}
 
 {{#error_phase2}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Chair confirmation phase schedule not saved!
+        Fehler! Zeitlicher Ablauf von Phase 2 wurde nicht gespeichert. Beachte die anderen Fehlermeldungen.
     </div>
 {{/error_phase2}}
 
 {{#error_phase3}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Random allocation phase schedule not saved!
+        Fehler! Zeitlicher Ablauf von Phase 3 wurde nicht gespeichert. Beachte die anderen Fehlermeldungen.
     </div>
 {{/error_phase3}}
 
 {{#error_phase4}}
     <div class="alert alert-danger mb-5" role="alert">
-        Error! Thesis definition phase schedule not saved!
+        Fehler! Zeitlicher Ablauf von Phase 4 wurde nicht gespeichert. Beachte die anderen Fehlermeldungen.
     </div>
 {{/error_phase4}}
 
 {{#error_plugin_reset_checkbox}}
     <div class="alert alert-warning mb-5" role="alert">
-        Warning! The Plugin was not reset! Safety checkbox was not checked!
+        Warnung! Das Plugin wurde nicht zurückgesetzt, da die Checkbox nicht markiert wurde.
     </div>
 {{/error_plugin_reset_checkbox}}
 
@@ -144,7 +144,7 @@
         <div class="card-header" id="heading0">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapse0" aria-expanded="false" aria-controls="collapse0">
-                    {{#str}} icon_phone_big, mod_stalloc {{/str}} - Phone Settings
+                    {{#str}} icon_phone_big, mod_stalloc {{/str}} - Telefon Einstellungen
                 </button>
             </h2>
         </div>
@@ -156,11 +156,11 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_phone" name="checkbox_phone" {{checkbox_phone}}>
                                 <label class="form-check-label" for="checkbox_phone">
-                                    Require phone number from students?
+                                    Telefonnummer der Studenten ist eine Pflichtangabe.
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" name ="save_phone" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} SAVE</button>
+                        <button type="submit" name ="save_phone" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Speichern</button>
                     </form>
                 </div>
             </div>
@@ -171,7 +171,7 @@
         <div class="card-header" id="headingOne">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    {{#str}} icon_declaration, mod_stalloc {{/str}} - Declaration settings
+                    {{#str}} icon_declaration, mod_stalloc {{/str}} - Studentische Erklärung
                 </button>
             </h2>
         </div>
@@ -183,7 +183,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_declaration" name="checkbox_declaration" {{checkbox_declaration}}>
                                 <label class="form-check-label" for="checkbox_declaration">
-                                    Use student declaration?
+                                    Studenten müssen eine Erklärung abgeben.
                                 </label>
                             </div>
                         </div>
@@ -191,8 +191,8 @@
                             {{{text_declaration}}}
                         </div>
 
-                        <a href="{{{delcaration_edit_url}}}" type="button" class="btn btn-primary">{{#str}} icon_edit, mod_stalloc {{/str}} Edit</a>
-                        <button type="submit" name ="save_declaration" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
+                        <a href="{{{delcaration_edit_url}}}" type="button" class="btn btn-primary">{{#str}} icon_edit, mod_stalloc {{/str}} Bearbeiten</a>
+                        <button type="submit" name ="save_declaration" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Speichern</button>
                     </form>
                 </div>
             </div>
@@ -203,7 +203,7 @@
         <div class="card-header" id="heading2">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                    {{#str}} icon_rating, mod_stalloc {{/str}} - Rating settings
+                    {{#str}} icon_rating, mod_stalloc {{/str}} - Prioritäten Einstellungen
                 </button>
             </h2>
         </div>
@@ -212,17 +212,17 @@
                 <div class="ml-3">
                     <form class="col-lg-6 col-sm-12" action="#heading2" method="post" >
                         <div class="form-group">
-                            <label for="rating_counter">How many ratings should a student make?</label>
+                            <label for="rating_counter">Wie viele Prioritäten muss ein Student angeben?</label>
                             <input type="text" class="form-control" name="rating_counter" id="rating_counter" value="{{rating_value}}" {{rating_disabled}}>
-                            <label for="rating_counter">(This value cannot be higher than the number of active chairs!)</label>
+                            <label for="rating_counter">(Dieser Wert kann nicht größer als die Anzahl der aktiven Lehrstühle sein!)</label>
                         </div>
                         {{#rating_value_enabled}}
-                            <button type="submit" name ="save_rating" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
+                            <button type="submit" name ="save_rating" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Speichern</button>
                         {{/rating_value_enabled}}
                         {{#rating_change_disabled}}
                             <div class="alert alert-warning mt-3" role="alert">
-                                The rating setting cannot be changed! Your plugin is in its active phase. <br>
-                                You can only change this setting when there are no student ratings or allocations present.
+                                Diese Einstellung kann aktuell nicht angepasst werden, weil sich bereits Studenten im Kurs befinden!<br>
+                                Sobald Studenten Zugriff auf dieses Plugin haben und schon Ihre Prioritäten abgeben können, ist dieser Wert nicht mehr bearbeitbar.
                             </div>
                         {{/rating_change_disabled}}
                     </form>
@@ -235,7 +235,7 @@
         <div class="card-header" id="heading3">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                    {{#str}} icon_time, mod_stalloc {{/str}} - Schedule
+                    {{#str}} icon_time, mod_stalloc {{/str}} - Zeitlicher Ablauf
                 </button>
             </h2>
         </div>
@@ -244,75 +244,75 @@
                 <div class="ml-3">
                     <form class="col-lg-6 col-sm-12" action="" method="post" >
 
-                        <h4>Phase 1: Declaration and ratings</h4>
+                        <h4>Phase 1: Studentische Erklärung und Angabe der Prioritäten</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_phase1">Start</label>
+                                    <label for="start_phase1">Von</label>
                                     <input type="date" class="form-control" name="start_phase1" id="start_phase1" value="{{start_phase1}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_phase1">End</label>
+                                    <label for="end_phase1">Bis</label>
                                     <input type="date" class="form-control" name="end_phase1" id="end_phase1" value="{{end_phase1}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <h4>Phase 2: Confirmations by chairs</h4>
+                        <h4>Phase 2: Feste Zuweisungen Annehmen/Ablehnen durch Lehrstühle</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_phase2">Start</label>
+                                    <label for="start_phase2">Von</label>
                                     <input type="date" class="form-control" name="start_phase2" id="start_phase2" value="{{start_phase2}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_phase2">End</label>
+                                    <label for="end_phase2">Bis</label>
                                     <input type="date" class="form-control" name="end_phase2" id="end_phase2" value="{{end_phase2}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <h4>Phase 3: Random allocation</h4>
+                        <h4>Phase 3: Losverfahren</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_phase3">Start</label>
+                                    <label for="start_phase3">Von</label>
                                     <input type="date" class="form-control" name="start_phase3" id="start_phase3" value="{{start_phase3}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_phase3">End</label>
+                                    <label for="end_phase3">Bis</label>
                                     <input type="date" class="form-control" name="end_phase3" id="end_phase3" value="{{end_phase3}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <h4>Phase 4: Thesis definition</h4>
+                        <h4>Phase 4: Bachelorarbeit Definieren</h4>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="start_phase4">Start</label>
+                                    <label for="start_phase4">Von</label>
                                     <input type="date" class="form-control" name="start_phase4" id="start_phase4" value="{{start_phase4}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="end_phase4">End</label>
+                                    <label for="end_phase4">Bis</label>
                                     <input type="date" class="form-control" name="end_phase4" id="end_phase4" value="{{end_phase4}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
-                        <button type="submit" name="save_schedule" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
+                        <button type="submit" name="save_schedule" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Speichern</button>
                     </form>
                 </div>
             </div>
@@ -323,7 +323,7 @@
         <div class="card-header" id="heading4">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                    {{#str}} icon_publish, mod_stalloc {{/str}} - Publish Results
+                    {{#str}} icon_publish, mod_stalloc {{/str}} - Ergebnisse Veröffentlichen
                 </button>
             </h2>
         </div>
@@ -335,11 +335,11 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_publish" name="checkbox_publish" {{checkbox_publish}}>
                                 <label class="form-check-label" for="checkbox_publish">
-                                    Yes, I want to publish the results. I am aware that this action closes the current thesis allocation process!
+                                    Ja, ich möchte die Ergebnisse veröffentlichen. Ich bin mir bewusst, dass diese Aktion das aktuelle Verteilungsverfahren beendet.
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Save</button>
+                        <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Veröffentlichen</button>
                     </form>
                 </div>
             </div>
@@ -350,7 +350,7 @@
         <div class="card-header" id="heading5">
             <h2 class="mb-0">
                 <button class="btn" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                    {{#str}} icon_reset, mod_stalloc {{/str}} - Reset
+                    {{#str}} icon_reset, mod_stalloc {{/str}} - Zurücksetzen
                 </button>
             </h2>
         </div>
@@ -360,16 +360,16 @@
                     <form class="col-lg-6 col-sm-12" action="#heading5" method="post" >
                         <div class="form-group">
                             <p>
-                                By resetting the plugin, all student, rating, and allocation data will be deleted!
+                                Durch das Zurücksetzen werden alle Studenten, Prioritäten und Zuweisungen dieser Instanz gelöscht.
                             </p>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkbox_reset" name="checkbox_reset">
                                 <label class="form-check-label" for="checkbox_reset">
-                                    Yes, I want to reset the Plugin! I am aware that this will delete all student related data from the plugin.
+                                    Ja, ich möchte das Plugin zurücksetzen! Ich bin mir bewusst, dass dadurch alle Studenten und deren Angaben im Plugin gelöscht werden.
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" name="reset_plugin" class="btn btn-danger">Reset</button>
+                        <button type="submit" name="reset_plugin" class="btn btn-danger">Zurücksetzen</button>
                     </form>
                 </div>
             </div>

@@ -20,6 +20,7 @@
  * @copyright   2025 Marc-André Schmidt
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once(__DIR__.'/config.php');
 require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/solver/edmonds-karp.php');
@@ -169,4 +170,171 @@ function distrubute_choices($id, $course_id, $instance) {
     $DB->update_record('stalloc', $updateobject);
 
     return $timeneeded;
+}
+
+
+/**
+ * Base Mail function of this Plugin
+ * @param int $id current course module id.
+ * @param int $course_id current course id.
+ * @param int $user_id current course module id.
+ * @param int $mail_action defines the mail action.
+ * @return bool ture if mail was send successfully or false in case of error.
+ */
+function prepare_student_mail($id, $course_id, $user_id, $mail_action): bool {
+
+    // Check which mail to send.
+    if($mail_action == MAIL_STUDENT_RATINGS_SAVED) {
+         return rating_saved_mail($id, $course_id, $user_id);
+    } else if ($mail_action == MAIL_DIRECT_CHAIR_ACCEPTED) {
+        return direct_chair_mail($id, $course_id, $user_id, MAIL_DIRECT_CHAIR_ACCEPTED);
+    } else if ($mail_action == MAIL_DIRECT_CHAIR_DECLINED) {
+        return direct_chair_mail($id, $course_id, $user_id, MAIL_DIRECT_CHAIR_DECLINED);
+    }
+
+    return false;
+}
+
+/**
+ * Sends an E-Mail to the student to inform about the saved ratings and direct chair selection.
+ * @param int $id current course module id.
+ * @param int $course_id current course id.
+ * @param int $user_id current course module id.
+ * @return bool ture if mail was send successfully or false in case of error.
+ */
+function rating_saved_mail($id, $course_id, $user_id): bool {
+    global $CFG, $DB, $OUTPUT;
+
+    // Get the stalloc instance data.
+    list ($course, $cm) = get_course_and_cm_from_cmid($id, 'stalloc');
+    $instance = $DB->get_record('stalloc', ['id'=> $cm->instance], '*', MUST_EXIST);
+
+    // Get the receiver user.
+    $user_data = $DB->get_record('stalloc_student', ['id' => $user_id]);
+    $moodle_user_data = $DB->get_record('user', ['id' => $user_data->moodle_user_id]);
+
+    // Get the user allocation, ratings and chair data.
+    $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $user_id]);
+    $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $user_id], "rating DESC");
+    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id]);
+
+    // Template Parameters.
+    $template_params = [];
+    $template_params['student_name'] = $moodle_user_data->firstname ." ". $moodle_user_data->lastname;
+
+    // Save the Phase Endings.
+    $template_params['phase1_end'] = date('d.m.Y',$instance->end_phase1);
+    $template_params['phase2_end'] = date('d.m.Y',$instance->end_phase2);
+    $template_params['phase3_end'] = date('d.m.Y',$instance->end_phase3);
+
+    // Get the direct Chair Name and save it to the template parameter.
+    if($allocation_data->chair_id != -1) {
+        foreach ($chair_data as $chair) {
+            if($chair->id == $allocation_data->chair_id){
+                $template_params['direct_chair'] = $chair->name;
+                $template_params['direct_chair_info'] = true;
+            break;
+            }
+        }
+    } else {
+        $template_params['direct_chair'] = 'Nicht vorhanden';
+        $template_params['no_direct_chair_info'] = true;
+    }
+
+    // Get all chairs of the ratings and save them to the template parameter.
+    $priority = 1;
+    foreach ($rating_data as $rating) {
+        $template_params['ratings'][$priority-1] = new stdClass();
+        $template_params['ratings'][$priority-1]->priority = $priority;
+
+        foreach ($chair_data as $chair) {
+            if($chair->id == $rating->chair_id) {
+                $template_params['ratings'][$priority-1]->chair_name = $chair->name;
+                break;
+            }
+        }
+        $priority++;
+    }
+
+    // Mail subject.
+    $subject =  "WiWi-BOS - Deine Lehrstuhl Prioritäten";
+    // Mail HTML message.
+    $html_message = $OUTPUT->render_from_template('stalloc/mail/student_rating_mail', $template_params);
+
+    // send-mail.
+    $email_sent = email_to_user(
+        $moodle_user_data,              // Mail Receiver.
+        $CFG->noreplyaddress,           // Mail Sender.
+        $subject,                       // Mail Subject.
+        html_to_text($html_message),    // Text Message.
+        $html_message                   // HTML Message.
+    );
+
+    if ($email_sent) {
+        // Mail send successfully.
+        return true;
+    } else {
+        // Error! ... Mail was not send.
+        return false;
+    }
+}
+
+
+
+/**
+ * Sends an E-Mail to the student to inform that the chair has accepted/declined the direct allocation.
+ * @param int $id current course module id.
+ * @param int $course_id current course id.
+ * @param int $user_id current course module id.
+ * @return bool ture if mail was send successfully or false in case of error.
+ */
+function direct_chair_mail($id, $course_id, $user_id, $chair_action): bool {
+    global $CFG, $DB, $OUTPUT;
+
+    // Get the stalloc instance data.
+    list ($course, $cm) = get_course_and_cm_from_cmid($id, 'stalloc');
+    $instance = $DB->get_record('stalloc', ['id'=> $cm->instance], '*', MUST_EXIST);
+
+    // Get the receiver user.
+    $user_data = $DB->get_record('stalloc_student', ['id' => $user_id]);
+    $moodle_user_data = $DB->get_record('user', ['id' => $user_data->moodle_user_id]);
+
+    // Get the user allocation, ratings and chair data.
+    $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $user_id]);
+    $chair_data = $DB->get_record('stalloc_chair', ['id' => $allocation_data->chair_id]);
+
+    // Template Parameters.
+    $template_params = [];
+    $template_params['student_name'] = $moodle_user_data->firstname ." ". $moodle_user_data->lastname;
+    $template_params['phase3_end'] = date('d.m.Y',$instance->end_phase3);
+    $template_params['phase4_end'] = date('d.m.Y',$instance->end_phase4);
+    $template_params['chair_name'] = $chair_data->name;
+
+    if($chair_action == MAIL_DIRECT_CHAIR_ACCEPTED) {
+        $template_params['direct_chair_accepted'] = true;
+    } else if ($chair_action == MAIL_DIRECT_CHAIR_DECLINED) {
+        $template_params['direct_chair_declined'] = true;
+    }
+
+    // Mail subject.
+    $subject =  "WiWi-BOS - Deine feste Lehrstuhl Zuweisung wurde bearbeitet";
+    // Mail HTML message.
+    $html_message = $OUTPUT->render_from_template('stalloc/mail/direct_chair_mail', $template_params);
+
+    // send-mail.
+    $email_sent = email_to_user(
+        $moodle_user_data,              // Mail Receiver.
+        $CFG->noreplyaddress,           // Mail Sender.
+        $subject,                       // Mail Subject.
+        html_to_text($html_message),    // Text Message.
+        $html_message                   // HTML Message.
+    );
+
+    if ($email_sent) {
+        // Mail send successfully.
+        return true;
+    } else {
+        // Error! ... Mail was not send.
+        return false;
+    }
 }
