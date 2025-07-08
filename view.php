@@ -56,7 +56,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
 
     // New Student? -> Create a new Database entry.
     if($student_data == null) {
-        $student_id = $DB->insert_record('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id, 'phone1' => $USER->phone1, 'phone2' => $USER->phone2]);
+        $student_id = $DB->insert_record('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id, 'phone1' => '', 'phone2' => '']);
         $student_data = $DB->get_record('stalloc_student', ['id' => $student_id]);
     }
 
@@ -67,52 +67,40 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
     $student_data = $DB->get_record('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
 
     // Check User Phone Data and update.
-    $updateobject  = new stdClass();
-    $updateobject->id = $student_data->id;
-    $update_phone = false;
     $phone_pattern = "/^(\+49|0)\d{6,14}$/";
 
     $phone1 = str_replace('-', '', $USER->phone1);
     $phone1 = str_replace(" ", "", $phone1);
     $phone1 = str_replace("/", "", $phone1);
-    if (preg_match($phone_pattern, $phone1)) {
-        if($phone1 != $student_data->phone1) {
-            // New Phone Data -> Update the current user.
-            $updateobject->phone1 = $phone1;
-            $update_phone = true;
-        }
+    if (!preg_match($phone_pattern, $phone1)) {
+        $phone1 = '';
     }
     $phone2 = str_replace('-', '', $USER->phone2);
     $phone2 = str_replace(" ", "", $phone2);
     $phone2 = str_replace("/", "", $phone2);
-    if (preg_match($phone_pattern, $phone2)) {
-        if($phone2 != $student_data->phone2) {
-            // New Phone Data -> Update the current user.
-            $updateobject->phone2 = $phone2;
-            $update_phone = true;
-        }
+    if (!preg_match($phone_pattern, $phone2)) {
+        $phone2 = '';
     }
 
+    $has_valid_phonenumber = $phone1 || $phone2;
+
     // Update the phone database entry.
-    if($update_phone) {
-        $DB->update_record('stalloc_student', $updateobject);
+    if($has_valid_phonenumber && ($phone1 != $student_data->phone1 || $phone2 != $student_data->phone2)) {
+        $DB->update_record('stalloc_student', [
+            'id' => $student_data->id,
+            'phone1' => $phone1,
+            'phone2' => $phone2
+        ]);
         // Refresh student data.
         $student_data = $DB->get_record('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
     }
 
     // Check if the phone number is required.
-    if($stalloc_data->phone_required == 1) {
-        if($student_data->phone1 == "" && $student_data->phone2 == "") {
-            // There is currently no phone number saved in the plugins user data.
-            $viewparams['no_phone_number'] = true;
-            $viewparams['profile_link'] = new moodle_url('/user/edit.php', ['id' => $USER->id]);
-        } else {
-            $phoneNumber = true;
-        }
-    }
-
-    // NO Phone number required OR the phone number is saved by the user
-    if($stalloc_data->phone_required == 0 || $phoneNumber) {
+    if ($stalloc_data->phone_required == 1 && !$has_valid_phonenumber) {
+        // There is currently no phone number saved in the plugins user data.
+        $viewparams['no_phone_number'] = true;
+        $viewparams['profile_link'] = new moodle_url('/user/edit.php', ['id' => $USER->id]);
+    } else {
         // Check if student declaration is needed.
         $declaration_data = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
         $start_phase1 = $stalloc_data->start_phase1;
