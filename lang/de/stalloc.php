@@ -36,6 +36,8 @@ $string['direct_students'] = 'Feste Zusagen';
 $string['direct_students_help'] = 'Feste Zusagen, bereits vergeben worden sind <b>/</b> Zusagen, die vergeben werden dürfen';
 $string['students'] = 'Arbeiten insg.';
 $string['students_help'] = 'Aktuell zu betreuende Bachelorarbeiten (feste Zusagen + Zulosungen) <b>/</b> maximale Zahl der zu betreuenden Bachelorarbeiten';
+$string['phase2_mail_task'] = 'Automatischer Mail Versand für akzeptierte/abgelehnte Studenten, nachdem Phase 2 beendet ist.';
+$string['thesis_mail_task'] = 'Automatischer Mail Versand für den Beginn der Bearbeitungszeit der Bachelorarbeit.';
 
 // ICONS
 $string['icon_active'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">

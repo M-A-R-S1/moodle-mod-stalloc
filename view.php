@@ -105,7 +105,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
         $declaration_data = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
         $start_phase1 = $stalloc_data->start_phase1;
         $end_phase1 = $stalloc_data->end_phase1;
-        $today = strtotime(date("Y-m-d"));
+        $today = strtotime(date("Y-m-d H:i"));
         $declaration = false;
 
         // Is Phase 1 active? -> Delcaration and Rating Phase
@@ -129,11 +129,11 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id]);
 
                 // Get All Chairs of this Course Module.
-                $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id]);
+                $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id], "name ASC");
                 // Set the 'NO' Selection.
                 $viewparams['chair'][0] = new stdClass();
                 $viewparams['chair'][0]->id = -1;
-                $viewparams['chair'][0]->chair_name = 'NO';
+                $viewparams['chair'][0]->chair_name = 'Nicht vorhanden';
 
                 // Go through each chair and save the data to the template array.
                 $index = 1;
@@ -192,7 +192,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                         $viewparams['rating'][$index]->index = ($index+1);
                         $viewparams['rating'][$index]->option[0] = new stdClass();
                         $viewparams['rating'][$index]->option[0]->chair_id = -1;
-                        $viewparams['rating'][$index]->option[0]->chair_name = "Choose...";
+                        $viewparams['rating'][$index]->option[0]->chair_name = "Auswählen...";
 
                         if(isset($_POST['save_ratings'])) {
                             if($_POST['rating_select_'.($index+1)] != -1) {
@@ -254,15 +254,14 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                         // Phase 4 has not started yet. Display waiting text to the student.
                         if($today < $start_phase4) {
                             $viewparams['waiting_for_phase4'] = true;
-                            $viewparams['phase4_start'] = date('d.m.Y',$stalloc_data->start_phase4);
-                            $viewparams['phase4_end'] = date('d.m.Y',$stalloc_data->end_phase4);
+                            $viewparams['phase4_start'] = date('d.m.Y H:i',$stalloc_data->start_phase4);
+                            $viewparams['phase4_end'] = date('d.m.Y H:i',$stalloc_data->end_phase4);
                         } else {
                             // Phase 4 is over.
                             // Get the thesis start date.
                             $thesis_start = $allocation_data->startdate;
 
                             if($thesis_start != null) {
-
                                 // Get the Thesis Date from the database.
                                 $viewparams['chair_name'] = $chair_data->name;
                                 $viewparams['thesis_name'] = $allocation_data->thesis_name;
@@ -273,16 +272,10 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                                 if($today >= $thesis_start) {
                                     $viewparams['thesis_started'] = true;
                                 } else {
-                                    if($stalloc_data->publish_results == 1) {
-                                        // Thesis has not started but the management has published the results.
-                                        $viewparams['thesis_dates_published'] = true;
-                                    } else {
-                                        // Thesis has not started AND the management has NOT published the results.
-                                        $viewparams['thesis_not_published'] = true;
-                                    }
+                                    $viewparams['thesis_not_published'] = true;
                                 }
                             } else {
-                                $viewparams['thesis_no_start_date'] = true;
+                                $viewparams['thesis_not_published'] = true;
                             }
                         }
                     }
@@ -292,8 +285,8 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
             } else {
                 // Phase 1 has not started yet. Display a Waiting text for the student.
                 $viewparams['waiting_for_phase1'] = true;
-                $viewparams['phase1_start'] = date('d.m.Y',$stalloc_data->start_phase1);
-                $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
+                $viewparams['phase1_start'] = date('d.m.Y H:i',$stalloc_data->start_phase1);
+                $viewparams['phase1_end'] = date('d.m.Y H:i',$stalloc_data->end_phase1);
             }
         }
     }
@@ -323,7 +316,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
         $showChairSelection = true;
     }
 
-    $viewparams['role'] = "CHAIR MEMBER!";
+    $viewparams['role'] = "Lehrstuhl-Mitarbeiter";
 }
 
 
@@ -472,7 +465,6 @@ function checkFormActions(int $course_id, int $id, int $student_id, int $instanc
         }
 
     }
-
 
     return $viewparams;
 }

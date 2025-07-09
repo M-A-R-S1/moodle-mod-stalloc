@@ -28,113 +28,85 @@
 
 {{#accepted_declaration}}
     <div class="alert alert-success mb-5" role="alert">
-        Declaration accepted!
+        Studentische Erklärung akzeptiert!
     </div>
 {{/accepted_declaration}}
 
 {{#no_phone_number}}
     <div class="jumbotron">
-        <h2>Phone number required</h2>
-        <p>In order to use this plugin, you must provide a phone number within moodle.</p>
+        <h2>Telefonnummer wird benötigt!</h2>
+        <p>Um dieses System nutzen zu können, müssen Sie uns eine Telefonnummer von Ihnen mitteilen</p>
         <p>
-            Please access your profile by clicking the link below and provide at least one phone number!<br>
-            On your profile page scroll down and click the 'Optional' Heading. Here you can submit your phone number.
+            Klicken Sie bitte auf den untenstehenden Link, um zu Ihrem Moodle Profil zu gelangen.<br>
+            Fügen Sie dort unter dem Reiter 'Optional' Ihre Telefon und/oder Mobilnummer hinzu.
         </p>
         <p>
-            Please note that the phone number has to start with either 0 or +49.<br>
-            (E.g. of a correct phone number: 0234-12345)
+            Bitte beachten Sie, dass Sie eine deutsche Telefonnummer angeben, die mit 0 oder +49 beginnen muss!<br>
+            (Bsp. einer korrekten Telefonnummer: 0234-12345)
         </p>
-        <a class="btn btn-success btn-lg mt-3" href="{{{profile_link}}}" role="button">Update profile</a>
+        <a class="btn btn-success btn-lg mt-3" href="{{{profile_link}}}" role="button">Mein Moodle Profil</a>
     </div>
 {{/no_phone_number}}
 
 {{#no_allocation_after_phase1}}
     <div class="jumbotron">
-        <h2>You are excluded from the process</h2>
-        <p>You did not provide any ratings in the previous step!</p>
-        <p>
-            You can no longer participate in this thesis allocation, because you did not provide the needed data during the
-            previous step.
-        </p>
+        <h2>Sie wurden von der Verteilung ausgeschlossen!</h2>
+        <p>Sie haben in der letzten Phase keine Prioritäten angegeben und können daher nicht mehr bei der Verteilung teilnehmen!</p>
     </div>
 {{/no_allocation_after_phase1}}
 
 {{#waiting_for_phase1}}
     <div class="jumbotron">
-        <h2>Please wait for the process to start</h2>
-        <p>You cannot commit your chair ratings yet.</p>
+        <h2>Bitte haben Sie noch etwas Geduld ...</h2>
+        <p>Wir können Ihre Prioritäten noch nicht entgegennehmen</p>
         <p>
-            Please come back later! This process has not started yet.<br>
-            You will be able to commit your chair ratings between the <b>{{phase1_start}}</b> and the <b>{{phase1_end}}</b>
+            Bitte kommen Sie später noch einmal zurück!<br>
+            Sie können Ihre Prioritäten zwischen dem <b>{{phase1_start}}</b> und dem <b>{{phase1_end}} abgeben.
         </p>
     </div>
 {{/waiting_for_phase1}}
 
 {{#waiting_for_phase4}}
     <div class="jumbotron">
-        <h2>Thank you for your ratings</h2>
+        <h2>Vielen Dank für Ihre Angaben</h2>
         <p>
-            For now, it's time to wait. Your ratings are being analyzed<br>
-            Please come back at the <b>{{phase4_start}}</b> to see which chair you are allocated to.
+            Jetzt heißt es erstmal warten. Ihre Angaben werden bearbeitet.<br>
+            Bitte kommen Sie am <b>{{phase4_start}}</b> zurück, um zu erfahren welchem Lehrstuhl Sie zugewiesen wurden.
         </p>
     </div>
 {{/waiting_for_phase4}}
 
 {{#thesis_not_published}}
     <div class="jumbotron">
-        <h2>Your Thesis information will be published soon</h2>
+        <h2>Die Informationen Ihrer Bachelorarbeit werden bald veröffentlicht!</h2>
         <p>
-            Your chair allocation: <b>{{chair_name}}</b><br><br>
-            The thesis information are not published yet.<br>
-            The examination office needs time to evaluate all thesis information<br>
-            Please come back later.
+            Zugewiesener Lehrstuhl: <b>{{chair_name}}</b><br><br>
+            Die Informationen zur Bachelorarbeit sind noch nicht veröffentlicht.<br>
+            Das Prüfungsamt benötigt noch mehr Zeit, um Ihre Angaben zu bearbeiten.<br>
+            Bitte kommen Sie zu einem späteren Zeitpunkt wieder.
         </p>
     </div>
 {{/thesis_not_published}}
 
-{{#thesis_dates_published}}
-    <div class="jumbotron">
-        <h2>Your thesis start date is published</h2>
-        <p>
-            Your chair allocation: <b>{{chair_name}}</b><br><br>
-            Congratulations! Your thesis start date is now published!<br>
-            Your thesis will start at the <b>{{start_date}}</b>.<br><br>
-            Please come back at the {{start_date}} to receive more information about your thesis.
-        </p>
-    </div>
-{{/thesis_dates_published}}
-
 {{#thesis_started}}
     <div class="jumbotron">
-        <h2>Your thesis time has started</h2>
-        <p>These are your thesis information.</p>
+        <h2>Ihre Bachelorarbeit Informationen sind da</h2>
         <p>
-            <b>Chair:</b> {{chair_name}}<br>
-            <b>Thesis name:</b> {{thesis_name}}<br>
-            <b>Start date:</b> {{start_date}}<br>
-            <b>2nd examiner:</b> {{examiner_two}}<br>
+            <b>Zugewiesener Lehrstuhl:</b> {{chair_name}}<br>
+            <b>Bachelorarbeit Thema:</b> {{thesis_name}}<br>
+            <b>Startdatum:</b> {{start_date}}<br>
+            <b>2ter Prüfer:</b> {{examiner_two}}<br>
         </p>
     </div>
 {{/thesis_started}}
 
-{{#thesis_no_start_date}}
-    <div class="jumbotron">
-        <h2>Something went wrong ...</h2>
-        <p>Please contact the examination office!</p>
-        <p>
-            Your allocated chair did not provide any thesis information yet!
-            Please contact the examination office about this issue.
-        </p>
-    </div>
-{{/thesis_no_start_date}}
-
 {{#allocated_chair_name}}
     <div class="jumbotron">
-        <h2>Allocation process done</h2>
-        <p>You have been allocated!</p>
+        <h2>Lehrstuhl Zuweisung abgeschlossen</h2>
+        <p>Sie wurden einem Lehrstuhl zugewiesen.</p>
         <p>
-            Your chair allocation: <b>{{allocated_chair_name}}</b><br>
-            Please contact your allocated chair now to discuss your thesis contents and start date options.
+            Zugewiesener Lehrstuhl: <b>{{allocated_chair_name}}</b><br>
+            Bitte kontaktieren Sie den Lehrstuhl, um Thema und Startdatum der Bachelorarbeit zu besprechen.
         </p>
     </div>
 {{/allocated_chair_name}}

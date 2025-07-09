@@ -26,16 +26,10 @@
     * none
 }}
 
-{{#error_declaration_not_accepted}}
-    <div class="alert alert-danger mb-5" role="alert">
-        Warning! The declaration was not accepted! In order to proceed, you have to accept the declaration.
-    </div>
-{{/error_declaration_not_accepted}}
-
 
 {{#allocation_time_needed}}
     <div class="alert alert-danger mb-5" role="alert">
-        Warning! There is no allocation schedule present! Please add an allocation schedule in the settings.
+        Achtung! Es wurde noch kein Zeitrahmen für das Losverfahren in den Einstellungen gesetzt. Bitte setzen Sie einen Zeitrahmen!
     </div>
 {{/allocation_time_needed}}
 
@@ -45,12 +39,12 @@
         <div class="card-body">
             <div class="ml-3">
                 <form class="col-lg-6 col-sm-12" action="" method="post" >
-                    <h2 class="mt-3 mb-3">Start the allocation process?</h2>
-                    <p class="lead">Number of students to allocate: {{rated_student_count}}</p>
+                    <h2 class="mt-3 mb-3">Losverfahren starten?</h2>
+                    <p class="lead">Teilnehmende Studenten: {{rated_student_count}}</p>
                     <div class="alert alert-warning mt-3" role="alert">
-                        Attention! The allocation process can only be performed once!
+                        Achtung! Das Losverfahren kann nur einmal ausgeführt werden!
                     </div>
-                    <button type="submit" name ="start_allocation" class="btn btn-success">START!</button>
+                    <button type="submit" name ="start_allocation" class="btn btn-success">Starten</button>
                 </form>
             </div>
         </div>
@@ -58,25 +52,25 @@
 
     {{#allocation_time_over}}
         <div class="jumbotron mt-5">
-            <h2>The allocation phase is over</h2>
-            <p>You can no longer allocate the students at this point!</p>
+            <h2>Die Zulosungsphase ist vorbei</h2>
+            <p>Das Losverfahren kann nicht mehr durchgeführt werden.</p>
         </div>
     {{/allocation_time_over}}
 
     {{#allocation_time_not_started}}
         <div class="jumbotron mt-5">
-            <h2>The allocation phase has not started yet.</h2>
-            <p>You can currently not allocate the students! Please wait for the allocation phase to start.</p>
+            <h2>Die Zulosungsphase hat noch nicht begonnen</h2>
+            <p>Das Losverfahren kann noch nicht durchgeführt werden. Bitte warten Sie bis die Zulosungsphase begonnen hat.</p>
         </div>
     {{/allocation_time_not_started}}
 
     {{#no_ratings}}
         <div class="jumbotron mt-5">
-            <h2>No student ratings</h2>
-            <p>The allocation process cannot be started!</p>
+            <h2>Keine Prioritäten vorhanden</h2>
+            <p>Die Zulosung kann nicht durchgeführt werden.</p>
             <p>
-                There are currently no student ratings, which means there is nothing to allocate for now.<br>
-                Please wait until your students have submitted their ratings.
+                Es existieren im moment noch keine studentischen Prioritäten, weswegen da Losverfahren nicht durchgeführt werden kann.<br>
+                Bitte warten Sie, bis die Studenten ihre Prioritäten abgegeben haben.
             </p>
         </div>
     {{/no_ratings}}
@@ -84,13 +78,13 @@
     {{#allocations}}
         <div class="card-body">
             <div class="ml-3">
-                <h2 class="mt-3 mb-3">Allocation results</h2>
+                <h2 class="mt-3 mb-3">Losverfahren Ergebnisse</h2>
                 <div class="table-responsive">
                     <table class="table table-striped border mb-0">
                         <thead class="bg-dark text-light">
                         <tr>
                             {{#rating}}
-                                <th scope="col">Priority: {{priority}}</th>
+                                <th scope="col">Priorität: {{priority}}</th>
                             {{/rating}}
                         </tr>
                         </thead>
@@ -103,7 +97,7 @@
                         </tbody>
                     </table>
                 </div>
-                <h3 class="mt-5 mb-3">Not allocated: {{unallocated}} </h3>
+                <h3 class="mt-5 mb-3">Nicht zugewiesen: {{unallocated}} </h3>
             </div>
         </div>
     {{/allocations}}

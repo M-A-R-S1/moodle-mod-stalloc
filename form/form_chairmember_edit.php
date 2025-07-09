@@ -64,7 +64,7 @@ class mod_stalloc_form_chairmember_edit extends moodleform {
         }
 
         // Dropdown element.
-        $mform->addElement('select', 'chair_id', "Select Chair", $chair_selection);
+        $mform->addElement('select', 'chair_id', "Lehrstuhl", $chair_selection);
         $mform->addRule('chair_id', null, 'required');
         $mform->setType('chair_id', PARAM_INT);
         $mform->setDefault('chair_id', $default);
@@ -74,6 +74,6 @@ class mod_stalloc_form_chairmember_edit extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'chairmember_id', $chairmember_id);
         $mform->setType('chairmember_id', PARAM_INT);
-        $this->add_action_buttons(true, "Edit Chair Member");
+        $this->add_action_buttons(true, "Änderungen speichern");
     }
 }

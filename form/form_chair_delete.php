@@ -50,7 +50,7 @@ class mod_stalloc_form_chair_delete extends moodleform {
         $chair_data = $DB->get_record('stalloc_chair', ['id' => required_param('chair_id', PARAM_INT)]);
 
         // Active element.
-        $mform->addElement('checkbox', 'delete', "Yes, Delete this Chair?");
+        $mform->addElement('checkbox', 'delete', "Diesen Lehrstuhl löschen");
         $mform->addRule('delete', null, 'required');
         $mform->setType('delete', PARAM_BOOL);
 
@@ -59,6 +59,6 @@ class mod_stalloc_form_chair_delete extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'chair_id', required_param('chair_id', PARAM_INT));
         $mform->setType('chair_id', PARAM_INT);
-        $this->add_action_buttons(true, "Delete");
+        $this->add_action_buttons(true, "Löschen");
     }
 }

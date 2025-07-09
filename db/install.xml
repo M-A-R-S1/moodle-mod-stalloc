@@ -22,7 +22,6 @@
         <FIELD NAME="end_phase3" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where students will be allocated."/>
         <FIELD NAME="start_phase4" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The startdate where chairs will commit the thesis name, startdate and examiners."/>
         <FIELD NAME="end_phase4" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The enddate where chairs will commit the thesis name, startdate and examiners."/>
-        <FIELD NAME="publish_results" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="1 -> Results published, 0 -> Results NOT published."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this stalloc instance."/>
@@ -100,6 +99,8 @@
         <FIELD NAME="thesis_name" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The name of the thesis."/>
         <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp of the thesis beginning"/>
         <FIELD NAME="examiner_two" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The name of the second examiner."/>
+        <FIELD NAME="direct_allocation_mail" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> E-Mail Send, 0 -> E-Mail not yet send."/>
+        <FIELD NAME="thesis_mail" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="1 -> E-Mail Send, 0 -> E-Mail not yet send."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the allocation."/>

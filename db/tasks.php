@@ -13,16 +13,36 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * @package   mod_stalloc
- * @copyright 2025, Schmidt, Marc-André <marc-andre.schmidt@ruhr-uni-bochum.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Definition of mod_stalloc scheduled tasks.
+ *
+ * @package     mod_stalloc
+ * @copyright   2025 Marc-André Schmidt
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2025070900;                                      // Plugin version (YYYYMMDDXX).
-$plugin->release = 'v0.9.0';                                        // Plugin release number.
-$plugin->requires = 2022112800;                                     // Required moodle version (>=4.1 LTS).
-$plugin->component = 'mod_stalloc';                                 // Component name.
-$plugin->maturity = MATURITY_ALPHA;
+$tasks = [
+    [
+        'classname' => 'mod_stalloc\task\phase2_mail_task',
+        'blocking' => 0,
+        'minute' => '*/50',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'faildelay' => 1,
+    ],
+    [
+        'classname' => 'mod_stalloc\task\thesis_mail_task',
+        'blocking' => 0,
+        'minute' => '*/50',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'faildelay' => 1,
+    ],
+];

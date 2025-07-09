@@ -47,7 +47,7 @@ class mod_stalloc_form_chairmember_delete extends moodleform {
         $context = \context_course::instance($COURSE->id);
 
         // Active element.
-        $mform->addElement('checkbox', 'delete', "Yes, Delete this Chairmember?");
+        $mform->addElement('checkbox', 'delete', "Diesen Lehrstuhl-Mitarbeiter löschen");
         $mform->addRule('delete', null, 'required');
         $mform->setType('delete', PARAM_BOOL);
 
@@ -56,6 +56,6 @@ class mod_stalloc_form_chairmember_delete extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'chairmember_id', required_param('chairmember_id', PARAM_INT));
         $mform->setType('chairmember_id', PARAM_INT);
-        $this->add_action_buttons(true, "Delete");
+        $this->add_action_buttons(true, "Löschen");
     }
 }

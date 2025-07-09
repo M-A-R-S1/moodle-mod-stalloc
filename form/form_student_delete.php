@@ -44,7 +44,7 @@ class mod_stalloc_form_student_delete extends moodleform {
         $mform =& $this->_form;
 
         // Active element.
-        $mform->addElement('checkbox', 'delete', "Yes, Delete this Student?");
+        $mform->addElement('checkbox', 'delete', "Diesen Studenten löschen");
         $mform->addRule('delete', null, 'required');
         $mform->setType('delete', PARAM_BOOL);
 
@@ -53,6 +53,6 @@ class mod_stalloc_form_student_delete extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'student_id', required_param('student_id', PARAM_INT));
         $mform->setType('student_id', PARAM_INT);
-        $this->add_action_buttons(true, "Delete");
+        $this->add_action_buttons(true, "Löschen");
     }
 }

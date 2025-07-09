@@ -80,14 +80,14 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
 
     // Different actions, depending on the user action.
     if ($form_chair_delete->is_cancelled()) {
-        redirect(new moodle_url('/mod/stalloc/chair.php', ['id' => $id]), "Chair Deletion Canceled!", 4, 'NOTIFY_INFO');
+        redirect(new moodle_url('/mod/stalloc/chair.php', ['id' => $id]), "Aktion abgebrochen!", 0, 'NOTIFY_INFO');
     } else if ($data = $form_chair_delete->get_data()) {
 
         $DB->delete_records('stalloc_chair', ['id' => $chair_id]);
 
         // All done! Redirect to the chair page.
         $redirecturl = new moodle_url('/mod/stalloc/chair.php', ['id' => $id]);
-        redirect($redirecturl, "Chair Successfully Deleted", 2, \core\output\notification::NOTIFY_SUCCESS);
+        redirect($redirecturl, "Lehrstuhl erfolgreich gelöscht", 0, \core\output\notification::NOTIFY_SUCCESS);
     }
     else {
         // Output the Chair Template

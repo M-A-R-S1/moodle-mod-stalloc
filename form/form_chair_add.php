@@ -47,49 +47,49 @@ class mod_stalloc_form_chair_add extends moodleform {
         $context = \context_course::instance($COURSE->id);
 
         // Name element.
-        $mform->addElement('text', 'chair_name', "Chair");
+        $mform->addElement('text', 'chair_name', "Lehrstuhl Name");
         $mform->addRule('chair_name', null, 'required');
         $mform->setType('chair_name', PARAM_TEXT);
         //$mform->addHelpButton('chair_name', 'category_name_label', 'mod_stalloc');
 
         // Holder element.
-        $mform->addElement('text', 'chair_holder', "Holder");
+        $mform->addElement('text', 'chair_holder', "Inhaber");
         $mform->addRule('chair_holder', null, 'required');
         $mform->setType('chair_holder', PARAM_TEXT);
 
         // Flexnow ID element.
-        $mform->addElement('text', 'flexnow_id', "Flexnow ID");
+        $mform->addElement('text', 'flexnow_id', "Flexnow-ID");
         $mform->addRule('flexnow_id', null, 'required');
         $mform->setType('flexnow_id', PARAM_INT);
 
         // Contact Name element.
-        $mform->addElement('text', 'contact_name', "Contact Name");
+        $mform->addElement('text', 'contact_name', "Kontakt Name");
         $mform->addRule('contact_name', null, 'required');
         $mform->setType('contact_name', PARAM_TEXT);
 
         // Contact Phone element.
-        $mform->addElement('text', 'contact_phone', "Contact Phone");
+        $mform->addElement('text', 'contact_phone', "Kontakt Telefonnummer");
         $mform->addRule('contact_phone', null, 'required');
         $mform->setType('contact_phone', PARAM_TEXT);
 
         // Contact Mail element.
-        $mform->addElement('text', 'contact_mail', "Contact Mail");
+        $mform->addElement('text', 'contact_mail', "Kontakt E-Mail");
         $mform->addRule('contact_mail', null, 'required');
         $mform->setType('contact_mail', PARAM_TEXT);
 
         // Distribution Key element.
-        $mform->addElement('text', 'distribution_key', "Distribution Key");
+        $mform->addElement('text', 'distribution_key', "Verteilungsschlüssel");
         $mform->addRule('distribution_key', null, 'required');
         $mform->setType('distribution_key', PARAM_FLOAT);
         $mform->setDefault('distribution_key', "0.00");
 
         // Active element.
-        $mform->addElement('checkbox', 'active', "Active?");
+        $mform->addElement('checkbox', 'active', "Aktiv");
         $mform->setType('active', PARAM_BOOL);
 
         // Basic Stuff.
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_INT);
-        $this->add_action_buttons(true, "Create Chair");
+        $this->add_action_buttons(true, "Lehrstuhl erstellen");
     }
 }

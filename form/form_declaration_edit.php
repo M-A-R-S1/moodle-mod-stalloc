@@ -50,7 +50,7 @@ class mod_stalloc_form_declaration_edit extends moodleform {
         $declaration_data = $DB->get_record('stalloc_declaration_text', ['id' => required_param('declaration_id', PARAM_INT)]);
 
         // Text element.
-        $mform->addElement('editor', 'declaration_text', "Declaration");
+        $mform->addElement('editor', 'declaration_text', "studentische Erklärung");
         $mform->addRule('declaration_text', null, 'required');
         $mform->setType('declaration_text', PARAM_RAW);
         $mform->setDefault('declaration_text', ['text' => $declaration_data->text]);
@@ -60,6 +60,6 @@ class mod_stalloc_form_declaration_edit extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'declaration_id', required_param('declaration_id', PARAM_INT));
         $mform->setType('declaration_id', PARAM_INT);
-        $this->add_action_buttons(true, "Save");
+        $this->add_action_buttons(true, "Speichern");
     }
 }

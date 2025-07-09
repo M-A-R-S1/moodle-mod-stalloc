@@ -62,7 +62,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
 
     // Different actions, depending on the user action.
     if ($form_student_delete->is_cancelled()) {
-        redirect(new moodle_url('/mod/stalloc/student.php', ['id' => $id]), "Student Deletion Canceled!", 4, 'NOTIFY_INFO');
+        redirect(new moodle_url('/mod/stalloc/student.php', ['id' => $id]), "Aktion abgebrochen!", 0, 'NOTIFY_INFO');
     } else if ($data = $form_student_delete->get_data()) {
 
         // Delete the student.
@@ -77,7 +77,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
 
         // All done! Redirect to the chair page.
         $redirecturl = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
-        redirect($redirecturl, "Student Successfully Deleted", 2, \core\output\notification::NOTIFY_SUCCESS);
+        redirect($redirecturl, "Student erfolgreich gelöscht.", 0, \core\output\notification::NOTIFY_SUCCESS);
     }
     else {
         $params_student = [];

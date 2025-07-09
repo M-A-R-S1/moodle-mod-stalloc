@@ -53,7 +53,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
     echo $OUTPUT->header();
     echo $OUTPUT->render_from_template('stalloc/header', $paramsheader);
 
-    echo '<h2 class="mt-3 mb-3 ml-3">EDIT STUDENT</h2>';
+    echo '<h2 class="mt-3 mb-3 ml-3">Student bearbeiten</h2>';
 
     // Displaying the footer.
     echo $OUTPUT->footer();

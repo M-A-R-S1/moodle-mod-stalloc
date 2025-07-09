@@ -26,7 +26,7 @@
     * none
 }}
 
-<h2 class="mt-3 mb-3 ml-3">STUDENTEN LISTE</h2>
+<h2 class="mt-3 mb-3 ml-3">Studenten</h2>
 
 <div id="accordion">
     <div class="card ml-3">
@@ -64,7 +64,8 @@
                             {{{allocation_filter_titel}}}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class='dropdown-item' href='{{{allocation_url_direct_accepted}}}'>Fest Zugewiesen</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_direct_accepted}}}'>Fest Zuweisung akzeptiert</a></li>
+                            <li><a class='dropdown-item' href='{{{allocation_url_direct_declined}}}'>Fest Zuweisung abgelehnt</a></li>
                             <li><a class='dropdown-item' href='{{{allocation_url_direct_not_accepted}}}'>Feste Zuweisung ausstehend</a></li>
                             <li><a class='dropdown-item' href='{{{allocation_url_drawn}}}'>Zugelost</a></li>
                             <li><a class='dropdown-item' href='{{{allocation_url_pending}}}'>Ausstehend</a></li>
@@ -141,8 +142,16 @@
 
                                 {{student_allocation}}
 
-                                {{#not_checked_allocation}}
+                                {{#accepted_allocation}}
+                                    {{#str}} icon_check, mod_stalloc {{/str}}
+                                {{/accepted_allocation}}
+
+                                {{#declined_allocation}}
                                     {{#str}} icon_wrong, mod_stalloc {{/str}}
+                                {{/declined_allocation}}
+
+                                {{#not_checked_allocation}}
+                                    , Ausstehend...
                                 {{/not_checked_allocation}}
                             </td>
                             <td>{{student_thesis}}</td>

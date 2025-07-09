@@ -83,35 +83,30 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
         $params_settings['checkbox_phone'] = 'checked';
     }
 
-    // Load Published Settings.
-    if($stalloc_data->publish_results == 1) {
-        $params_settings['checkbox_publish'] = 'checked';
-    }
-
     // Load the Dates from the database.
     if($stalloc_data->start_phase1 != null) {
-        $params_settings['start_phase1'] = date("Y-m-d", $stalloc_data->start_phase1);
+        $params_settings['start_phase1'] = date("Y-m-d H:i", $stalloc_data->start_phase1);
     }
     if($stalloc_data->end_phase1 != null) {
-        $params_settings['end_phase1'] = date("Y-m-d", $stalloc_data->end_phase1);
+        $params_settings['end_phase1'] = date("Y-m-d H:i", $stalloc_data->end_phase1);
     }
     if($stalloc_data->start_phase2 != null) {
-        $params_settings['start_phase2'] = date("Y-m-d", $stalloc_data->start_phase2);
+        $params_settings['start_phase2'] = date("Y-m-d H:i", $stalloc_data->start_phase2);
     }
     if($stalloc_data->end_phase2 != null) {
-        $params_settings['end_phase2'] = date("Y-m-d", $stalloc_data->end_phase2);
+        $params_settings['end_phase2'] = date("Y-m-d H:i", $stalloc_data->end_phase2);
     }
     if($stalloc_data->start_phase3 != null) {
-        $params_settings['start_phase3'] = date("Y-m-d", $stalloc_data->start_phase3);
+        $params_settings['start_phase3'] = date("Y-m-d H:i", $stalloc_data->start_phase3);
     }
     if($stalloc_data->end_phase3 != null) {
-        $params_settings['end_phase3'] = date("Y-m-d", $stalloc_data->end_phase3);
+        $params_settings['end_phase3'] = date("Y-m-d H:i", $stalloc_data->end_phase3);
     }
     if($stalloc_data->start_phase4 != null) {
-        $params_settings['start_phase4'] = date("Y-m-d", $stalloc_data->start_phase4);
+        $params_settings['start_phase4'] = date("Y-m-d H:i", $stalloc_data->start_phase4);
     }
     if($stalloc_data->end_phase4 != null) {
-        $params_settings['end_phase4'] = date("Y-m-d", $stalloc_data->end_phase4);
+        $params_settings['end_phase4'] = date("Y-m-d H:i", $stalloc_data->end_phase4);
     }
 
     // Display the page layout.
@@ -352,21 +347,6 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
         if($update_dates) {
             $DB->update_record('stalloc', $updateobject);
         }
-    } else if(isset($_POST['publish'])) {
-
-        $publishCheckbox = 0;
-        if(isset($_POST['checkbox_publish'])) {
-            $publishCheckbox = 1;
-        }
-
-        // Update the already existing entry.
-        $updateobject  = new stdClass();
-        $updateobject->id = $instance_id;
-        $updateobject->publish_results = $publishCheckbox;
-
-        // Update the database entry.
-        $DB->update_record('stalloc', $updateobject);
-        $params_settings['saved_published'] = true;
     } else if(isset($_POST['reset_plugin'])) {
 
         if(isset($_POST['checkbox_reset'])) {

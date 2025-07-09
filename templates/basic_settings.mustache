@@ -26,7 +26,7 @@
     * none
 }}
 
-<h2 class="mt-3 mb-3 ml-3">EINSTELLUNGEN</h2>
+<h2 class="mt-3 mb-3 ml-3">Einstellungen</h2>
 
 {{#saved_declaration}}
     <div class="alert alert-success mb-5" role="alert">
@@ -249,13 +249,13 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="start_phase1">Von</label>
-                                    <input type="date" class="form-control" name="start_phase1" id="start_phase1" value="{{start_phase1}}">
+                                    <input type="datetime-local" class="form-control" name="start_phase1" id="start_phase1" value="{{start_phase1}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     <label for="end_phase1">Bis</label>
-                                    <input type="date" class="form-control" name="end_phase1" id="end_phase1" value="{{end_phase1}}">
+                                    <input type="datetime-local" class="form-control" name="end_phase1" id="end_phase1" value="{{end_phase1}}">
                                 </div>
                             </div>
                         </div>
@@ -266,13 +266,13 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="start_phase2">Von</label>
-                                    <input type="date" class="form-control" name="start_phase2" id="start_phase2" value="{{start_phase2}}">
+                                    <input type="datetime-local" class="form-control" name="start_phase2" id="start_phase2" value="{{start_phase2}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     <label for="end_phase2">Bis</label>
-                                    <input type="date" class="form-control" name="end_phase2" id="end_phase2" value="{{end_phase2}}">
+                                    <input type="datetime-local" class="form-control" name="end_phase2" id="end_phase2" value="{{end_phase2}}">
                                 </div>
                             </div>
                         </div>
@@ -283,13 +283,13 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="start_phase3">Von</label>
-                                    <input type="date" class="form-control" name="start_phase3" id="start_phase3" value="{{start_phase3}}">
+                                    <input type="datetime-local" class="form-control" name="start_phase3" id="start_phase3" value="{{start_phase3}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     <label for="end_phase3">Bis</label>
-                                    <input type="date" class="form-control" name="end_phase3" id="end_phase3" value="{{end_phase3}}">
+                                    <input type="datetime-local" class="form-control" name="end_phase3" id="end_phase3" value="{{end_phase3}}">
                                 </div>
                             </div>
                         </div>
@@ -300,46 +300,19 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="start_phase4">Von</label>
-                                    <input type="date" class="form-control" name="start_phase4" id="start_phase4" value="{{start_phase4}}">
+                                    <input type="datetime-local" class="form-control" name="start_phase4" id="start_phase4" value="{{start_phase4}}">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     <label for="end_phase4">Bis</label>
-                                    <input type="date" class="form-control" name="end_phase4" id="end_phase4" value="{{end_phase4}}">
+                                    <input type="datetime-local" class="form-control" name="end_phase4" id="end_phase4" value="{{end_phase4}}">
                                 </div>
                             </div>
                         </div>
                         <hr>
 
                         <button type="submit" name="save_schedule" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Speichern</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card ml-3">
-        <div class="card-header" id="heading4">
-            <h2 class="mb-0">
-                <button class="btn" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                    {{#str}} icon_publish, mod_stalloc {{/str}} - Ergebnisse Veröffentlichen
-                </button>
-            </h2>
-        </div>
-        <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
-            <div class="card-body">
-                <div class="ml-3">
-                    <form class="col-lg-6 col-sm-12" action="#heading4" method="post" >
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkbox_publish" name="checkbox_publish" {{checkbox_publish}}>
-                                <label class="form-check-label" for="checkbox_publish">
-                                    Ja, ich möchte die Ergebnisse veröffentlichen. Ich bin mir bewusst, dass diese Aktion das aktuelle Verteilungsverfahren beendet.
-                                </label>
-                            </div>
-                        </div>
-                        <button type="submit" name ="publish" class="btn btn-success">{{#str}} icon_save, mod_stalloc {{/str}} Veröffentlichen</button>
                     </form>
                 </div>
             </div>

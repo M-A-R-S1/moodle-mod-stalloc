@@ -126,7 +126,7 @@
             <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px; padding: 0;">
 
                 <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Deine feste Lehrstuhl Zuweisung wurde bearbeitet.</span>
+                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Ihre feste Lehrstuhl Zuweisung wurde bearbeitet.</span>
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #ffffff; border: 1px solid #eaebed; border-radius: 16px; width: 100%;" width="100%">
 
                     <!-- START MAIN CONTENT AREA -->
@@ -136,26 +136,26 @@
                             <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
                                 Hallo {{student_name}},</p>
                             <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
-                                Der Lehrstuhl <b>{{chair_name}}</b> hat Deine feste Zuweisung überprüft.
+                                Der Lehrstuhl <b>{{chair_name}}</b> hat Ihre feste Zuweisung überprüft.
                             </p>
 
                             <hr style="margin-bottom: 16px;">
                             {{#direct_chair_accepted}}
                                 <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
                                     Herzlichen Glückwunsch! <br>
-                                        Der Lehrstuhl hat Deiner festen Zuweisung <b>zugestimmt</b>!
+                                        Der Lehrstuhl hat der festen Zuweisung <b>zugestimmt</b>!
                                 </p>
                                 <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0;">
-                                    Der Lehrstuhl für deine Bachelorarbeit steht nun fest und Du nimmst nicht mehr am Losverfahren teil.
+                                    Der Lehrstuhl für die Bachelorarbeit steht nun fest und Sie nehmen nicht mehr am Losverfahren teil.
                                 </p>
                             {{/direct_chair_accepted}}
 
                             {{#direct_chair_declined}}
                                 <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
-                                    Der Lehrstuhl hat Deine feste Zuweisung <b>abgelehnt</b>!
+                                    Der Lehrstuhl hat die feste Zuweisung <b>abgelehnt</b>!
                                 </p>
                                 <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0;">
-                                    Der Lehrstuhl für deine Bachelorarbeit steht noch nicht fest!
+                                    Der Lehrstuhl für Ihre Bachelorarbeit steht noch nicht fest!
                                 </p>
                             {{/direct_chair_declined}}
 
@@ -163,12 +163,12 @@
 
                             {{#direct_chair_accepted}}
                                 <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px; margin-top: 30px;">
-                                    Du hast nun bis zum <b>{{phase4_end}}</b> Zeit, um Dich mit deinem Lehrstuhl über Startzeitpunkt und Thema Deiner Bachelorarbeit zu beraten.
+                                    Sie haben nun bis zum <b>{{phase4_end}}</b> Zeit, um sich mit dem Lehrstuhl über Startzeitpunkt und Thema Ihrer Bachelorarbeit zu beraten.
                                 </p>
                             {{/direct_chair_accepted}}
                             {{#direct_chair_declined}}
                                 <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px; margin-top: 30px;">
-                                    Da Du keinem Lehrstuhl direkt zugewiesen wurdest, wirst Du automatisch am Losverfahren teilnehmen und bis zum <b>{{phase3_end}}</b> einem Lehrstuhl aus deinen Prioritäten zugeordnet.
+                                    Da Sie keinem Lehrstuhl direkt zugewiesen wurden, werden Sie automatisch am Losverfahren teilnehmen und bis zum <b>{{phase3_end}}</b> einem Lehrstuhl aus den Prioritäten zugeordnet.
                                 </p>
                             {{/direct_chair_declined}}
 

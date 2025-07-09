@@ -98,12 +98,14 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         } else if ($allocation_filter == 0) {
             $params_student['allocation_filter_titel'] = 'Zuweisung: Keine Zuweisung';
         } else if ($allocation_filter == 1) {
-            $params_student['allocation_filter_titel'] = 'Zuweisung: Fest Zugewiesen';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Fest Zuweisung akzeptiert';
         } else if ($allocation_filter == 2) {
-            $params_student['allocation_filter_titel'] = 'Zuweisung: Feste Zuweisung ausstehend';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Fest Zuweisung abgelehnt';
         } else if ($allocation_filter == 3) {
-            $params_student['allocation_filter_titel'] = 'Zuweisung: Zugelost';
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Feste Zuweisung ausstehend';
         } else if ($allocation_filter == 4) {
+            $params_student['allocation_filter_titel'] = 'Zuweisung: Zugelost';
+        } else if ($allocation_filter == 5) {
             $params_student['allocation_filter_titel'] = 'Zuweisung: Ausstehend';
         }
 
@@ -118,9 +120,10 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         $params_student['allocation_url_all'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
         $params_student['allocation_url_none'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 0]);
         $params_student['allocation_url_direct_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 1]);
-        $params_student['allocation_url_direct_not_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 2]);
-        $params_student['allocation_url_drawn'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 3]);
-        $params_student['allocation_url_pending'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 4]);
+        $params_student['allocation_url_direct_declined'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 2]);
+        $params_student['allocation_url_direct_not_accepted'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 3]);
+        $params_student['allocation_url_drawn'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 4]);
+        $params_student['allocation_url_pending'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 5]);
         $params_student['reset_filter_url'] =  new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
 
 
@@ -141,12 +144,15 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                 // Allocations: Direct and Checked.
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 1, 'checked' => 1]);
             } else if($allocation_filter == 2) {
+                // Allocations: Direct and declined.
+                $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 1, 'checked' => -1]);
+            } else if($allocation_filter == 3) {
                 // Allocations: Direct and not Checked.
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 1, 'checked' => 0]);
-            } else if($allocation_filter == 3) {
+            } else if($allocation_filter == 4) {
                 // Allocations: Random Allocated
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id, 'direct_allocation' => 0, 'checked' => 1]);
-            } else if ($allocation_filter == 4) {
+            } else if ($allocation_filter == 5) {
                 // Allocations: Pending
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student->id]);
                 if($allocation_data == null) {
@@ -209,6 +215,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                         }
 
                         if($allocation_data->checked == 1) {
+                            $params_student['student'][$index]->accepted_allocation = true;
                             $params_student['student'][$index]->student_thesis = $allocation_data->thesis_name;
                             $export_data[$index]->student_thesis = $allocation_data->thesis_name;
 
@@ -219,9 +226,14 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
                                 $export_data[$index]->student_start_date =  "";
                             }
 
-                            $params_student['student'][$index]->student_examiner =  $allocation_data->examiner_two;
+                            $params_student['student'][$index]->student_examiner = $allocation_data->examiner_two;
                             $export_data[$index]->student_examiner = $allocation_data->examiner_two;
 
+                        } else if ($allocation_data->checked == -1) {
+                            $params_student['student'][$index]->declined_allocation = true;
+                            $export_data[$index]->student_thesis = "";
+                            $export_data[$index]->student_start_date = "";
+                            $export_data[$index]->student_examiner = "";
                         } else {
                             $params_student['student'][$index]->not_checked_allocation = true;
                             $export_data[$index]->student_thesis = "";
@@ -271,13 +283,13 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         // Get Data of the current Chair Member.
         $chairmember_data = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
         // Load all pending students of this chair.
-        $pending_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 0]);
+        $all_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id]);
         $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
 
         // Phase 2 Schedule Data.
         $start_phase2 = $stalloc_data->start_phase2;
         $end_phase2 = $stalloc_data->end_phase2;
-        $today = strtotime(date("Y-m-d"));
+        $today = strtotime(date("Y-m-d H:i"));
 
         // Phase 2 is active -> Confirmations by Chairs Phase.
         if($start_phase2 != null && $end_phase2 != null) {
@@ -300,45 +312,48 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         // Phase 4 is active -> Thesis Definition Phase.
         if($start_phase4 != null && $end_phase4 != null) {
             if (($start_phase4 <= $today) && ($end_phase4 >= $today)) {
-                $params_student['edit_student'] = true;
-            } else {
-                $params_student['dont_edit_student'] = true;
+                $params_student['in_phase4'] = true;
             }
-        } else {
-            $params_student['dont_edit_student'] = true;
         }
 
         //Check for POST Events -> Was a student accepted or declined?
-        foreach ($pending_students as $pending_student) {
-            if(isset($_POST['accept_' . $pending_student->user_id])) {
-                // Send Mail to student.
-                if(!prepare_student_mail($id, $course_id, $pending_student->user_id, MAIL_DIRECT_CHAIR_ACCEPTED )){
-                    $params_student['error_mail_not_send'] = true;
+        foreach ($all_students as $this_student) {
+            if($this_student->checked == 0) {
+                if(isset($_POST['accept_' . $this_student->user_id])) {
+                    // Update the Database for this allocation! -> Student was accepted by the chair.
+                    $updateobject  = new stdClass();
+                    $updateobject->id = $this_student->id;
+                    $updateobject->checked = 1;
+                    $DB->update_record('stalloc_allocation', $updateobject);
+                } else if (isset($_POST['decline_' . $this_student->user_id])) {
+                    // Update the Database for this allocation! -> Student was declined by the chair.
+                    $updateobject  = new stdClass();
+                    $updateobject->id = $this_student->id;
+                    $updateobject->checked = -1;
+                    $DB->update_record('stalloc_allocation', $updateobject);
                 }
-                // Update the Database for this allocation! -> Student was accepted by the chair.
-                $updateobject  = new stdClass();
-                $updateobject->id = $pending_student->id;
-                $updateobject->checked = 1;
-                $DB->update_record('stalloc_allocation', $updateobject);
-                // Delete all ratings of this student.
-                $DB->delete_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $pending_student->user_id]);
-            } else if (isset($_POST['decline_' . $pending_student->user_id])) {
-                // Send Mail to student.
-                if(!prepare_student_mail($id, $course_id, $pending_student->user_id, MAIL_DIRECT_CHAIR_DECLINED )){
-                    $params_student['error_mail_not_send'] = true;
+            } else if($this_student->checked == -1) {
+                if(isset($_POST['accept_' . $this_student->user_id])) {
+                    // Update the Database for this allocation! -> Student was accepted by the chair.
+                    $updateobject  = new stdClass();
+                    $updateobject->id = $this_student->id;
+                    $updateobject->checked = 1;
+                    $DB->update_record('stalloc_allocation', $updateobject);
                 }
-                // Update the Database for this allocation! -> Student was declined by the chair.
-                $updateobject  = new stdClass();
-                $updateobject->id = $pending_student->id;
-                $updateobject->checked = 0;
-                $updateobject->direct_allocation = 0;
-                $updateobject->chair_id = -1;
-                $DB->update_record('stalloc_allocation', $updateobject);
+            }  else if($this_student->checked == 1) {
+                if(isset($_POST['decline_' . $this_student->user_id])) {
+                    // Update the Database for this allocation! -> Student was declined by the chair.
+                    $updateobject  = new stdClass();
+                    $updateobject->id = $this_student->id;
+                    $updateobject->checked = -1;
+                    $DB->update_record('stalloc_allocation', $updateobject);
+                }
             }
         }
 
-        // Load all pending and allocated students of this chair again!
+        // Load all pending, declined and allocated students of this chair again!
         $pending_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 0]);
+        $declined_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => -1]);
         $allocated_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 1]);
         $direct_allocated_students_number = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 1, 'direct_allocation' => 1]);
 
@@ -407,6 +422,40 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
             $params_student['pending'] = true;
         }
 
+        // Prepare the declined student data for the template.
+        $index = 0;
+        foreach($declined_students as $declined_student) {
+            $student_data = $DB->get_record('stalloc_student', ['id' => $declined_student->user_id]);
+            $user_data = $DB->get_record('user', ['id' => $student_data->moodle_user_id]);
+
+            $params_student['declined_student'][$index] = new stdClass();
+            $params_student['declined_student'][$index]->index = $index+1;
+            $params_student['declined_student'][$index]->student_lastname = $user_data->lastname;
+            $params_student['declined_student'][$index]->student_firstname = $user_data->firstname;
+            $params_student['declined_student'][$index]->student_number = $user_data->idnumber;
+            $params_student['declined_student'][$index]->student_mail = $user_data->email;
+            $params_student['declined_student'][$index]->student_id = $student_data->id;
+
+            // check if this chair can accept more direct students [If a chair is disabled, it can always accept direct students].
+            if($this_chair_data->active == 1) {
+                if($direct_allocated_students_number >= $max_direct_students) {
+                    $params_student['declined_student'][$index]->disable_pending = 'disabled';
+                    $params_student['declined_student'][$index]->accept_button_color = 'secondary';
+                } else {
+                    $params_student['declined_student'][$index]->accept_button_color = 'success';
+                }
+            } else {
+                $params_student['declined_student'][$index]->accept_button_color = 'success';
+            }
+
+            $index++;
+        }
+
+        if($index != 0) {
+            $params_student['declined'] = true;
+        }
+
+
         // Prepare the allocated student data for the template.
         $index = 0;
         foreach($allocated_students as $allocated_student) {
@@ -419,6 +468,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
             $params_student['allocated_student'][$index]->student_firstname = $user_data->firstname;
             $params_student['allocated_student'][$index]->student_number = $user_data->idnumber;
             $params_student['allocated_student'][$index]->student_mail = $user_data->email;
+            $params_student['allocated_student'][$index]->student_id = $student_data->id;
             $params_student['allocated_student'][$index]->student_thesis = $allocated_student->thesis_name;
             $params_student['allocated_student'][$index]->student_examiner = $allocated_student->examiner_two;
             if($allocated_student->startdate != "") {

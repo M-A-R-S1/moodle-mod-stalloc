@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_stalloc/student_rating_mail
+    @template mod_stalloc/thesis_published_mail
 
     Display the home site of this plugin.
     Classes required for JS:
@@ -122,37 +122,54 @@
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #e7e7e7; width: 100%;" width="100%" bgcolor="#e7e7e7">
     <tr>
         <td style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top;" valign="top">&nbsp;</td>
-        <td class="container" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; max-width: 600px; padding: 0; padding-top: 24px; width: 600px; margin: 0 auto;" width="600" valign="top">
+        <td class="container" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; max-width: 900px; padding: 0; padding-top: 24px; width: 900px; margin: 0 auto;" width="900" valign="top">
             <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px; padding: 0;">
 
                 <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Diese E-Mail fasst Ihre Lehrstuhlangaben zusammen.</span>
+                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Diese E-Mail fasst Ihre Bachelorarbeit Daten zusammen.</span>
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #ffffff; border: 1px solid #eaebed; border-radius: 16px; width: 100%;" width="100%">
 
                     <!-- START MAIN CONTENT AREA -->
                     <tr>
                         <td class="wrapper" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; box-sizing: border-box; padding: 24px;" valign="top">
-                            <h2 style="font-family: Helvetica, sans-serif; font-size: 26px; font-weight: bold; margin: 0; color:#17365c; margin-bottom: 16px;">Lehrstuhl Prioritäten gespeichert</h2>
+                            <h2 style="font-family: Helvetica, sans-serif; font-size: 26px; font-weight: bold; margin: 0; color:#17365c; margin-bottom: 16px;">Bachelorarbeit Einzelheiten</h2>
                             <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
                                 Hallo {{student_name}},</p>
                             <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
-                                wir haben folgende Informationen von Ihnen erhalten und gespeichert.
+                                Sie erhalten diese E-Mail, da Sie im laufenden Semester im WiWi-BOS für die Bearbeitung einer Bachelorarbeit angemeldet sind. Die:den Prüfer:in und das Thema können Sie im WiWi-BOS und in FlexNow einsehen.
+                                Bitte setzen Sie sich bezüglich der formalen Richtlinien zu der Bearbeitung Ihrer Bachelorarbeit (Titelblatt, Formatierung, Bestandteile, Zitation, Verzeichnisse, Tabellen und Abbildungen, etc.) mit
+                                Ihrer:Ihrem Prüfer:in in Verbindung.Bitte beachten Sie für die Abgabe der Bachelorarbeit die Informationen auf der Homepage des Prüfungsamts für Wirtschaftswissenschaft: https://www2.wiwi.rub.de/informationen-uebersichten/
                             </p>
 
                             <hr style="margin-bottom: 16px;">
 
-                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
-                                <b>Feste Lehrstuhl Zuweisung:</b> {{direct_chair}}
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 60px;">
+                                <b>Abgabedatum für 1-Fach-Bachelor-Studierende</b><br><br>
+                                Für Studierende des 1-Fach-Bachelor-Studiengangs Management and Economics beträgt die Bearbeitungszeit für den schriftlichen Teil der Bachelorarbeit gem. § 22 Abs. 7 (Prüfungsordnung 2020) bzw. gem. 21 Absatz 6
+                                (Prüfungsordnung 2012) neun Wochen. Bei einem Beginn am {{start_date}} muss die Bachelorarbeit also spätestens am {{end_date}} eingereicht werden.
+                                Die Bearbeitungszeit kann auf begründeten Antrag (z.B. Attest) um maximal bis zu zwei Wochen verlängert werden. Hierfür ist verpflichtend das Formblatt des Prüfungsamtes dem Arzt vorzulegen und innerhalb von fünf
+                                Werktagen beim Prüfungsamt per Rub-E-Mail (Vorname.Nachname@rub.de) einzureichen.
                             </p>
-                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: bold; margin: 0;">Gesetzte Prioritäten:</p>
-                            {{#ratings}}
-                                <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0;">{{priority}}: {{chair_name}}</p>
-                            {{/ratings}}
-
-                            <hr style="margin-top: 16px;">
 
                             <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-top: 20px; margin-bottom: 20px;">
-                                Sie können Ihre Angaben bei Bedarf noch bis zum <b>{{phase1_end}}</b> anpassen. Nutzen Sie dazu bitte den nachfolgenden Link, um direkt zum WiWi-BOS System zu gelangen.
+                                <b>Abgabedatum für 2-Fach-Bachelor-Studierende</b><br><br>
+                                Für Studierende des 2-Fach-Bachelor-Studiengangs Wirtschaftswissenschaft beträgt die Bearbeitungszeit für den schriftlichen Teil der Bachelorarbeit gem. § 21 Abs. 5 der Gemeinsamen Prüfungsordnung für den
+                                2-Fächer-Bachelor-Studiengang sechs Wochen.
+                                Die Bearbeitungszeit kann aufgrund von Krankheit um maximal bis zu drei Wochen verlängert werden. Hierfür ist verpflichtend das Formblatt des Prüfungsamtes der Ärtzin:dem Arzt vorzulegen und innerhalb von fünf
+                                Werktagen beim Prüfungsamt per Rub-E-Mail (Vorname.Nachname@rub.de) einzureichen. Darüber hinaus kann die Bearbeitungszeit auf begründeten Antrag der Kandidatin:des Kandidaten um bis zu zwei Wochen verlängert werden.
+                                Hierfür ist per Rub-E-Mail (Vorname.Nachname@rub.de) ein Antrag beim Prüfungsausschuss zu stellen.
+                            </p>
+
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-top: 20px; margin-bottom: 20px;">
+                                Nach der Beurteilung des schriftlichen Teils der Bachelorarbeit erhält der Kandidat:die Kandidatin von der Prüferin:dem Prüfer eine Einladung zur mündlichen Prüfung.<br>
+                                Bei der Bearbeitung Ihrer Bachelorarbeit wünschen wir Ihnen viel Erfolg.<br><br>
+                                Ihr Team vom Prüfungsamt
+                            </p>
+
+                            <hr style="margin-top: 60px;">
+
+                            <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-top: 20px; margin-bottom: 20px;">
+                                Sie können die Einzelheiten Ihrer Bachelorarbeit jetzt im WiWi-Bos System einsehen. Über den untenstehenden Link gelangen Sie direkt zum WiWi-Bos System.
                             </p>
 
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; box-sizing: border-box; width: 100%; min-width: 100%;" width="100%">
@@ -172,18 +189,6 @@
                                 </tr>
                                 </tbody>
                             </table>
-
-                            {{#direct_chair_info}}
-                                <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px; margin-top: 30px;">
-                                    Die Angabe der festen Lehrstuhl Zuweisung wird von Ihrem gewählten Lehrstuhl bis zum <b>{{phase2_end}}</b> geprüft.
-                                </p>
-                            {{/direct_chair_info}}
-                            {{#no_direct_chair_info}}
-                                <p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px; margin-top: 30px;">
-                                    Da keine feste Lehrstuhl Zuweisung vorhanden ist, werden Sie automatisch am Losverfahren teilnehmen und bis zum <b>{{phase3_end}}</b> einem Lehrstuhl aus den Prioritäten zugeordnet.
-                                </p>
-                            {{/no_direct_chair_info}}
-
                         </td>
                     </tr>
 
