@@ -50,7 +50,7 @@ class mod_stalloc_form_chairmember_edit extends moodleform {
 
         // Get Chair information from Database.
         $chair_member_data = $DB->get_record('stalloc_chair_member', ['id' => $chairmember_id]);
-        $chair_data = $DB->get_records('stalloc_chair', ['cm_id' => $id, 'course_id' => $chair_member_data->course_id], "name ASC");
+        $chair_data = $DB->get_records('stalloc_chair', [], "name ASC");
 
         $chair_selection = [];
         $default = 0;

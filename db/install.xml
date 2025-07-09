@@ -34,8 +34,6 @@
     <TABLE NAME="stalloc_chair" COMMENT="This table saves information about the chairs.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the chair."/>
         <FIELD NAME="holder" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the chair holder."/>
         <FIELD NAME="contact_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the chair contact."/>
@@ -47,23 +45,17 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the chair."/>
-        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
-        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
 
     <TABLE NAME="stalloc_chair_member" COMMENT="This table saves information about the chair member.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="chair_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="moodle_user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the chair member."/>
-        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
-        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
         <KEY NAME="chair_id" TYPE="foreign" FIELDS="chair_id" REFTABLE="stalloc_chair" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
@@ -114,15 +106,11 @@
     <TABLE NAME="stalloc_declaration_text" COMMENT="This table saves information about the declaration text.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 -> declaration is active, 0 -> declaration is inactive."/>
         <FIELD NAME="text" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for the declaration text."/>
-        <KEY NAME="course_id" TYPE="foreign" FIELDS="course_id" REFTABLE="stalloc" REFFIELDS="course"/>
-        <KEY NAME="cm_id" TYPE="foreign" FIELDS="cm_id" REFTABLE="stalloc" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
 

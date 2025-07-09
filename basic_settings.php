@@ -53,7 +53,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
     }
 
     // Load declaration data from the database which is connected to this course module.
-    $declaration_data = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
+    $declaration_data = $DB->get_record('stalloc_declaration_text', []);
     // Collect "Declaration" Data for the Template.
     if($declaration_data->active == 0) {
         $params_settings['disabled_declaration'] = 'disabled';
@@ -147,7 +147,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
 function checkFormActions(int $course_id, int $id, int $instance_id, moodle_database $DB, array $params_settings): array {
     if(isset($_POST['save_declaration'])) {
 
-        $declarationData = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
+        $declarationData = $DB->get_record('stalloc_declaration_text', []);
         $declarationCheckbox = isset($_POST['checkbox_declaration']);
         $declarationText = trim($_POST['text_declaration']);
 
@@ -190,7 +190,7 @@ function checkFormActions(int $course_id, int $id, int $instance_id, moodle_data
         $params_settings['saved_phone'] = true;
 
     } else if(isset($_POST['save_rating'])) {
-        $chair_number = $DB->count_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1]);
+        $chair_number = $DB->count_records('stalloc_chair', ['active' => 1]);
         $rating_number = trim($_POST['rating_counter']);
 
         if($rating_number != null && is_number($rating_number) && $rating_number <= $chair_number) {

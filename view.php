@@ -102,7 +102,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
         $viewparams['profile_link'] = new moodle_url('/user/edit.php', ['id' => $USER->id]);
     } else {
         // Check if student declaration is needed.
-        $declaration_data = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
+        $declaration_data = $DB->get_record('stalloc_declaration_text', []);
         $start_phase1 = $stalloc_data->start_phase1;
         $end_phase1 = $stalloc_data->end_phase1;
         $today = strtotime(date("Y-m-d H:i"));
@@ -129,7 +129,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                 $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id]);
 
                 // Get All Chairs of this Course Module.
-                $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id], "name ASC");
+                $chair_data = $DB->get_records('stalloc_chair', [], "name ASC");
                 // Set the 'NO' Selection.
                 $viewparams['chair'][0] = new stdClass();
                 $viewparams['chair'][0]->id = -1;
@@ -157,7 +157,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
 
                 // There is already a student rating! Load and display it.
                 if($rating_data != null) {
-                    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
+                    $chair_data = $DB->get_records('stalloc_chair', ['active' => 1], "name ASC");
 
                     $viewparams['ratings_present'] = true;
                     $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
@@ -184,7 +184,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                     }
                 } else {
                     // Student has not provided a rating yet.
-                    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
+                    $chair_data = $DB->get_records('stalloc_chair', ['active' => 1], "name ASC");
                     while($index < $stalloc_data->rating_number) {
                         $post_chair_id = -1;
 
@@ -297,15 +297,15 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
     if(isset($_POST['save_chair_selection'])) {
         $selected_chair_id = $_POST['chair_select'];
         // Create a new Chair Member Record.
-        $DB->insert_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $selected_chair_id, 'moodle_user_id' => $USER->id]);
+        $DB->insert_record('stalloc_chair_member', ['chair_id' => $selected_chair_id, 'moodle_user_id' => $USER->id]);
     }
 
-    $chair_data = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
+    $chair_data = $DB->get_record('stalloc_chair_member', ['moodle_user_id' => $USER->id]);
 
     // New Chair Member? -> Create a new Chair Member entry.
     if($chair_data == null) {
         // Get All Chairs of this Course Module.
-        $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id]);
+        $chair_data = $DB->get_records('stalloc_chair', []);
         $index = 0;
         foreach($chair_data as $key=>$chair) {
             $viewparams['chair'][$index] = new stdClass();

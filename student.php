@@ -281,7 +281,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         // Teacher view!
     } else if (has_capability('mod/stalloc:chairmember', context_course::instance($course_id))) {
         // Get Data of the current Chair Member.
-        $chairmember_data = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id]);
+        $chairmember_data = $DB->get_record('stalloc_chair_member', ['moodle_user_id' => $USER->id]);
         // Load all pending students of this chair.
         $all_students = $DB->get_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id]);
         $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
@@ -358,7 +358,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         $direct_allocated_students_number = $DB->count_records('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chairmember_data->chair_id, 'checked' => 1, 'direct_allocation' => 1]);
 
         // Load all chairs from the DB.
-        $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id], "name ASC");
+        $chair_data = $DB->get_records('stalloc_chair', [], "name ASC");
         $this_chair_data = $DB->get_record('stalloc_chair', ['id' => $chairmember_data->chair_id]);
 
         // Calculate the sum of all chair distribution keys.
@@ -369,7 +369,7 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
             }
         }
 
-        $declaration_data = $DB->get_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id]);
+        $declaration_data = $DB->get_record('stalloc_declaration_text', []);
         $declaration = 0;
         if($declaration_data->active == 1) {
             $declaration = 1;

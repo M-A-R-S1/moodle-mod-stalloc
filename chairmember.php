@@ -55,7 +55,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
     $params_chair = [];
 
     // Load all Chairs.
-    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id], "name ASC");
+    $chair_data = $DB->get_records('stalloc_chair', [], "name ASC");
     $index = 0;
 
     foreach ($chair_data as $chair) {

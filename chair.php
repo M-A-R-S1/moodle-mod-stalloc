@@ -55,7 +55,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
     $params_chair = [];
 
     // Load chairs from the database which are connected to this course module.
-    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id], "name ASC");
+    $chair_data = $DB->get_records('stalloc_chair', [], "name ASC");
 
     // Calculate the sum of all chair distribution keys.
     $distrubition_key_total_sum = 0;
@@ -74,7 +74,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
         $params_chair['examination_view'] = true;
     } else {
         // Load the chair of the current chair member.
-        $current_chair_id = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id])->chair_id;
+        $current_chair_id = $DB->get_record('stalloc_chair_member', ['moodle_user_id' => $USER->id])->chair_id;
         $chair_data = $DB->get_records('stalloc_chair', ['id' => $current_chair_id]);
         $params_chair['chair_view'] = true;
     }
@@ -116,7 +116,7 @@ if (has_capability('mod/stalloc:examination_member', context_course::instance($c
         $params_chair['chair'][$index]->delete_chair_url = new moodle_url('/mod/stalloc/chair_delete.php', ['chair_id' => $chair->id, 'id' => $id]);
 
 
-        $chairmember_data = $DB->get_records('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'chair_id' => $chair->id]);
+        $chairmember_data = $DB->get_records('stalloc_chair_member', ['chair_id' => $chair->id]);
         $member_index = 0;
         foreach ($chairmember_data as $chairmember) {
             $user_data = $DB->get_record('user', ['id' => $chairmember->moodle_user_id]);

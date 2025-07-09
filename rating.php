@@ -64,10 +64,10 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
 
     if (has_capability('mod/stalloc:examination_member', context_course::instance($course_id))) {
         // Load all active chairs
-        $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1], "name ASC");
+        $chair_data = $DB->get_records('stalloc_chair', ['active' => 1], "name ASC");
     } else {
         // Load the chair of the current chair member.
-        $current_chair_id = $DB->get_record('stalloc_chair_member', ['course_id' => $course_id, 'cm_id' => $id, 'moodle_user_id' => $USER->id])->chair_id;
+        $current_chair_id = $DB->get_record('stalloc_chair_member', ['moodle_user_id' => $USER->id])->chair_id;
         $chair_data = $DB->get_records('stalloc_chair', ['id' => $current_chair_id]);
     }
 

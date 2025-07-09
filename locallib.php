@@ -95,9 +95,13 @@ function initialize_stalloc_header($activeElement, $id, $course_id, $instance) {
 function initialize_stalloc_plugin($id, $course_id, $instance_id) {
     global $DB;
 
-    // Create Declaration Text Entry for this Module.
-    $text = "Lorem ipsum dolor sit amet....";
-    $DB->insert_record('stalloc_declaration_text', ['course_id' => $course_id, 'cm_id' => $id, 'text' => $text, 'active' => 0]);
+    $declaration_data = $DB->get_records('stalloc_declaration_text');
+    if($declaration_data == null) {
+        // Create Declaration Text Entry.
+        $text = "Lorem ipsum dolor sit amet....";
+        $DB->insert_record('stalloc_declaration_text', ['text' => $text, 'active' => 0]);
+    }
+
     // Set the Init Record to 1
     $updateobject  = new stdClass();
     $updateobject->id = $instance_id;
@@ -216,7 +220,7 @@ function rating_saved_mail($id, $course_id, $user_id): bool {
     // Get the user allocation, ratings and chair data.
     $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $user_id]);
     $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $user_id], "rating DESC");
-    $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id]);
+    $chair_data = $DB->get_records('stalloc_chair', []);
 
     // Template Parameters.
     $template_params = [];

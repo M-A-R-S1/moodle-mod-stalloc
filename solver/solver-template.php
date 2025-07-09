@@ -94,7 +94,7 @@ class distributor {
         global $DB;
 
         // Load active chairs from this course module.
-        $chair_data = $DB->get_records('stalloc_chair', ['course_id' => $course_id, 'cm_id' => $id, 'active' => 1]);
+        $chair_data = $DB->get_records('stalloc_chair', ['active' => 1]);
 
         // Load all ratings from this course module.
         $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id]);
