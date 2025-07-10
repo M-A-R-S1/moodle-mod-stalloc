@@ -1,0 +1,104 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_stalloc/home_chair
+
+    Display the home site of this plugin.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * none
+}}
+
+
+{{#new_chair}}
+    <div id="accordion">
+        <div class="card-body">
+            <div class="ml-3">
+                <form class="col-lg-6 col-sm-12" action="" method="post" >
+
+                    <h2 class="mt-3 mb-3">Zu welchem Lehrstuhl gehören Sie?</h2>
+
+                    <div class="form-row mt-3 mb-5">
+                        <div class="col-sm-6 col-xs-12 mb-3">
+                            <label for="chair_select">Lehrstuhl:</label>
+                            <select id="chair_select" name="chair_select" class="form-control">
+                                {{#chair}}
+                                    <option value="{{id}}">{{chair_name}}</option>
+                                {{/chair}}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" name ="save_chair_selection" class="btn btn-success">Bestätigen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{{/new_chair}}
+
+{{#chair_overview_data}}
+    <div id="accordion">
+        <div class="card-body">
+            {{#current_numbers}}
+                <h3>Aktuelle Zahlen:</h3>
+            {{/current_numbers}}
+
+            {{#fixed_numbers}}
+                <h3>Endgültige Zahlen:</h3>
+            {{/fixed_numbers}}
+
+            <table class="table table-bordered border text-center mb-3 mt-3">
+                <thead class="bg-dark text-light">
+                <tr>
+                    <th scope="col">Feste Zusagen</th>
+                    <th scope="col">Zulosung</th>
+                    <th scope="col">Gesamtanzahl</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{max_direct_students}}</td>
+                    <td>{{max_draw_students}}</td>
+                    <td>{{max_students}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            {{#current_numbers}}
+                <div class="alert alert-info text-justify" role="alert">
+                    Das System befindet derzeit noch in Phase 1, weswegen sich die Anzahl der Kandidaten und Kandidatinnen noch verändern können.<br>
+                    Dies bedeutet, dass sich die Zahlen der obigen Tabelle noch bis zum <b>{{phase1_end}}</b> ändern können.
+                </div>
+            {{/current_numbers}}
+
+            <h3 class="mt-5">Erläuterung:</h3>
+            <p>
+                Ihr Lehrstuhl bietet in diesem Semester <b>{{max_students}} Plätze</b> an.<br>
+                Davon müssen mindestens <b>{{max_draw_students}} Plätze</b> dem Losverfahren zur Verfügung stehen.<br>
+                Sollten Sie weniger als <b>{{max_direct_students}} feste Zusagen</b> vergeben, so stehen die verbleibenden Plätze zusätzlich dem Losverfahren zur Verfügung.<br>
+                Abhängig von den abgegebenen Präferenzen der Kandidaten ist es ebenfalls möglich, dass nicht die volle Anzahl der Plätze für das Losverfahren besetzt werden; in diesem Fall reduziert
+                sich die Anzahl der zu betreuenden Arbeiten entsprechend.<br><br>
+                Insgesamt haben sich <b>{{students_in_plugin}} Kandidaten und Kandidatinnen</b> für eine Bachelorarbeit angemeldet.
+            </p>
+
+        </div>
+    </div>
+{{/chair_overview_data}}
+
+

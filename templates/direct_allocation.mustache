@@ -69,8 +69,11 @@
         <div class="card-body">
             <div class="ml-3">
                 <h2 class="mt-3 mb-3">Feste Lehrstuhl Zuweisung</h2>
+                <div class="alert alert-info mb-3 text-justify" role="alert">
+                    Wenn Sie eine feste Zusage vereinbart haben, wählen Sie bitte den entsprechenden Lehrstuhl aus. Sollten Sie keine feste Zusage vereinbart haben, wählen Sie bitte 'Nicht vorhanden' aus
+                </div>
                 <div class="form-row mt-3">
-                    <div class="col-sm-6 col-xs-12 mb-3">
+                    <div class="col-sm-12 col-xs-12 mb-3">
                         <label for="chair_select">Lehrstuhl:</label>
                         <select id="chair_select" name="chair_select" class="form-control">
                             {{#chair}}
@@ -87,9 +90,14 @@
         <div class="card-body mt-2">
             <div class="ml-3">
                 <h2 class="mb-3">Lehrstuhl Prioritäten</h2>
+                <div class="alert alert-info mb-3 text-justify" role="alert">
+                    Sie werden entsprechend Ihrer gewählten Präferenzen einem Lehrstuhl zugeordnet. Nach Abgabe Ihrer Präferenzen erhalten Sie eine E-Mail mit der Bestätigung Ihrer Angaben. Gültig für die Zuordnung zu einem Lehrstuhl ist immer
+                    Ihre letzte Abgabe. Sie können Ihre Präferenzen bis zum <b>{{phase1_end}}</b> jederzeit ändern. Wenn Sie eine feste Zusage vereinbart haben, muss diese vom Lehrstuhl bestätigt werden. Für den Fall,
+                    dass diese nicht bestätigt wird, werden Sie entsprechend Ihrer Präferenzen einem Lehrstuhl zugeteilt.
+                </div>
                 {{#rating}}
                     <div class="form-row mt-3 mb-3">
-                        <div class="col-sm-6 col-xs-12 mb-3">
+                        <div class="col-sm-12 col-xs-12 mb-3">
                             <label for="rating_select_{{index}}">Priorität {{index}}:</label>
                             <select id="rating_select_{{index}}" name="rating_select_{{index}}" class="form-control {{is_invalid}}">
                                 {{#option}}

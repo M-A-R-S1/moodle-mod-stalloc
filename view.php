@@ -44,7 +44,7 @@ echo $OUTPUT->header();
 $viewparams['student_name'] = $USER->firstname. " " . $USER->lastname;
 $phoneNumber = false;
 $showDeclaration = false;
-$showChairSelection = false;
+$showChairTemplate = false;
 $showRatingSelection = false;
 
 // Is the User a student?
@@ -155,29 +155,59 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
                 $rating_data = $DB->get_records('stalloc_rating', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $student_data->id], "rating DESC");
                 $index = 0;
 
+                $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
+
                 // There is already a student rating! Load and display it.
                 if($rating_data != null) {
                     $chair_data = $DB->get_records('stalloc_chair', ['active' => 1], "name ASC");
 
                     $viewparams['ratings_present'] = true;
-                    $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
 
                     while($index < $stalloc_data->rating_number) {
+                        $post_chair_id = -1;
+
                         $viewparams['rating'][$index] = new stdClass();
                         $viewparams['rating'][$index]->index = ($index+1);
                         $option_index = 0;
+
+                        if(isset($_POST['save_ratings'])) {
+                            if($_POST['rating_select_'.($index+1)] != -1) {
+                                $post_chair_id =  $_POST['rating_select_' . ($index+1)];
+                            } else {
+                                $viewparams['rating'][$index]->is_invalid = 'is-invalid';
+                            }
+                        }
+
                         foreach ($chair_data as $chair) {
                             $viewparams['rating'][$index]->option[$option_index] = new stdClass();
                             $viewparams['rating'][$index]->option[$option_index]->chair_id = $chair->id;
                             $viewparams['rating'][$index]->option[$option_index]->chair_name = $chair->name;
 
-                            foreach ($rating_data as $rating) {
-                                if($rating->rating == ($stalloc_data->rating_number-$index)) {
-                                    if($rating->chair_id == $chair->id) {
-                                        $viewparams['rating'][$index]->option[$option_index]->selected = 'selected';
+
+                            if(isset($_POST['save_ratings'])) {
+                                if($post_chair_id == $chair->id) {
+                                    $viewparams['rating'][$index]->option[$option_index]->selected = 'selected';
+
+                                    // Check if this selection is unique! Walk through all other post events and check if another selection has the same chair id.
+                                    for($current_index = 1; $current_index <= $stalloc_data->rating_number; $current_index++) {
+                                        // Do not compare the same selection!
+                                        if($current_index != ($index+1)) {
+                                            if($_POST['rating_select_'.$current_index] == $chair->id) {
+                                                $viewparams['rating'][$index]->is_invalid = 'is-invalid';
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                foreach ($rating_data as $rating) {
+                                    if($rating->rating == ($stalloc_data->rating_number-$index)) {
+                                        if($rating->chair_id == $chair->id) {
+                                            $viewparams['rating'][$index]->option[$option_index]->selected = 'selected';
+                                        }
                                     }
                                 }
                             }
+
                             $option_index++;
                         }
                         $index++;
@@ -292,6 +322,7 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
     }
 
 } else if(has_capability('mod/stalloc:chairmember', context_course::instance($course_id)) && !is_siteadmin()) {
+    $showChairTemplate = true;
 
     // Check for Post Events.
     if(isset($_POST['save_chair_selection'])) {
@@ -313,17 +344,58 @@ if(has_capability('mod/stalloc:student', context_course::instance($course_id)) &
             $viewparams['chair'][$index]->chair_name = $chair->name;
             $index++;
         }
-        $showChairSelection = true;
+        $viewparams['new_chair'] = true;
+    } else {
+        $stalloc_data = $DB->get_record('stalloc', ['id' => $instance->id]);
+        // Get Data of the current Chair Member.
+        $chairmember_data = $DB->get_record('stalloc_chair_member', ['moodle_user_id' => $USER->id]);
+        // Load all chairs from the DB.
+        $chair_data = $DB->get_records('stalloc_chair', [], "name ASC");
+        $this_chair_data = $DB->get_record('stalloc_chair', ['id' => $chairmember_data->chair_id]);
+
+        // Some time data here ...
+        $today = strtotime(date("Y-m-d H:i"));
+        $start_phase1 = $stalloc_data->start_phase1;
+        $end_phase1 = $stalloc_data->end_phase1;
+
+        // Phase 1 active
+        if( ($start_phase1 <= $today) && ($end_phase1 >= $today) ) {
+            $viewparams['phase1_end'] = date('d.m.Y',$stalloc_data->end_phase1);
+            $viewparams['current_numbers'] = true;
+        }
+
+        // Phase 1 finished
+        if($today >= $stalloc_data->end_phase1) {
+            $viewparams['fixed_numbers'] = true;
+        }
+
+        // Calculate the sum of all chair distribution keys.
+        $distrubition_key_total_sum = 0;
+        foreach ($chair_data as $chair) {
+            if($chair->active == 1) {
+                $distrubition_key_total_sum += $chair->distribution_key;
+            }
+        }
+
+        // Calculate the number or registered students of this plugin.
+        $student_number = $DB->count_records('stalloc_student', ['course_id' => $course_id, 'cm_id' => $id, 'declaration' => 1]);
+        $viewparams['students_in_plugin'] = $student_number;
+        $student_number = ceil(($student_number + $student_number*STUDENT_BUFFER));
+        $max_students = ceil(($student_number * $this_chair_data->distribution_key) / $distrubition_key_total_sum);
+        $max_allocation_students = floor($max_students * MAX_STUDENT_ALLOCATIONS_PERCENT);
+        $max_direct_students = $max_students - $max_allocation_students;
+
+        $viewparams['max_students'] = $max_students;
+        $viewparams['max_draw_students'] = $max_allocation_students;
+        $viewparams['max_direct_students'] = $max_direct_students;
+        $viewparams['chair_overview_data'] = true;
     }
 
-    $viewparams['role'] = "Lehrstuhl-Mitarbeiter";
 }
 
 
 if($showDeclaration) {
     echo $OUTPUT->render_from_template('stalloc/declaration', $viewparams);
-} else if($showChairSelection) {
-    echo $OUTPUT->render_from_template('stalloc/chair_selection', $viewparams);
 } else if ($showRatingSelection) {
     echo $OUTPUT->render_from_template('stalloc/direct_allocation', $viewparams);
 } else {
@@ -333,8 +405,14 @@ if($showDeclaration) {
         echo $OUTPUT->render_from_template('stalloc/header', $paramsheader);
     }
 
-    // Display the Page.
-    echo $OUTPUT->render_from_template('stalloc/view', $viewparams);
+    if($showChairTemplate) {
+        // Display the Chair Members template.
+        echo $OUTPUT->render_from_template('stalloc/home_chair', $viewparams);
+    } else {
+        // Display the Examination Members template.
+        echo $OUTPUT->render_from_template('stalloc/view', $viewparams);
+    }
+
 }
 
 // Displaying the footer.

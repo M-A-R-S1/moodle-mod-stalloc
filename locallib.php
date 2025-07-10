@@ -127,7 +127,7 @@ function process_action_start_distribution($id, $course_id, $instance)
         core_php_time_limit::raise();
         // Distribute choices.
         $timeneeded = distrubute_choices($id, $course_id, $instance);
-        redirect(new moodle_url($PAGE->url->out()), 'Allocation successfully saved.', null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect(new moodle_url($PAGE->url->out()), 'Zulosungen erfolgreich gespeichert.', null, \core\output\notification::NOTIFY_SUCCESS);
 
     } else {
         redirect(course_get_url($course_id), "Missing Capability!", null, 'NOTIFY_ERROR');
@@ -190,10 +190,6 @@ function prepare_student_mail($id, $course_id, $user_id, $mail_action): bool {
     // Check which mail to send.
     if($mail_action == MAIL_STUDENT_RATINGS_SAVED) {
          return rating_saved_mail($id, $course_id, $user_id);
-    } else if ($mail_action == MAIL_DIRECT_CHAIR_ACCEPTED) {
-        return direct_chair_mail($id, $course_id, $user_id, MAIL_DIRECT_CHAIR_ACCEPTED);
-    } else if ($mail_action == MAIL_DIRECT_CHAIR_DECLINED) {
-        return direct_chair_mail($id, $course_id, $user_id, MAIL_DIRECT_CHAIR_DECLINED);
     }
 
     return false;
@@ -261,7 +257,7 @@ function rating_saved_mail($id, $course_id, $user_id): bool {
     }
 
     // Mail subject.
-    $subject =  "WiWi-BOS - Deine Lehrstuhl Prioritäten";
+    $subject =  "WiWi-BOS - Ihre Lehrstuhl Angaben wurden gespeichert";
     // Mail HTML message.
     $html_message = $OUTPUT->render_from_template('stalloc/mail/student_rating_mail', $template_params);
 
@@ -283,62 +279,3 @@ function rating_saved_mail($id, $course_id, $user_id): bool {
     }
 }
 
-
-
-/**
- * Sends an E-Mail to the student to inform that the chair has accepted/declined the direct allocation.
- * @param int $id current course module id.
- * @param int $course_id current course id.
- * @param int $user_id current course module id.
- * @return bool ture if mail was send successfully or false in case of error.
- */
-function direct_chair_mail($id, $course_id, $user_id, $chair_action): bool {
-    global $CFG, $DB, $OUTPUT;
-
-    // Get the stalloc instance data.
-    list ($course, $cm) = get_course_and_cm_from_cmid($id, 'stalloc');
-    $instance = $DB->get_record('stalloc', ['id'=> $cm->instance], '*', MUST_EXIST);
-
-    // Get the receiver user.
-    $user_data = $DB->get_record('stalloc_student', ['id' => $user_id]);
-    $moodle_user_data = $DB->get_record('user', ['id' => $user_data->moodle_user_id]);
-
-    // Get the user allocation, ratings and chair data.
-    $allocation_data = $DB->get_record('stalloc_allocation', ['course_id' => $course_id, 'cm_id' => $id, 'user_id' => $user_id]);
-    $chair_data = $DB->get_record('stalloc_chair', ['id' => $allocation_data->chair_id]);
-
-    // Template Parameters.
-    $template_params = [];
-    $template_params['student_name'] = $moodle_user_data->firstname ." ". $moodle_user_data->lastname;
-    $template_params['phase3_end'] = date('d.m.Y',$instance->end_phase3);
-    $template_params['phase4_end'] = date('d.m.Y',$instance->end_phase4);
-    $template_params['chair_name'] = $chair_data->name;
-
-    if($chair_action == MAIL_DIRECT_CHAIR_ACCEPTED) {
-        $template_params['direct_chair_accepted'] = true;
-    } else if ($chair_action == MAIL_DIRECT_CHAIR_DECLINED) {
-        $template_params['direct_chair_declined'] = true;
-    }
-
-    // Mail subject.
-    $subject =  "WiWi-BOS - Deine feste Lehrstuhl Zuweisung wurde bearbeitet";
-    // Mail HTML message.
-    $html_message = $OUTPUT->render_from_template('stalloc/mail/direct_chair_mail', $template_params);
-
-    // send-mail.
-    $email_sent = email_to_user(
-        $moodle_user_data,              // Mail Receiver.
-        $CFG->noreplyaddress,           // Mail Sender.
-        $subject,                       // Mail Subject.
-        html_to_text($html_message),    // Text Message.
-        $html_message                   // HTML Message.
-    );
-
-    if ($email_sent) {
-        // Mail send successfully.
-        return true;
-    } else {
-        // Error! ... Mail was not send.
-        return false;
-    }
-}

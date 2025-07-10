@@ -306,7 +306,6 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
             $params_student['not_in_phase2'] = true;
         }
 
-
         // Phase 4 Schedule Data.
         $start_phase4 = $stalloc_data->start_phase4;
         $end_phase4 = $stalloc_data->end_phase4;
