@@ -126,6 +126,8 @@ if (has_capability('mod/stalloc:chairmember', context_course::instance($course_i
         $params_student['allocation_url_pending'] = new moodle_url('/mod/stalloc/student.php', ['id' => $id, 'a' => 5]);
         $params_student['reset_filter_url'] =  new moodle_url('/mod/stalloc/student.php', ['id' => $id]);
 
+        // Set Helper Icons
+        $params_student['allocation_help'] = '&#x1F512; = Feste Zusage<br>&#10003; = Student Akzeptiert<br>X = Student Abgelehnt';
 
         // Prepare the loaded Student data for the template and save this information in a parameter array.
         $index = 0;
